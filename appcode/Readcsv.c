@@ -5,13 +5,13 @@
 
 BOOL ReadCSVFile(char *Name);
 
-double stod(string str)
-{
+double stod(string str)    //string to double
+{ 
     double ans;
     sscanf(str, "%lf", &ans);
     return ans;
 }
-int stoi(string str)
+int stoi(string str)  //string to int 
 {
     int ans;
     sscanf(str, "%d", &ans);
@@ -59,15 +59,18 @@ BOOL ReadCSVFile(char *Name)
 
     else
     {
-
+        int flag = 0;
         char buffer[256];
-        fseek(fp, 3, 0);                                //txt文件前面三个是使用编码的标识符 跳过
-        while (fscanf(fp, "%[^,\n]%*c", buffer) != EOF) //%*c代表跳过一个字符
+        char flagbuffer[10];
+                             
+        while (fscanf(fp, "%[^,\n]", buffer) != EOF) //   正表达式  buffer里放的是数据   flagbuffer里放的是,或者\n  flag是第一行是否完事了
         {
             num++;
-            if (num > 5)
+            fgets(flagbuffer, 2, fp);
+          
+            if (flag)
             {
-                switch (num % 5)
+                switch (num % (ChooseDataNum+1))
                 {
                 case 1:
                     STU = (stu_Ptr)malloc(sizeof(struct stu));
@@ -75,7 +78,6 @@ BOOL ReadCSVFile(char *Name)
                     STU->IsSelect = TRUE;
                     strcpy(STU->Nowcolor, COLOR[FileTotalNum % (sizeof(COLOR) / sizeof(COLOR[0]))]);
                     strcpy(STU->Changedcolor, "Pink");
-
                     STU->Date = (char *)malloc(sizeof(buffer) + 1);
                     strcpy(STU->Date, buffer);
                     FileTotalNum++;
@@ -102,6 +104,12 @@ BOOL ReadCSVFile(char *Name)
                 ChooseData[num - 1] = (char *)malloc(sizeof(buffer) + 1);
                 strcpy(ChooseData[num - 1], buffer);
                 // printf("%s\n", ChooseData[num - 1]);
+            }
+            if (!flag && flagbuffer[0] == 10) {   //读到换行了  10就是换行
+                flag = 1;  //flag标志是否开始创建struct
+                ChooseDataNum = num-1  ;   //减一的原因是算了日期 
+                printf("num is %d\n", num);
+
             }
         }
         //printf("wanshi");

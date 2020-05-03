@@ -14,7 +14,7 @@ void drawDate(int tmpnum, char* Date);
 void DrawTextZH(string str, double bx, double by);
 void DrawTextChar(string str, double bx, double by);
 
-#define   MY_DRAW_K  20
+#define   MY_DRAW_K  20  //在画table的时候 两个x直接画多少个点
 
 void DrawMenu()
 {
@@ -70,7 +70,7 @@ void DrawOpenDir()
                 OpenFileName = (char *)malloc(sizeof(strlen(FileName[i - 1]) + 1));
                 strcpy(OpenFileName, FileName[i - 1]);
                 //printf("ok\n");
-                if (ReadCSVFile(FileName[i - 1]))
+                if (ReadCSVFile(FileName[i - 1]))  //read正确返回1   不正确返回0
                 {
                     if (!FileTotalNum)
                     {
@@ -79,7 +79,7 @@ void DrawOpenDir()
                     }
                     else
                     {
-                        IsOpen = 2;
+                        IsOpen = 2;   //2的时候就是可以进行画图了
                         Calculate();
                         drawMainPicture();
                         return;
@@ -128,58 +128,15 @@ void DrawOpenDir()
     
 }
 
-void DrawButton()
-{
-    SetEraseMode(FALSE);
 
-    // 红色选择按钮
-    setButtonColors("Orange", "Red", "Yellow", "Red", !strcmp(penColor, "Red"));
-    if (button(GenUIID(0), 1, MaxY - 3 * GetFontHeight(), 0.1, 0.1, ""))
-    {
-        IsEraser = 0;
-        SetEraseMode(FALSE);
-        sprintf(penColor, "Red");
-    }
-    // 绿色选择按钮
-    setButtonColors("Cyan", "Green", "Magenta", "Green", !strcmp(penColor, "Green"));
-    if (button(GenUIID(0), 1.4, MaxY - 3 * GetFontHeight(), 0.1, 0.1, ""))
-    {
-        IsEraser = 0;
-        SetEraseMode(FALSE);
-        sprintf(penColor, "Green");
-    }
-    // 蓝色选择按钮
-    setButtonColors("Violet", "Blue", "Brown", "Blue", !strcmp(penColor, "Blue"));
-    if (button(GenUIID(0), 1.8, MaxY - 3 * GetFontHeight(), 0.1, 0.1, ""))
-    {
-        IsEraser = 0;
-        SetEraseMode(FALSE);
-        sprintf(penColor, "Blue");
-    }
-    setButtonColors("Light Gray", "White", "Black", "Black", IsEraser);
-    if (button(GenUIID(0), 2.2, MaxY - 3 * GetFontHeight(), 0.1, 0.1, ""))
-    {
-        if (IsEraser)
-        {
-            SetEraseMode(FALSE);
-        }
-        else
-        {
-            SetEraseMode(TRUE);
-        }
-        IsEraser = 1 - IsEraser;
-    }
-    if (IsEraser)
-        SetEraseMode(TRUE);
-}
 
 void DrawLeftButton(stu_Ptr Head)
 {
     double fH = GetFontHeight();
     int nowNum = 0;
-    Head = Head->next;
+    Head = Head->next;   //是有头节点啊啊啊啊啊嗷嗷嗷嗷哦哦哦哦哦哦
 
-    while (Head != NULL)
+    while (Head != NULL)  
     {
         int IsSelect = Head->IsSelect;
         setButtonColors("Orange", "Red", "Black", "Red", IsSelect);
@@ -256,7 +213,7 @@ void drawMainPicture()
 
     SetPenColor("Black");
     SetPenSize(1);
-    MovePen(beginTableX, beginTableY);
+    MovePen(beginTableX, beginTableY);   //两条线x轴y轴
     DrawLine(endTableX - beginTableX,0);
     MovePen(beginTableX, beginTableY);
     DrawLine(0, endTableY - beginTableY);
@@ -265,7 +222,7 @@ void drawMainPicture()
     while (tmp != NULL) {
         if (tmp->IsSelect) {
             ++tmpnum;
-            drawDate(tmpnum, tmp->Date);
+            drawDate(tmpnum, tmp->Date);   
           }
         tmp = tmp->next;
     }      //画日期和两道线
@@ -286,9 +243,9 @@ void drawMainPicture()
 
      
 }
-void DrawTextChar(string str,double bx,double by) {
+void DrawTextChar(string str,double bx,double by) {   //写字符（数字）
     string c;
-    if (str[1] > 0 && str[1] <= 255)
+    if (str[1] > 0 && str[1] <= 255)   //如果是两位数
     {
         c= (string)malloc(3);
         c[0] = str[0];
@@ -302,15 +259,15 @@ void DrawTextChar(string str,double bx,double by) {
     }
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
-    free(c);
+   // free(c);  这个好像有点异常处理  打开console的时候会报错  先这么着把
 }
 
-void DrawTextZH(string str,double bx,double by) {
+void DrawTextZH(string str,double bx,double by) {   //写中文
     string c = (string )malloc(3);
     c[0] = str[0], c[1] = str[1], c[2] = '\0';
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
-    free(c);
+    //free(c);
 }
 void drawDate(int tmpnum, char* Date)
 {
@@ -322,7 +279,7 @@ void drawDate(int tmpnum, char* Date)
 
     MovePen(bx, by);
     for (int i = 0; Date[i]; i++) {
-        if (Date[i] > 0 && Date[i] < 255) {
+        if (Date[i] > 0 && Date[i] < 255) {  //是数字
             by -= FontHeight;
             DrawTextChar(Date + i,bx,by);
            
@@ -330,7 +287,7 @@ void drawDate(int tmpnum, char* Date)
                 i++; //如果数字是两位 需要把i++了
 
         }
-        else {
+        else {   //是中文
             by -= FontHeight;
             DrawTextZH(Date+i,bx,by);
             i++;
