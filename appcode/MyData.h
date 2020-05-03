@@ -24,7 +24,7 @@ int FileNum;  //总文件数目
 
 double beginTableX, beginTableY;   //开始画图的xy
 double endTableX, endTableY;   //结束画图的xy
-int TableMark1, TableMark2, TableMark3, TableMark4;    //第1234条y轴上的灰色线
+int TableMark1, TableMark2, TableMark3, TableMark4, TableMark5,TableMark6;    //第1234条y轴上的灰色线
 
 double TableData[10][30][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
 
@@ -32,7 +32,8 @@ double TableData[10][30][2];    //table数据     第一个为选的列   第二个为日期   
 double PerX, PerY;      //单位长度的xy
 double FontHeight, FontAscent, FontDescent; //见定义
 
-char* COLOR[] = { "NULL","Red", "Blue", "Green",  "Gray", "Orange","Yellow" };    //画图颜色
+char* COLOR[] = { "NULL","TableColor1","TableColor2" ,"TableColor3" , "TableColor4" , "TableColor5" , "TableColor6" ,
+"TableColor7" , "TableColor8","TableColor9","TableColor10","TableColor11","TableColor12" };    //画图颜色
 
 int ClassDataNum[10];    //用来存放每个种类的日期数量
 
@@ -51,4 +52,4 @@ struct stu    //每一天
     double XPosition[10],YPosition[10];    //每一个数据的xy位置
 
 } *STU;
-struct stu *head, *ptr;
+struct stu *head, *ptr,*tail;

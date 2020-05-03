@@ -8,6 +8,7 @@ void FindCSV();
 void DefineMycolor();
 BOOL CheckName(char* name);
 void Calculate();
+void AssignTable();
 
 void PreWork()
 {
@@ -77,6 +78,20 @@ void DefineMycolor()
     DefineColor("DirSelectionFrame", 112.0 / 255, 214.0 / 255, 1.0);
 
     DefineColor("DataButton", 218.0 / 255, 215.0 / 255, 205.0 / 255); //日期选择框的颜色
+
+    DefineColor("TableColor1", 239.0/255, 106.0/255, 46.0/255);
+    DefineColor("TableColor2", 64.0/255, 199.0/255, 120.0/255);
+    DefineColor("TableColor3", 37.0/255, 74.0/255, 178.0/255);
+    DefineColor("TableColor4", 255.0/255, 33.0/255, 127.0/255);
+    DefineColor("TableColor5", 204.0/255, 0, 213.0/255);
+    DefineColor("TableColor6", 102.0/255, 44.0/255, 145.0/255);
+    DefineColor("TableColor7", 23.0/255, 163.0/255, 152.0/255);
+    DefineColor("TableColor8", 255.0 / 255, 198.0 / 255, 255.0 / 255);
+    DefineColor("TableColor9", 51.0/255, 49.0/255, 46.0/255);
+    DefineColor("TableColor10", 253.0/255, 255.0/255, 182.0/255);
+    DefineColor("TableColor11", 202.0/255, 255.0/255, 191.0/255);
+    DefineColor("TableColor12", 155.0/255, 246.0/255, 255.0/255);
+
 }
 
 BOOL CheckName(char* name)
@@ -93,7 +108,13 @@ BOOL CheckName(char* name)
     }
     return 0;
 }
-
+void AssignTable() {
+    if (ChooseDataNum&&ChooseDataNum <= 2)      //是二代表柱状图  一代表折线图
+        IsChooseData[1] = 2;
+    else if (ChooseDataNum >= 4)
+        IsChooseData[1] = IsChooseData[2] = 2;
+        
+}
 void Calculate()
 {
   
@@ -114,22 +135,26 @@ void Calculate()
                 }
             }
         }
+        if (tmp->next == NULL)
+            tail = tmp;
         tmp = tmp->next;
     }
     //printf("Maxnum=%d   ShowNum=%d\n", Maxnum,ShowNum);
     if (Maxnum > 1000) {
  
-        (Maxnum / 4) % 100 > 50 ? (TableMark1 = ((Maxnum / 4) - (Maxnum / 4) % 100) + 100 ):( TableMark1 = ((Maxnum / 4) - (Maxnum / 4) % 100));
+        (Maxnum / 6) % 100 > 50 ? (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 100) + 100 ):( TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 100));
          
     }
     else {
-        (Maxnum / 4) % 10 > 5 ? (TableMark1 = ((Maxnum / 4) - (Maxnum / 4) % 10) + 10) : (TableMark1 = ((Maxnum / 4) - (Maxnum / 4) % 10));
+        (Maxnum / 6) % 10 > 5 ? (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 10) + 10) : (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 10));
 
     }
     TableMark2 = TableMark1 * 2;
     TableMark3 = TableMark1 * 3;
     TableMark4 = TableMark1 * 4;
-     PerY = (endTableY - beginTableY) / 5 / TableMark1;
+    TableMark5 = TableMark1 * 5;
+    TableMark6 = TableMark1 * 6;
+     PerY = (endTableY - beginTableY) / 7 / TableMark1;
     PerX = (endTableX - beginTableX) / (ShowNum + 1);
     //printf("%lf %lf \n", endTableX, endTableY);
     
@@ -163,6 +188,6 @@ void Calculate()
         }
         tmp = tmp->next;
     }
-   
+    AssignTable();//把折线图的设为1   柱状图设为2     柱状图数目不超过两个 尽量平均分配
 
 }

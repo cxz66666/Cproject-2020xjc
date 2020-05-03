@@ -64,7 +64,6 @@ void display()
     DisplayClear();
     DrawMenu();
     // ºÚÉ«Ñ¡Ôñ°´Å¥
-    DrawButton();
     DrawMain();
 }
 

@@ -70,7 +70,8 @@ BOOL ReadCSVFile(char *Name)
           
             if (flag)
             {
-                switch (num % (ChooseDataNum+1))
+                int tmpnum = num % (ChooseDataNum + 1);
+                switch (tmpnum)
                 {
                 case 1:
                     STU = (stu_Ptr)malloc(sizeof(struct stu));
@@ -83,25 +84,20 @@ BOOL ReadCSVFile(char *Name)
                     FileTotalNum++;
                     /* code */
                     break;
-                case 2:
-                    STU->Data[1] = stoi(buffer);
-                    break;
-                case 3:
-                    STU->Data[2] = stoi(buffer);
-                    break;
-                case 4:
-                    STU->Data[3] = stoi(buffer);
-                    break;
                 case 0:
                     STU->Data[4] = stoi(buffer);
                     STU->next = NULL;
                     ptr->next = STU;
                     ptr = ptr->next;
+                    break;
+                default:
+                    STU->Data[tmpnum - 1] = stoi(buffer);
+                    break;
                 }
             }
             else
             {
-                ChooseData[num - 1] = (char *)malloc(sizeof(buffer) + 1);
+                ChooseData[num - 1] = (char *)malloc(sizeof(buffer) + 1); //这里放的是每列的表头   第一个是日期 所以跳过   所有的chooseData都从一开始计数
                 strcpy(ChooseData[num - 1], buffer);
                 // printf("%s\n", ChooseData[num - 1]);
             }

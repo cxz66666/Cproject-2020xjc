@@ -4,15 +4,19 @@
 #include "MyDrawTable.c"
 void DrawOpenDir();
 void DrawMenu();
-void DrawButton();
+
 void HandleFileButton(int selection);
 void HandleToolButton(int selection);
-void DrawButton();
+
 void DrawLeftButton(stu_Ptr Head);
 void drawMainPicture();
 void drawDate(int tmpnum, char* Date);
 void DrawTextZH(string str, double bx, double by);
 void DrawTextChar(string str, double bx, double by);
+void DrawArrow();
+void DrawLastTableNum();
+void Drawlegend();
+void DrawHistogram(double TableData[][2],int ClassDataNum);
 
 #define   MY_DRAW_K  20  //在画table的时候 两个x直接画多少个点
 
@@ -194,7 +198,35 @@ void HandleToolButton(int selection)
         IsOpenOther = 1;
     }
 }
+void DrawLastTableNum() {
+    stu_Ptr tmp = tail;
+    for (int i = 1; i <= ChooseDataNum; i++) {
+        if (IsChooseData[i]) {
+            string ShowNum = tostring(tmp->Data[i]);
+            MovePen(tmp->XPosition[i] + 0.05, tmp->YPosition[i]);
+            SetPenColor(COLOR[i]);
+            DrawTextString(ShowNum);
+            free(ShowNum);
+        }
+    }
+}
+void Drawlegend() {
 
+}
+void DrawArrow() {
+    SetPenColor("Black");
+    MovePen(endTableX, beginTableY);
+    DrawLine(-0.2 * PerX, 0.2 * PerX);
+    MovePen(endTableX, beginTableY);
+    DrawLine(-0.2 * PerX, -0.2 * PerX);
+    MovePen(beginTableX, endTableY);
+    DrawLine(-0.2 * (endTableY - beginTableY) / 7, -0.2 * (endTableY - beginTableY) / 7);
+    MovePen(beginTableX, endTableY);
+    DrawLine(0.2 * (endTableY - beginTableY) / 7, -0.2 * (endTableY - beginTableY) / 7);
+}
+void DrawHistogram(double TableData[][2], int num) {
+    //TODO
+}
 void drawMainPicture()
 {
 
@@ -205,9 +237,13 @@ void drawMainPicture()
         MovePen(beginTableX, beginTableY);
         if (IsChooseData[i]) {
             SetPenColor(COLOR[i]);
+            if(IsChooseData[i]==1)
             Cubic_Spline(TableData[i], ClassDataNum[i], MY_DRAW_K);
+            else {
+                DrawHistogram(TableData[i], ClassDataNum[i]);
+            }
         }
-
+       
     }   //!!!!   画线部分   核心 !!!!  用到三次样条插值法   感觉还行 找了一整天（
 
 
@@ -224,24 +260,26 @@ void drawMainPicture()
             ++tmpnum;
             drawDate(tmpnum, tmp->Date);   
           }
+      
         tmp = tmp->next;
     }      //画日期和两道线
 
     SetPenColor("Gray");
-    for (int i = 1; i <= 4; i++) {
-        MovePen(beginTableX, beginTableY + (endTableY - beginTableY) / 5 * i);
+    for (int i = 1; i <= 6; i++) {
+        MovePen(beginTableX, beginTableY + (endTableY - beginTableY) / 7 * i);
         DrawLine(endTableX - beginTableX, 0);
     }   //画线  
 
     SetPenColor("Black");
-    for (int i = 1; i <= 4; i++) {
+    for (int i = 1; i <= 6; i++) {
         string c = tostring(TableMark1 * i);
-        MovePen(beginTableX - 0.1 - TextStringWidth(c), beginTableY + (endTableY - beginTableY) / 5 * i);
+        MovePen(beginTableX - 0.1 - TextStringWidth(c), beginTableY + (endTableY - beginTableY) / 7 * i);
         DrawTextString(c);
         free(c);
     }
+    DrawArrow();
+    DrawLastTableNum();
 
-     
 }
 void DrawTextChar(string str,double bx,double by) {   //写字符（数字）
     string c;
