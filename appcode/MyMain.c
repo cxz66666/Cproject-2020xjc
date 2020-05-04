@@ -22,7 +22,7 @@
 #include <winuser.h>
 #include "PreWork.c"
 #include "MyDraw.c"
-
+#include "HandleMouse.c"
 // 窗口有关坐标  MaxX和MaxY
 
 
@@ -98,7 +98,8 @@ void MouseEventProcess(int x, int y, int button, int event)
 {
     // UI 获取鼠标事件
     uiGetMouse(x, y, button, event);
-    
+   if( HandleMouse(x, y, button, event)&&IsOpen==2)
+       Calculate();
    
     display();
 }

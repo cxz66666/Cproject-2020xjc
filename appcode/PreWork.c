@@ -26,8 +26,10 @@ void PreWork()
     MaxX = GetWindowWidth();
     MaxY = GetWindowHeight();
     DefineMycolor();
-    beginTableX = GetWindowWidth() * 0.2, beginTableY = GetWindowHeight() * 0.2;
-    endTableX = GetWindowWidth() * 0.8, endTableY = GetWindowHeight() * 0.9;
+   StaticbeginTableX= beginTableX = GetWindowWidth() * 0.2,
+     StaticbeginTableY= beginTableY = GetWindowHeight() * 0.2;
+   StaticendTableX=endTableX = GetWindowWidth() * 0.8, 
+      StaticendTableY= endTableY = GetWindowHeight() * 0.9;
     /*for (int i = 0; i < FileNum; i++)
         printf("%s\n", FileName[i]);*/
     
@@ -155,7 +157,7 @@ void AssignTable() {   //分配是用柱状图还是折线图
 }
 void Calculate()
 {
-  
+    memset(CubicEquation, 0, sizeof(CubicEquation));   //每次计算出的方程都不一样  都得清空了再说
     int ShowNum = 0;
     int Maxnum = 0;
     stu_Ptr tmp = head->next;

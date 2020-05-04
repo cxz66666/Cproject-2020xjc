@@ -3,7 +3,7 @@
 
 void parspl(double p[][2], int n, int k);
 void lineto(double x, double y);
-void Cubic_Spline(double data[][2], int num, int k);
+void Cubic_Spline(double data[][2], int num, int k,  int ColumnNum);
 
 
 
@@ -44,9 +44,9 @@ void parspl(double p[][2], int n, int k)
     }
     lineto(p[i + 2][0], p[i + 2][1]);
 }
-#define N 20   //ÀÁµÃÓÃmallocÁË  ¿ÉÒÔ¸ÄÏÂ
+#define N 50   //ÀÁµÃÓÃmallocÁË  ¿ÉÒÔ¸ÄÏÂ
 
-void Cubic_Spline(double data[][2], int num, int k)   //ÄÜÓÃ¾ÍĞĞÁË   ±ğ¹ÜÄÇÃ´¶àÁË Ğ¦¿Ş
+void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //ÄÜÓÃ¾ÍĞĞÁË   ±ğ¹ÜÄÇÃ´¶àÁË Ğ¦¿Ş
 {
     int i, j;
 
@@ -83,10 +83,15 @@ void Cubic_Spline(double data[][2], int num, int k)   //ÄÜÓÃ¾ÍĞĞÁË   ±ğ¹ÜÄÇÃ´¶àÁ
         b[j] = (y[j + 1] - y[j]) / h[j] - h[j] * (c[j + 1] + 2 * c[j]) / 3;
         d[j] = (c[j + 1] - c[j]) / (3 * h[j]);
     }
-
-   // printf("%2s %8s %8s %8s %8s\n", "i", "ai", "bi", "ci", "di");
-   // for (i = 0; i < n; ++i)
-     //   printf("%2d %8.2f %8.2f %8.2f %8.2f\n", i, y[i], b[i], c[i], d[i]);
+    for (i = 0; i < n; ++i) {
+        CubicEquation[ColumnNum][i][0] = y[i];
+        CubicEquation[ColumnNum][i][1] = b[i];
+        CubicEquation[ColumnNum][i][2] = c[i];
+        CubicEquation[ColumnNum][i][3] = d[i];
+    }
+    printf("%2s %8s %8s %8s %8s\n", "i", "ai", "bi", "ci", "di");
+    for (i = 0; i < n; ++i)
+        printf("%2d %8.2f %8.2f %8.2f %8.2f\n", i, y[i], b[i], c[i], d[i]);
     MovePen(x[0], y[0]);
     double tmpy = y[0], tmpx = x[0];
     double prey = tmpy;

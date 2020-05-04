@@ -10,15 +10,20 @@ void HandleToolButton(int selection);
 
 void DrawLeftButton(stu_Ptr Head);
 void drawMainPicture();
-void drawDate(int tmpnum, char* Date);
+void DrawEachDate(int tmpnum, char* Date);
+void DrawDate();
 void DrawTextZH(string str, double bx, double by);
 void DrawTextChar(string str, double bx, double by);
 void DrawArrow();
 void DrawLastTableNum();
 void Drawlegend();
 void DrawHistogram(double TableData[][2],int ClassDataNum);
-
-#define   MY_DRAW_K  20  //在画table的时候 两个x直接画多少个点
+void DrawXYLine();
+void DrawBaseline();
+void DrawMainLine();
+void Add(int num);
+void Delete(int num);
+#define   MY_DRAW_K  10  //在画table的时候 两个x直接画多少个点
 
 void DrawMenu()
 {
@@ -161,6 +166,9 @@ void DrawLeftButton(stu_Ptr Head)
         if (button(GenUIID(i), 0.1, 4 - (1.4 * i + 1.5) * GetFontHeight(), 0.15, 0.15, ""))
         {
             IsChooseColumn[i] = !IsChooseColumn[i];
+            if (IsChooseColumn[i]) 
+                Add(i); //把i加到已经选择的里面 
+            else Delete(i); //把i删去
             Calculate();
         
         }
@@ -236,6 +244,35 @@ void Drawlegend()  //画图例
     SetPenColor(precolor); //换回原来颜色
     SetPenSize(presize);   //换回原来尺寸
 }
+void DrawDate() {
+    SetPenColor("Black");
+    stu_Ptr tmp = head->next;
+    int tmpnum = 0;
+    while (tmp != NULL) {
+        if (tmp->IsSelect) {
+            ++tmpnum;
+            DrawEachDate(tmpnum, tmp->Date);
+        }
+        tmp = tmp->next;
+    }      //画日期和两道线
+}
+void DrawMainLine() {
+    SetPenSize(2);
+    DrawWithColumnNow = 0;   //已经画了几个柱状图了 因为 cxz设定最多画两个 所以好讨论
+    for (int i = 1; i <= TotalColumnNum; i++) {
+
+        MovePen(beginTableX, beginTableY);
+        if (IsChooseColumn[i]) {
+            SetPenColor(COLOR[i]);
+            if (IsChooseColumn[i] == 1)
+                Cubic_Spline(TableData[i], ClassDataNum[i], MY_DRAW_K, i);
+            else {
+                DrawHistogram(TableData[i], ClassDataNum[i]);
+            }
+        }
+
+    }   //!!!!   画线部分   核心 !!!!  曲线用到三次样条插值法  柱状图倒没啥  感觉还行 找了一整天（
+}
 void DrawArrow() {
     SetPenColor("Black");
     MovePen(endTableX, beginTableY);
@@ -267,45 +304,21 @@ void DrawHistogram(double TableData[][2], int num) {
         }
     }
 }
-void drawMainPicture()
-{
-
-
-    SetPenSize(2);
-    DrawWithColumnNow = 0;
-
-    for (int i = 1; i <= TotalColumnNum; i++) {
-     
-        MovePen(beginTableX, beginTableY);
-        if (IsChooseColumn[i]) {
-            SetPenColor(COLOR[i]);
-            if(IsChooseColumn[i]==1)
-            Cubic_Spline(TableData[i], ClassDataNum[i], MY_DRAW_K);
-            else {
-                DrawHistogram(TableData[i], ClassDataNum[i]);
-            }
-        }
-       
-    }   //!!!!   画线部分   核心 !!!!  曲线用到三次样条插值法  柱状图倒没啥  感觉还行 找了一整天（
-
-    printf("DrawWithColumn is  %d\n", DrawWithColumn);
-    SetPenColor("Black");
+void Add(int num) {
+    ChoosedColumn[++ChooseColumnNum] = num;
+}
+void Delete(int num) {
+    int i;
+    for (i = 1; i <= ChooseColumnNum; i++) {
+        if (ChoosedColumn[i] == num)
+            break;
+    }
+    for (i; i < ChooseColumnNum; i++)
+        ChoosedColumn[i] = ChoosedColumn[i + 1];
+    ChooseColumnNum--;
+}
+void DrawBaseline() {
     SetPenSize(1);
-    MovePen(beginTableX, beginTableY);   //两条线x轴y轴
-    DrawLine(endTableX - beginTableX,0);
-    MovePen(beginTableX, beginTableY);
-    DrawLine(0, endTableY - beginTableY);
-    stu_Ptr tmp = head->next;
-    int tmpnum = 0;
-    while (tmp != NULL) {
-        if (tmp->IsSelect) {
-            ++tmpnum;
-            drawDate(tmpnum, tmp->Date);   
-          }
-      
-        tmp = tmp->next;
-    }      //画日期和两道线
-
     SetPenColor("Gray");
     for (int i = 1; i <= 6; i++) {
         MovePen(beginTableX, beginTableY + (endTableY - beginTableY) / 7 * i);
@@ -319,6 +332,28 @@ void drawMainPicture()
         DrawTextString(c);
         free(c);
     }
+}
+void DrawXYLine() {
+    SetPenColor("Black");
+    SetPenSize(1);
+
+    MovePen(beginTableX, beginTableY);   //两条线x轴y轴
+    DrawLine(endTableX - beginTableX, 0);
+    MovePen(beginTableX, beginTableY);
+    DrawLine(0, endTableY - beginTableY);
+}
+void drawMainPicture()
+{
+
+
+    DrawMainLine();  //最重要的曲线 啊啊还有柱状图
+
+   // printf("DrawWithColumn is  %d\n", DrawWithColumn);
+   
+    DrawDate();
+
+    DrawXYLine();   //画出xy轴   如果选中就高亮
+    DrawBaseline(); //画y轴上的六条基准线
     DrawArrow();   //xy轴的箭头
     DrawLastTableNum();   //最后的数字显示
     Drawlegend();   //画图例
@@ -350,7 +385,7 @@ void DrawTextZH(string str,double bx,double by) {   //写中文
     DrawTextString(c);
     //free(c);
 }
-void drawDate(int tmpnum, char* Date)
+void DrawEachDate(int tmpnum, char* Date)
 {
     SetPointSize(15);
     double midx = tmpnum * PerX+beginTableX;

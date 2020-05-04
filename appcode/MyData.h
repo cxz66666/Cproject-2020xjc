@@ -18,6 +18,8 @@ int FileTotalNum;    //一共多少日期
 int TotalColumnNum ;  //一共有多少列  就是类似 全国感染   湖北感染  全国疑似这种列
 BOOL IsChooseColumn[13];  //是否选择了该列  
 int ChooseColumnNum;
+int ChoosedColumn[13];
+
 char *ColumnName[20];  //每一列的名字
 char FilePath[100];   //文件路径
 char *FileName[20];   //各个文件名
@@ -25,10 +27,12 @@ int FileNum;  //总文件数目
 
 double beginTableX, beginTableY;   //开始画图的xy
 double endTableX, endTableY;   //结束画图的xy
+double StaticbeginTableX, StaticbeginTableY;  //定死的数据
+double StaticendTableX, StaticendTableY;
 int TableMark1, TableMark2, TableMark3, TableMark4, TableMark5,TableMark6;    //第1234条y轴上的灰色线
 
 double TableData[13][30][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
-
+double CubicEquation[13][50][4]; //放三次方程的数据  第一个为各列   第二个为日期    第三个分别为a b c d  对应 y=a+bx+cx^2+dx^3
 
 double PerX, PerY;      //单位长度的xy
 double FontHeight, FontAscent, FontDescent; //见定义
@@ -48,6 +52,8 @@ int DrawWithColumnNow;       //如果用折线画那么画到第几个了   反正就俩 大力讨论
 double ColumnWidth;    //柱状图的宽度
 
 
+
+
 typedef struct stu* stu_Ptr;
 struct stu    //每一天
 {
@@ -65,5 +71,7 @@ struct stu    //每一天
 struct stu *head, *ptr,*tail;
 
 
-BOOL IsChooseXaxis, IsChooseYaxis;    //是否选中了xy轴 进行拉伸缩短等操作
-double ChangedXaxisPosition, ChangeYaxisPosition;
+BOOL IsChooseXaxis, IsChooseYaxis,IsChooseLine;    //是否选中了xy轴 进行拉伸缩短等操作
+
+double ChooseLineMoveX, ChooseLineMoveY;    // 选择的线的移动的x，y
+int ChooseLineNum;  //选中的column的序号   从1开始计数
