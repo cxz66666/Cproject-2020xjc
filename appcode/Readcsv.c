@@ -70,7 +70,7 @@ BOOL ReadCSVFile(char *Name)
           
             if (flag)
             {
-                int tmpnum = num % (ChooseDataNum + 1);
+                int tmpnum = num % (TotalColumnNum + 1);
                 switch (tmpnum)
                 {
                 case 1:
@@ -85,7 +85,7 @@ BOOL ReadCSVFile(char *Name)
                     /* code */
                     break;
                 case 0:
-                    STU->Data[4] = stoi(buffer);
+                    STU->Data[TotalColumnNum] = stoi(buffer);
                     STU->next = NULL;
                     ptr->next = STU;
                     ptr = ptr->next;
@@ -97,13 +97,13 @@ BOOL ReadCSVFile(char *Name)
             }
             else
             {
-                ChooseData[num - 1] = (char *)malloc(sizeof(buffer) + 1); //这里放的是每列的表头   第一个是日期 所以跳过   所有的chooseData都从一开始计数
-                strcpy(ChooseData[num - 1], buffer);
-                // printf("%s\n", ChooseData[num - 1]);
+                ColumnName[num - 1] = (char *)malloc(sizeof(buffer) + 1); //这里放的是每列的表头   第一个是日期 所以跳过   所有的ColumnName都从一开始计数
+                strcpy(ColumnName[num - 1], buffer);
+                // printf("%s\n", ColumnName[num - 1]);
             }
             if (!flag && flagbuffer[0] == 10) {   //读到换行了  10就是换行
                 flag = 1;  //flag标志是否开始创建struct
-                ChooseDataNum = num-1  ;   //减一的原因是算了日期 
+                TotalColumnNum = num-1  ;   //减一的原因是算了"日期" 
                 printf("num is %d\n", num);
 
             }

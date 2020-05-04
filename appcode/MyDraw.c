@@ -147,7 +147,7 @@ void DrawLeftButton(stu_Ptr Head)
         nowNum++;
         if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * nowNum + 1.5) * GetFontHeight(), 0.08, 0.08, ""))
         {
-            Head->IsSelect = 1 - (Head->IsSelect);
+            Head->IsSelect = !(Head->IsSelect);
             Calculate();
 
         }
@@ -155,16 +155,16 @@ void DrawLeftButton(stu_Ptr Head)
         Head = Head->next;
     }
 
-    for (int i = 1; i <= ChooseDataNum; i++)
+    for (int i = 1; i <= TotalColumnNum; i++)
     {
-        setButtonColors("Orange", "Red", "Black", "Red", IsChooseData[i]);
+        setButtonColors("Orange", "Red", "Black", "Red", IsChooseColumn[i]);
         if (button(GenUIID(i), 0.1, 4 - (1.4 * i + 1.5) * GetFontHeight(), 0.15, 0.15, ""))
         {
-            IsChooseData[i] = 1 - IsChooseData[i];
+            IsChooseColumn[i] = !IsChooseColumn[i];
             Calculate();
         
         }
-        drawLabel(0.4, 4 - (1.4 * i + 1.5) * GetFontHeight(), ChooseData[i]);
+        drawLabel(0.4, 4 - (1.4 * i + 1.5) * GetFontHeight(), ColumnName[i]);
     }
 }
 
@@ -200,8 +200,8 @@ void HandleToolButton(int selection)
 }
 void DrawLastTableNum() {
     stu_Ptr tmp = tail;
-    for (int i = 1; i <= ChooseDataNum; i++) {
-        if (IsChooseData[i]) {
+    for (int i = 1; i <= TotalColumnNum; i++) {
+        if (IsChooseColumn[i]) {
             string ShowNum = tostring(tmp->Data[i]);
             MovePen(tmp->XPosition[i] + 0.05, tmp->YPosition[i]);
             SetPenColor(COLOR[i]);
@@ -210,43 +210,85 @@ void DrawLastTableNum() {
         }
     }
 }
-void Drawlegend() {
+void Drawlegend()  //画图例 
+{  
+    double  NowX = beginTableX + PerX,NowY=beginTableY/2.5;
+    int presize = GetPenSize();
+    string precolor = GetPenColor();
+    for (int i = 1; i <=TotalColumnNum; i++) {
+        if (IsChooseColumn[i]) {
+            NowX += 0.8;  //0.8是两两是间隔
 
+            MovePen(NowX, NowY);
+         
+           IsChooseColumn[i]==1? SetPenSize(2):SetPenSize(5);     //画的是折线还是柱
+            SetPenColor(COLOR[i]);
+            DrawLine(0.6, 0);
+            MovePen(GetCurrentX() + 0.25, GetCurrentY());         
+            DrawTextString(ColumnName[i]);
+
+            NowX = GetCurrentX(), NowY = GetCurrentY();
+            if (NowX > endTableX - PerX)
+                NowY -= FontHeight * 1.5;
+        }
+     
+    }
+    SetPenColor(precolor); //换回原来颜色
+    SetPenSize(presize);   //换回原来尺寸
 }
 void DrawArrow() {
     SetPenColor("Black");
     MovePen(endTableX, beginTableY);
-    DrawLine(-0.2 * PerX, 0.2 * PerX);
+    DrawLine(-0.2, 0.2 );
     MovePen(endTableX, beginTableY);
-    DrawLine(-0.2 * PerX, -0.2 * PerX);
+    DrawLine(-0.2 , -0.2 );
     MovePen(beginTableX, endTableY);
-    DrawLine(-0.2 * (endTableY - beginTableY) / 7, -0.2 * (endTableY - beginTableY) / 7);
+    DrawLine(-0.2 , -0.2 );
     MovePen(beginTableX, endTableY);
-    DrawLine(0.2 * (endTableY - beginTableY) / 7, -0.2 * (endTableY - beginTableY) / 7);
+    DrawLine(0.2 , -0.2 );
 }
 void DrawHistogram(double TableData[][2], int num) {
-    //TODO
+    if (DrawWithColumn == 2) {
+        if (!DrawWithColumnNow) {
+            DrawWithColumnNow ++;   //就是存到底画几个柱状图  烦死我了
+            for (int i = 1; i <= num; i++) {
+                drawRectangle(TableData[i][0], beginTableY, -1 * ColumnWidth, TableData[i][1] - beginTableY, 1);
+            }
+        }
+        else {
+            for (int i = 1; i <= num; i++) {
+                drawRectangle(TableData[i][0], beginTableY,  ColumnWidth, TableData[i][1] - beginTableY, 1);
+            }
+        }
+    }
+    else if(DrawWithColumn==1){
+        for (int i = 1; i <= num; i++) {
+            drawRectangle(TableData[i][0]-ColumnWidth/2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
+        }
+    }
 }
 void drawMainPicture()
 {
 
 
     SetPenSize(2);
-    for (int i = 1; i <= ChooseDataNum; i++) {
+    DrawWithColumnNow = 0;
+
+    for (int i = 1; i <= TotalColumnNum; i++) {
      
         MovePen(beginTableX, beginTableY);
-        if (IsChooseData[i]) {
+        if (IsChooseColumn[i]) {
             SetPenColor(COLOR[i]);
-            if(IsChooseData[i]==1)
+            if(IsChooseColumn[i]==1)
             Cubic_Spline(TableData[i], ClassDataNum[i], MY_DRAW_K);
             else {
                 DrawHistogram(TableData[i], ClassDataNum[i]);
             }
         }
        
-    }   //!!!!   画线部分   核心 !!!!  用到三次样条插值法   感觉还行 找了一整天（
+    }   //!!!!   画线部分   核心 !!!!  曲线用到三次样条插值法  柱状图倒没啥  感觉还行 找了一整天（
 
-
+    printf("DrawWithColumn is  %d\n", DrawWithColumn);
     SetPenColor("Black");
     SetPenSize(1);
     MovePen(beginTableX, beginTableY);   //两条线x轴y轴
@@ -277,8 +319,9 @@ void drawMainPicture()
         DrawTextString(c);
         free(c);
     }
-    DrawArrow();
-    DrawLastTableNum();
+    DrawArrow();   //xy轴的箭头
+    DrawLastTableNum();   //最后的数字显示
+    Drawlegend();   //画图例
 
 }
 void DrawTextChar(string str,double bx,double by) {   //写字符（数字）

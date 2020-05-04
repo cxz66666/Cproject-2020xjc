@@ -15,9 +15,10 @@ int IsOpenOther;
 int IsOpenAdvance;
 
 int FileTotalNum;    //一共多少日期
-int ChooseDataNum ;  //一共有多少列  就是类似 全国感染   湖北感染  全国疑似这种列
-BOOL IsChooseData[10];  //是否选择了该列  
-char *ChooseData[20];  //每一列的名字
+int TotalColumnNum ;  //一共有多少列  就是类似 全国感染   湖北感染  全国疑似这种列
+BOOL IsChooseColumn[13];  //是否选择了该列  
+int ChooseColumnNum;
+char *ColumnName[20];  //每一列的名字
 char FilePath[100];   //文件路径
 char *FileName[20];   //各个文件名
 int FileNum;  //总文件数目
@@ -26,7 +27,7 @@ double beginTableX, beginTableY;   //开始画图的xy
 double endTableX, endTableY;   //结束画图的xy
 int TableMark1, TableMark2, TableMark3, TableMark4, TableMark5,TableMark6;    //第1234条y轴上的灰色线
 
-double TableData[10][30][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
+double TableData[13][30][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
 
 
 double PerX, PerY;      //单位长度的xy
@@ -35,7 +36,16 @@ double FontHeight, FontAscent, FontDescent; //见定义
 char* COLOR[] = { "NULL","TableColor1","TableColor2" ,"TableColor3" , "TableColor4" , "TableColor5" , "TableColor6" ,
 "TableColor7" , "TableColor8","TableColor9","TableColor10","TableColor11","TableColor12" };    //画图颜色
 
-int ClassDataNum[10];    //用来存放每个种类的日期数量
+int ClassDataNum[13];    //用来存放每个种类的展示的日期数量
+
+
+int ShowDateNum; //选中的日期数
+
+int DrawWithLine, DrawWithColumn; //用折线图画的   用散点图画的数   折线图不能超锅两个   超过两个画图显示效果就很可惜了
+int DrawWithColumnNow;       //如果用折线画那么画到第几个了   反正就俩 大力讨论
+
+
+double ColumnWidth;    //柱状图的宽度
 
 
 typedef struct stu* stu_Ptr;
@@ -53,3 +63,7 @@ struct stu    //每一天
 
 } *STU;
 struct stu *head, *ptr,*tail;
+
+
+BOOL IsChooseXaxis, IsChooseYaxis;    //是否选中了xy轴 进行拉伸缩短等操作
+double ChangedXaxisPosition, ChangeYaxisPosition;

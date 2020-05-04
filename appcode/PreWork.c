@@ -27,10 +27,10 @@ void PreWork()
     MaxY = GetWindowHeight();
     DefineMycolor();
     beginTableX = GetWindowWidth() * 0.2, beginTableY = GetWindowHeight() * 0.2;
-    endTableX = GetWindowWidth() * 0.9, endTableY = GetWindowHeight() * 0.9;
+    endTableX = GetWindowWidth() * 0.8, endTableY = GetWindowHeight() * 0.9;
     /*for (int i = 0; i < FileNum; i++)
         printf("%s\n", FileName[i]);*/
-    IsChooseData[1] = 1;
+    
 
 }
 void FindCSV()
@@ -108,11 +108,49 @@ BOOL CheckName(char* name)
     }
     return 0;
 }
-void AssignTable() {
-    if (ChooseDataNum&&ChooseDataNum <= 2)      //是二代表柱状图  一代表折线图
-        IsChooseData[1] = 2;
-    else if (ChooseDataNum >= 4)
-        IsChooseData[1] = IsChooseData[2] = 2;
+void AssignTable() {   //分配是用柱状图还是折线图
+    ChooseColumnNum = 0;    //一共多少列被选中了
+    for (int i = 1; i <= TotalColumnNum; i++) {
+        if (IsChooseColumn[i])
+            IsChooseColumn[i] = 1, ChooseColumnNum++;   //无论是1还是2 都先设为1
+    }
+
+    if (ChooseColumnNum && ChooseColumnNum <4)      //是二代表柱状图  一代表折线图  原来默认是1  那我只要改成2 就行
+    {
+        for (int i = 1; i <= TotalColumnNum; i++) {
+            if (IsChooseColumn[i] == 1)
+            {
+                IsChooseColumn[i] = 2;
+                break;
+            }
+        }
+       
+        DrawWithColumn = 1;
+        DrawWithLine = TotalColumnNum - 1;
+    }
+    else if (ChooseColumnNum >= 4)
+    {
+        int i;
+        for (i = 1; i <= TotalColumnNum; i++) {
+            if (IsChooseColumn[i] == 1)
+            {
+                IsChooseColumn[i] = 2;
+                break;
+            }
+        }
+        for (i; i <= TotalColumnNum; i++) {
+            if (IsChooseColumn[i] == 1)
+            {
+                IsChooseColumn[i] = 2;
+                break;
+            }
+        }
+
+        DrawWithColumn = 2;
+        DrawWithLine = TotalColumnNum - 2;
+
+    }
+        
         
 }
 void Calculate()
@@ -121,24 +159,25 @@ void Calculate()
     int ShowNum = 0;
     int Maxnum = 0;
     stu_Ptr tmp = head->next;
-    while (tmp != NULL)
+    while (tmp != NULL)  
     {
      
         if (tmp->IsSelect)
         {
+            tail = tmp;   //tail表示的是最后一个被选中的日期
             ShowNum++;
-            for (int i = 1; i <= ChooseDataNum; i++)
+            for (int i = 1; i <= TotalColumnNum; i++)
             {
-                if (IsChooseData[i])
+                if (IsChooseColumn[i])
                 {
                     Maxnum = max(Maxnum, tmp->Data[i]);
                 }
             }
         }
-        if (tmp->next == NULL)
-            tail = tmp;
+
         tmp = tmp->next;
     }
+    ShowDateNum = ShowNum;   //显示的日期数目
     //printf("Maxnum=%d   ShowNum=%d\n", Maxnum,ShowNum);
     if (Maxnum > 1000) {
  
@@ -169,9 +208,10 @@ void Calculate()
 
     while (tmp != NULL) {
         if (tmp->IsSelect) {
+           
             tmpX++;
-            for (int i = 1; i <= ChooseDataNum; i++) {
-                if (IsChooseData[i]) {
+            for (int i = 1; i <= TotalColumnNum; i++) {
+                if (IsChooseColumn[i]) {
                     
                     tmp->XPosition[i] = tmpX * PerX + beginTableX;                 //对这个TableData和结构体里的X，Yposition赋同样的值
                     TableData[i][++ClassDataNum[i]][0] = tmpX * PerX + beginTableX;
@@ -189,5 +229,5 @@ void Calculate()
         tmp = tmp->next;
     }
     AssignTable();//把折线图的设为1   柱状图设为2     柱状图数目不超过两个 尽量平均分配
-
+    ColumnWidth = min(0.2, 0.25 * PerX);
 }
