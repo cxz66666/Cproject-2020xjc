@@ -1,7 +1,8 @@
 #pragma once
 
 #include"MyData.h"
-
+#include <direct.h>
+#define  SHOWTIMEPRE 0 //输出运行时间
 
 void PreWork();
 void FindCSV();
@@ -78,6 +79,7 @@ void DefineMycolor()
 
     DefineColor("DirSelectionFrameHot", 91.0 / 255, 192.0 / 255, 235.0 / 255); //文件选择框
     DefineColor("DirSelectionFrame", 112.0 / 255, 214.0 / 255, 1.0);
+    DefineColor("ChoosedColor", 254.0 / 255, 95.0 / 255, 85.0 / 255); //选中后的颜色
 
     DefineColor("DataButton", 218.0 / 255, 215.0 / 255, 205.0 / 255); //日期选择框的颜色
 
@@ -102,7 +104,8 @@ BOOL CheckName(char* name)
         return 0;
     else
     {
-        for (int i = 0; i < FileNum; i++)
+    	int i;
+        for (i = 0; i < FileNum; i++)
         {
             if (!strcmp(name, FileName[i]))
                 return 1;
@@ -111,43 +114,25 @@ BOOL CheckName(char* name)
     return 0;
 }
 void AssignTable() {   //分配是用柱状图还是折线图
-    ChooseColumnNum = 0;    //一共多少列被选中了
-    for (int i = 1; i <= TotalColumnNum; i++) {
-        if (IsChooseColumn[i])
-            IsChooseColumn[i] = 1, ChooseColumnNum++;   //无论是1还是2 都先设为1
+   //一共多少列被选中了
+   int i;
+    for (i=1; i <= ChooseColumnNum; i++) {
+        int column = ChoosedColumn[i];
+            IsChooseColumn[column] = 1;   //无论是1还是2 都先设为1
     }
 
     if (ChooseColumnNum && ChooseColumnNum <4)      //是二代表柱状图  一代表折线图  原来默认是1  那我只要改成2 就行
     {
-        for (int i = 1; i <= TotalColumnNum; i++) {
-            if (IsChooseColumn[i] == 1)
-            {
-                IsChooseColumn[i] = 2;
-                break;
-            }
-        }
-       
+        int change1 = ChoosedColumn[1];    //把第一个选中的置为2
+        IsChooseColumn[change1] = 2;
+      
         DrawWithColumn = 1;
         DrawWithLine = TotalColumnNum - 1;
     }
     else if (ChooseColumnNum >= 4)
     {
-        int i;
-        for (i = 1; i <= TotalColumnNum; i++) {
-            if (IsChooseColumn[i] == 1)
-            {
-                IsChooseColumn[i] = 2;
-                break;
-            }
-        }
-        for (i; i <= TotalColumnNum; i++) {
-            if (IsChooseColumn[i] == 1)
-            {
-                IsChooseColumn[i] = 2;
-                break;
-            }
-        }
-
+        int change1 = ChoosedColumn[1],change2 = ChoosedColumn[2];
+        IsChooseColumn[change1] = 2, IsChooseColumn[change2] = 2;
         DrawWithColumn = 2;
         DrawWithLine = TotalColumnNum - 2;
 
@@ -157,6 +142,11 @@ void AssignTable() {   //分配是用柱状图还是折线图
 }
 void Calculate()
 {
+#if  SHOWTIMEPRE
+    clock_t start_time, end_time;
+    start_time = clock();   //获取开始执行时间
+#endif //  SHOWTIME
+
     memset(CubicEquation, 0, sizeof(CubicEquation));   //每次计算出的方程都不一样  都得清空了再说
     int ShowNum = 0;
     int Maxnum = 0;
@@ -168,12 +158,13 @@ void Calculate()
         {
             tail = tmp;   //tail表示的是最后一个被选中的日期
             ShowNum++;
-            for (int i = 1; i <= TotalColumnNum; i++)
+            int i; 
+            for (i=1; i <= ChooseColumnNum; i++)
             {
-                if (IsChooseColumn[i])
-                {
-                    Maxnum = max(Maxnum, tmp->Data[i]);
-                }
+                int column = ChoosedColumn[i];
+                
+                    Maxnum = max(Maxnum, tmp->Data[column]);
+                
             }
         }
 
@@ -212,18 +203,20 @@ void Calculate()
         if (tmp->IsSelect) {
            
             tmpX++;
-            for (int i = 1; i <= TotalColumnNum; i++) {
-                if (IsChooseColumn[i]) {
+            int  i; 
+            for (i=1; i <= ChooseColumnNum; i++) {
+                 {
+                    int column = ChoosedColumn[i];
                     
-                    tmp->XPosition[i] = tmpX * PerX + beginTableX;                 //对这个TableData和结构体里的X，Yposition赋同样的值
-                    TableData[i][++ClassDataNum[i]][0] = tmpX * PerX + beginTableX;
+                    tmp->XPosition[column] = tmpX * PerX + beginTableX;                 //对这个TableData和结构体里的X，Yposition赋同样的值
+                    TableData[column][++ClassDataNum[column]][0] = tmpX * PerX + beginTableX;
                 
 
-                    tmp->YPosition[i] = beginTableY + tmp->Data[i] * PerY;
-                    TableData[i][ClassDataNum[i]][1] = beginTableY + tmp->Data[i] * PerY;   //对y赋值
-                 //   printf("%d\n", tmp->Data[i]);
-                    //if(i==2)
-                  //  printf("这是第%d个元素 第%d种数据 其xy分别为%.3lf %.3lf\n", tmpX, i, tmp->XPosition[i], tmp->YPosition[i]);
+                    tmp->YPosition[column] = beginTableY + tmp->Data[column] * PerY;
+                    TableData[column][ClassDataNum[column]][1] = beginTableY + tmp->Data[column] * PerY;   //对y赋值
+                 //   printf("%d\n", tmp->Data[column]);
+                  
+                  //  printf("这是第%d个元素 第%d种数据 其xy分别为%.3lf %.3lf\n", tmpX, i, tmp->XPosition[column], tmp->YPosition[column]);
                 }
             }
          
@@ -232,4 +225,12 @@ void Calculate()
     }
     AssignTable();//把折线图的设为1   柱状图设为2     柱状图数目不超过两个 尽量平均分配
     ColumnWidth = min(0.2, 0.25 * PerX);
+    
+#if  SHOWTIMEPRE
+    end_time = clock();     //获取结束时间
+    double Times = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+    printf("计算用时为%lf seconds\n", Times);
+
+#endif //  SHOWTIME
+
 }

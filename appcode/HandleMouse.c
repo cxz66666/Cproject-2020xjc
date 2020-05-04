@@ -1,9 +1,10 @@
 #pragma once
 #include "MyData.h"
-
+#include "graphics.h"
 #define   XTOLERANCE  0.1   //选中xy轴伸缩的允许误差
 #define   YTOLERANCE  0.1
 #define   LINETOLERANCE  0.08   //选中直线移动的允许误差
+
 BOOL  ChooseXaxis(double nowx,double  nowy);
 BOOL  ChooseYaxis(double nowx,double  nowy);
 BOOL  ChooseLine(double nowx, double  nowy);
@@ -31,15 +32,21 @@ BOOL ChooseLine(double nowx, double nowy) {
 
 	double MinPos = 0;
 	int tmpNum=0;
-
-	for (int i = 1; i <= TotalColumnNum; i++) {
+	int i;
+	for (i = 1; i <= TotalColumnNum; i++) {
 		if (IsChooseColumn[i] == 1) {
 			double* PtrTmp = CubicEquation[i][SNum];   //这个指针放着 abcd   就是三次多项式的方程
-			double xtmp = nowx - (SNum + 1) * i;    // 放当前nowx到前一个节点的横向距离
+			double xtmp = nowx - (SNum + (double)1) * PerX-beginTableX;    // 放当前nowx到前一个节点的横向距离
 			double postmp = PtrTmp[0] + xtmp * PtrTmp[1] + pow(xtmp, 2) * PtrTmp[2] + pow(xtmp, 3) * PtrTmp[3];
-			
+		//	printf("snum=%d  nowx=%lf\n", SNum,nowx);
+			//printf("PerX为%lf  tmpx为%lf  计算出来的y值为%lf   鼠标y值为%lf \n  ",PerX,xtmp, postmp,nowy);
+	
+			SetPenColor("Black");
+			SetPenSize(2);
+			MovePen(nowx, postmp);
+			DrawLine(0, 0.5);
 
-			if (nowy - postmp < LINETOLERANCE) {
+			if (fabs(nowy - postmp) < LINETOLERANCE) {
 				if (MinPos == 0) {
 					MinPos = nowy - postmp;
 					tmpNum = i;
@@ -97,8 +104,9 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 			IsMove = FALSE;
 		break;
 	case MOUSEMOVE:
-		ReCalculate = TRUE;
+		
 		if (IsMove) {
+			ReCalculate = TRUE;
 			if (IsChooseXaxis) {
 				endTableX += nowx - oldx;
 			}

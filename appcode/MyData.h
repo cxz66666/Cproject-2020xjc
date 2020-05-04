@@ -1,5 +1,7 @@
 #pragma once 
-// 窗口有关坐标  MaxX和MaxY
+
+#include "genlib.h"
+#include "minwindef.h"
 double MaxX, MaxY; //最大宽度 长度
 
 double lx = -1, ly = -1;
@@ -16,9 +18,9 @@ int IsOpenAdvance;
 
 int FileTotalNum;    //一共多少日期
 int TotalColumnNum ;  //一共有多少列  就是类似 全国感染   湖北感染  全国疑似这种列
-BOOL IsChooseColumn[13];  //是否选择了该列  
-int ChooseColumnNum;
-int ChoosedColumn[13];
+BOOL IsChooseColumn[13];  //是否选择了该列    只要非零都为选中 
+int ChooseColumnNum;   //选中的column的数目
+int ChoosedColumn[13];   //放所有选中的column的序号  
 
 char *ColumnName[20];  //每一列的名字
 char FilePath[100];   //文件路径

@@ -6,6 +6,7 @@
 #include "graphics.h"
 #include "imgui.h"
 #include "simpio.h"
+#include "time.h"
 #include <Windows.h>
 #include <direct.h>
 #include <io.h>
@@ -61,10 +62,12 @@ void Main()
 // 显示界面
 void display()
 {
+    
     DisplayClear();
     DrawMenu();
     // 黑色选择按钮
     DrawMain();
+
 }
 
 
@@ -97,9 +100,11 @@ void DrawPicture(stu_Ptr Head)
 void MouseEventProcess(int x, int y, int button, int event)
 {
     // UI 获取鼠标事件
+  
     uiGetMouse(x, y, button, event);
-   if( HandleMouse(x, y, button, event)&&IsOpen==2)
-       Calculate();
+    if (HandleMouse(x, y, button, event) && IsOpen == 2)
+        Calculate(); //如果移动了  重新计算
+    
    
     display();
 }

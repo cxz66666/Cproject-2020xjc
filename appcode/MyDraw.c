@@ -24,7 +24,7 @@ void DrawMainLine();
 void Add(int num);
 void Delete(int num);
 #define   MY_DRAW_K  10  //在画table的时候 两个x直接画多少个点
-
+#define  SHOWTIMEDRAW 0 //输出运行时间
 void DrawMenu()
 {
     static char *menuListFile[] = {"File",
@@ -71,7 +71,8 @@ void DrawOpenDir()
         sprintf(tmplabel, "当前目录下共有%d个csv文件", FileNum);
         drawLabel(MaxX / 2 - TextStringWidth(tmplabel) / 2, BeginY, tmplabel);
         setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
-        for (int i = 1; i <= FileNum; i++)
+        int i;
+		for ( i= 1; i <= FileNum; i++)
         {
             printf("1\n");
             if (button(GenUIID(i - 1), MaxX / 2 - TextStringWidth(NameDemo), BeginY - i * BoxHeight * 1.5 + 0.25 * BoxHeight, TextStringWidth(NameDemo) * 2, BoxHeight, FileName[i - 1]))
@@ -159,8 +160,8 @@ void DrawLeftButton(stu_Ptr Head)
         drawLabel(0.3, MaxY - (1.2 * nowNum + 1.5) * GetFontHeight(), Head->Date);
         Head = Head->next;
     }
-
-    for (int i = 1; i <= TotalColumnNum; i++)
+	int i;
+    for (i=1; i <= TotalColumnNum; i++)
     {
         setButtonColors("Orange", "Red", "Black", "Red", IsChooseColumn[i]);
         if (button(GenUIID(i), 0.1, 4 - (1.4 * i + 1.5) * GetFontHeight(), 0.15, 0.15, ""))
@@ -208,14 +209,15 @@ void HandleToolButton(int selection)
 }
 void DrawLastTableNum() {
     stu_Ptr tmp = tail;
-    for (int i = 1; i <= TotalColumnNum; i++) {
-        if (IsChooseColumn[i]) {
-            string ShowNum = tostring(tmp->Data[i]);
-            MovePen(tmp->XPosition[i] + 0.05, tmp->YPosition[i]);
-            SetPenColor(COLOR[i]);
+    int i;
+    for (i=1; i <= ChooseColumnNum; i++) {
+        int column = ChoosedColumn[i];
+            string ShowNum = tostring(tmp->Data[column]);
+            MovePen(tmp->XPosition[column] + 0.05, tmp->YPosition[column]);
+            SetPenColor(COLOR[column]);
             DrawTextString(ShowNum);
             free(ShowNum);
-        }
+        
     }
 }
 void Drawlegend()  //画图例 
@@ -223,22 +225,23 @@ void Drawlegend()  //画图例
     double  NowX = beginTableX + PerX,NowY=beginTableY/2.5;
     int presize = GetPenSize();
     string precolor = GetPenColor();
-    for (int i = 1; i <=TotalColumnNum; i++) {
-        if (IsChooseColumn[i]) {
+    int i;
+    for (i = 1; i <=ChooseColumnNum; i++) {
+        int column = ChoosedColumn[i];
             NowX += 0.8;  //0.8是两两是间隔
 
             MovePen(NowX, NowY);
          
-           IsChooseColumn[i]==1? SetPenSize(2):SetPenSize(5);     //画的是折线还是柱
-            SetPenColor(COLOR[i]);
+           IsChooseColumn[column]==1? SetPenSize(2):SetPenSize(5);     //画的是折线还是柱
+            SetPenColor(COLOR[column]);
             DrawLine(0.6, 0);
             MovePen(GetCurrentX() + 0.25, GetCurrentY());         
-            DrawTextString(ColumnName[i]);
+            DrawTextString(ColumnName[column]);
 
             NowX = GetCurrentX(), NowY = GetCurrentY();
             if (NowX > endTableX - PerX)
                 NowY -= FontHeight * 1.5;
-        }
+        
      
     }
     SetPenColor(precolor); //换回原来颜色
@@ -257,19 +260,25 @@ void DrawDate() {
     }      //画日期和两道线
 }
 void DrawMainLine() {
-    SetPenSize(2);
+    
     DrawWithColumnNow = 0;   //已经画了几个柱状图了 因为 cxz设定最多画两个 所以好讨论
-    for (int i = 1; i <= TotalColumnNum; i++) {
-
+    int i;
+    for (i=1; i <= ChooseColumnNum; i++) {
+        SetPenSize(2);
         MovePen(beginTableX, beginTableY);
-        if (IsChooseColumn[i]) {
-            SetPenColor(COLOR[i]);
-            if (IsChooseColumn[i] == 1)
-                Cubic_Spline(TableData[i], ClassDataNum[i], MY_DRAW_K, i);
-            else {
-                DrawHistogram(TableData[i], ClassDataNum[i]);
-            }
+        int column = ChoosedColumn[i];
+        SetPenColor(COLOR[column]);
+        if (IsChooseLine && column == ChooseLineNum) {
+            SetPenColor("ChoosedColor");
+            SetPenSize(3);
         }
+          
+            if (IsChooseColumn[column] == 1)
+                Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, i);
+            else {
+                DrawHistogram(TableData[column], ClassDataNum[column]);
+            }
+        
 
     }   //!!!!   画线部分   核心 !!!!  曲线用到三次样条插值法  柱状图倒没啥  感觉还行 找了一整天（
 }
@@ -288,18 +297,21 @@ void DrawHistogram(double TableData[][2], int num) {
     if (DrawWithColumn == 2) {
         if (!DrawWithColumnNow) {
             DrawWithColumnNow ++;   //就是存到底画几个柱状图  烦死我了
-            for (int i = 1; i <= num; i++) {
+            int i;
+            for ( i = 1; i <= num; i++) {
                 drawRectangle(TableData[i][0], beginTableY, -1 * ColumnWidth, TableData[i][1] - beginTableY, 1);
             }
         }
         else {
-            for (int i = 1; i <= num; i++) {
+        	int i;
+            for ( i = 1; i <= num; i++) {
                 drawRectangle(TableData[i][0], beginTableY,  ColumnWidth, TableData[i][1] - beginTableY, 1);
             }
         }
     }
     else if(DrawWithColumn==1){
-        for (int i = 1; i <= num; i++) {
+    	int i;
+        for (i = 1; i <= num; i++) {
             drawRectangle(TableData[i][0]-ColumnWidth/2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
         }
     }
@@ -320,13 +332,15 @@ void Delete(int num) {
 void DrawBaseline() {
     SetPenSize(1);
     SetPenColor("Gray");
-    for (int i = 1; i <= 6; i++) {
+    int i;
+    for (i = 1; i <= 6; i++) {
         MovePen(beginTableX, beginTableY + (endTableY - beginTableY) / 7 * i);
         DrawLine(endTableX - beginTableX, 0);
     }   //画线  
 
     SetPenColor("Black");
-    for (int i = 1; i <= 6; i++) {
+    
+    for ( i = 1; i <= 6; i++) {
         string c = tostring(TableMark1 * i);
         MovePen(beginTableX - 0.1 - TextStringWidth(c), beginTableY + (endTableY - beginTableY) / 7 * i);
         DrawTextString(c);
@@ -336,28 +350,49 @@ void DrawBaseline() {
 void DrawXYLine() {
     SetPenColor("Black");
     SetPenSize(1);
-
+    if (IsChooseXaxis) {
+        SetPenColor("ChoosedColor");
+        SetPenSize(3);             //如果高亮x
+    }
     MovePen(beginTableX, beginTableY);   //两条线x轴y轴
     DrawLine(endTableX - beginTableX, 0);
+    SetPenColor("Black");
+    SetPenSize(1);
+    if (IsChooseYaxis) {
+        SetPenColor("ChoosedColor");   //如果高亮y
+        SetPenSize(3);
+    }
     MovePen(beginTableX, beginTableY);
     DrawLine(0, endTableY - beginTableY);
 }
 void drawMainPicture()
 {
+#if SHOWTIMEDRAW
 
+
+    clock_t start_time, end_time;
+    start_time = clock();   //获取开始执行时间
+#endif // SHOWTIME
+
+
+    DrawDate();
+    DrawXYLine();   //画出xy轴   如果选中就高亮
 
     DrawMainLine();  //最重要的曲线 啊啊还有柱状图
 
    // printf("DrawWithColumn is  %d\n", DrawWithColumn);
    
-    DrawDate();
-
-    DrawXYLine();   //画出xy轴   如果选中就高亮
+   
     DrawBaseline(); //画y轴上的六条基准线
     DrawArrow();   //xy轴的箭头
     DrawLastTableNum();   //最后的数字显示
     Drawlegend();   //画图例
+#if SHOWTIMEDRAW
+    end_time = clock();
+    printf("%lf seconds\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
+#endif // DEBUG
 
+    
 }
 void DrawTextChar(string str,double bx,double by) {   //写字符（数字）
     string c;
@@ -394,7 +429,8 @@ void DrawEachDate(int tmpnum, char* Date)
     double bx= midx , by = beginTableY ;
 
     MovePen(bx, by);
-    for (int i = 0; Date[i]; i++) {
+    int i;
+    for ( i = 0; Date[i]; i++) {
         if (Date[i] > 0 && Date[i] < 255) {  //是数字
             by -= FontHeight;
             DrawTextChar(Date + i,bx,by);

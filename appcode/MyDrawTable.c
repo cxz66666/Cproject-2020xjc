@@ -1,3 +1,5 @@
+#pragma once 
+#include "MyData.h"
 
 
 
@@ -89,9 +91,9 @@ void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //能用就行了
         CubicEquation[ColumnNum][i][2] = c[i];
         CubicEquation[ColumnNum][i][3] = d[i];
     }
-    printf("%2s %8s %8s %8s %8s\n", "i", "ai", "bi", "ci", "di");
-    for (i = 0; i < n; ++i)
-        printf("%2d %8.2f %8.2f %8.2f %8.2f\n", i, y[i], b[i], c[i], d[i]);
+   // printf("%2s %8s %8s %8s %8s\n", "i", "ai", "bi", "ci", "di");
+   // for (i = 0; i < n; ++i)
+     //   printf("%2d %8.2f %8.2f %8.2f %8.2f\n", i, y[i], b[i], c[i], d[i]);
     MovePen(x[0], y[0]);
     double tmpy = y[0], tmpx = x[0];
     double prey = tmpy;
