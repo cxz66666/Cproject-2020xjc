@@ -262,23 +262,36 @@ void DrawDate() {
 void DrawMainLine() {
     
     DrawWithColumnNow = 0;   //已经画了几个柱状图了 因为 cxz设定最多画两个 所以好讨论
-    int i;
+    int i,j;
     for (i=1; i <= ChooseColumnNum; i++) {
+
+
         SetPenSize(2);
         MovePen(beginTableX, beginTableY);
         int column = ChoosedColumn[i];
-        SetPenColor(COLOR[column]);
-        if (IsChooseLine && column == ChooseLineNum) {
+        SetPenColor(COLOR[column]);   //正常的准备工作
+
+
+        if (IsChooseLine && column == ChooseLineNum) {   //如果这根线被选中
             SetPenColor("ChoosedColor");
-            SetPenSize(3);
+            SetPenSize(4); 
+
+            for (j = 1; j <= ClassDataNum[column]; j++) {
+                TableData[column][j][0] += ChooseLineMoveX;
+                TableData[column][j][1] += ChooseLineMoveY;
+            }    //把它的xy坐标改了
         }
-          
-            if (IsChooseColumn[column] == 1)
+            if (IsChooseColumn[column] == 1)   //1是画曲线   2是柱状图
                 Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, i);
             else {
                 DrawHistogram(TableData[column], ClassDataNum[column]);
             }
-        
+            if (IsChooseLine && column == ChooseLineNum) {
+                for (j = 1; j <= ClassDataNum[column]; j++) {
+                    TableData[column][j][0] -= ChooseLineMoveX;
+                    TableData[column][j][1] -= ChooseLineMoveY;
+                }    //把它的xy减了  
+            }
 
     }   //!!!!   画线部分   核心 !!!!  曲线用到三次样条插值法  柱状图倒没啥  感觉还行 找了一整天（
 }
@@ -293,29 +306,7 @@ void DrawArrow() {
     MovePen(beginTableX, endTableY);
     DrawLine(0.2 , -0.2 );
 }
-void DrawHistogram(double TableData[][2], int num) {
-    if (DrawWithColumn == 2) {
-        if (!DrawWithColumnNow) {
-            DrawWithColumnNow ++;   //就是存到底画几个柱状图  烦死我了
-            int i;
-            for ( i = 1; i <= num; i++) {
-                drawRectangle(TableData[i][0], beginTableY, -1 * ColumnWidth, TableData[i][1] - beginTableY, 1);
-            }
-        }
-        else {
-        	int i;
-            for ( i = 1; i <= num; i++) {
-                drawRectangle(TableData[i][0], beginTableY,  ColumnWidth, TableData[i][1] - beginTableY, 1);
-            }
-        }
-    }
-    else if(DrawWithColumn==1){
-    	int i;
-        for (i = 1; i <= num; i++) {
-            drawRectangle(TableData[i][0]-ColumnWidth/2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
-        }
-    }
-}
+
 void Add(int num) {
     ChoosedColumn[++ChooseColumnNum] = num;
 }

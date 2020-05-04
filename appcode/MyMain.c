@@ -34,7 +34,7 @@ void display();
 void MouseEventProcess(int x, int y, int button, int event);
 void CharEventProcess(char ch);
 void KeyboardEventProcess(int key, int event);
-void TimeEventProcess(int timerID);
+
 
 
 
@@ -55,7 +55,7 @@ void Main()
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());
     registerMouseEvent(MouseEventProcess); //鼠标
     registerKeyboardEvent(KeyboardEventProcess);
-    registerTimerEvent(TimeEventProcess);
+ 
     registerCharEvent(CharEventProcess);
 }
 
@@ -102,19 +102,24 @@ void MouseEventProcess(int x, int y, int button, int event)
     // UI 获取鼠标事件
   
     uiGetMouse(x, y, button, event);
-    if (HandleMouse(x, y, button, event) && IsOpen == 2)
+    //clock_t start_time, end_time;
+    //start_time = clock();
+    //static num = 0;
+    if (HandleMouse(x, y, button, event) && IsOpen == 2) {
+      // num++;
         Calculate(); //如果移动了  重新计算
-    
-   
+        display();
+    }
+       
     display();
+   // end_time = clock();
+    //double Times = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+  //  printf("num为%d\n", num);
 }
 
 
 
-void TimeEventProcess(int timerID)
-{
-    display();
-}
+
 
 void CharEventProcess(char ch)
 {

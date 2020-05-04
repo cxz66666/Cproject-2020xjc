@@ -1,7 +1,7 @@
 #pragma once 
 
 #include "genlib.h"
-#include "minwindef.h"
+
 double MaxX, MaxY; //最大宽度 长度
 
 double lx = -1, ly = -1;

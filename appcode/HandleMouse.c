@@ -100,8 +100,10 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 		oldx = nowx, oldy = nowy;
 		break;
 	case BUTTON_UP:
+		ReCalculate = TRUE;
 		if(button == LEFT_BUTTON)
 			IsMove = FALSE;
+
 		break;
 	case MOUSEMOVE:
 		

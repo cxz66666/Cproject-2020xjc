@@ -6,7 +6,7 @@
 void parspl(double p[][2], int n, int k);
 void lineto(double x, double y);
 void Cubic_Spline(double data[][2], int num, int k,  int ColumnNum);
-
+void DrawHistogram(double TableData[][2], int num);
 
 
 void lineto(double x, double y)   //画一条当前位置到x，y的直线   
@@ -14,7 +14,29 @@ void lineto(double x, double y)   //画一条当前位置到x，y的直线
     double nowx = GetCurrentX(), nowy = GetCurrentY();
     DrawLine(x - nowx, y - nowy);
 }
-
+void DrawHistogram(double TableData[][2], int num) {
+    if (DrawWithColumn == 2) {
+        if (!DrawWithColumnNow) {
+            DrawWithColumnNow++;   //就是存到底画几个柱状图  烦死我了
+            int i;
+            for (i = 1; i <= num; i++) {
+                drawRectangle(TableData[i][0], beginTableY, -1 * ColumnWidth, TableData[i][1] - beginTableY, 1);
+            }
+        }
+        else {
+            int i;
+            for (i = 1; i <= num; i++) {
+                drawRectangle(TableData[i][0], beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
+            }
+        }
+    }
+    else if (DrawWithColumn == 1) {
+        int i;
+        for (i = 1; i <= num; i++) {
+            drawRectangle(TableData[i][0] - ColumnWidth / 2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
+        }
+    }
+}
 void parspl(double p[][2], int n, int k)
 {
     int i, j;
