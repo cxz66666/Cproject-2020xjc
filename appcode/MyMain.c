@@ -81,7 +81,11 @@ void DrawMain()
     }
     else if (IsOpen == 2)
     {
+        if(!IsPredict)
         DrawPicture(head);
+        else {
+            DrawPicture(PreHead);
+        }
     }
 }
 
@@ -91,8 +95,10 @@ void DrawMain()
 void DrawPicture(stu_Ptr Head)
 {
    
-    DrawLeftButton(Head);   //里面包含画图像
-    drawMainPicture();
+    DrawLeftButton(Head);   //左侧的一堆按钮
+   
+    drawMainPicture();   //主要那个表
+    DrawPredict();     //画预测的输入框
 }
 
 
@@ -107,7 +113,7 @@ void MouseEventProcess(int x, int y, int button, int event)
     //static num = 0;
     if (HandleMouse(x, y, button, event) && IsOpen == 2) {
       // num++;
-        Calculate(); //如果移动了  重新计算
+        Calculate(NowShowTable); //如果移动了  重新计算
         display();
     }
        

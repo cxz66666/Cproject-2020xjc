@@ -8,7 +8,7 @@ void PreWork();
 void FindCSV();
 void DefineMycolor();
 BOOL CheckName(char* name);
-void Calculate();
+void Calculate(stu_Ptr HEAD);
 void AssignTable();
 
 void PreWork()
@@ -33,7 +33,7 @@ void PreWork()
       StaticendTableY= endTableY = GetWindowHeight() * 0.9;
     /*for (int i = 0; i < FileNum; i++)
         printf("%s\n", FileName[i]);*/
-    
+   
 
 }
 void FindCSV()
@@ -140,7 +140,7 @@ void AssignTable() {   //分配是用柱状图还是折线图
         
         
 }
-void Calculate()
+void Calculate(stu_Ptr HEAD)
 {
 #if  SHOWTIMEPRE
     clock_t start_time, end_time;
@@ -150,7 +150,7 @@ void Calculate()
     memset(CubicEquation, 0, sizeof(CubicEquation));   //每次计算出的方程都不一样  都得清空了再说
     int ShowNum = 0;
     int Maxnum = 0;
-    stu_Ptr tmp = head->next;
+    stu_Ptr tmp = HEAD->next;
     while (tmp != NULL)  
     {
      
@@ -187,11 +187,11 @@ void Calculate()
     TableMark5 = TableMark1 * 5;
     TableMark6 = TableMark1 * 6;
      PerY = (endTableY - beginTableY) / 7 / TableMark1;
-    PerX = (endTableX - beginTableX) / (ShowNum + 1);
+    PerX = (endTableX - beginTableX) / (ShowNum + 1.0);
     //printf("%lf %lf \n", endTableX, endTableY);
     
     
-    tmp = head->next;
+    tmp = HEAD->next;
     
   
     int tmpX = 0;

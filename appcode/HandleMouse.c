@@ -91,7 +91,9 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 		if (button == RIGHT_BUTTON && (IsChooseXaxis || IsChooseYaxis || IsChooseLine)) {
 			IsChooseXaxis = IsChooseYaxis = IsChooseLine = 0;
 			ChooseLineNum = 0;
+		
 			ChooseLineMoveX = ChooseLineMoveY = 0;
+
 		}   //”“º¸÷±Ω”÷√¡„
 
 		if ((IsChooseXaxis || IsChooseYaxis || IsChooseLine))

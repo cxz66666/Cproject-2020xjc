@@ -33,7 +33,7 @@ double StaticbeginTableX, StaticbeginTableY;  //定死的数据
 double StaticendTableX, StaticendTableY;
 int TableMark1, TableMark2, TableMark3, TableMark4, TableMark5,TableMark6;    //第1234条y轴上的灰色线
 
-double TableData[13][30][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
+double TableData[13][50][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
 double CubicEquation[13][50][4]; //放三次方程的数据  第一个为各列   第二个为日期    第三个分别为a b c d  对应 y=a+bx+cx^2+dx^3
 
 double PerX, PerY;      //单位长度的xy
@@ -71,9 +71,16 @@ struct stu    //每一天
 
 } *STU;
 struct stu *head, *ptr,*tail;
+struct stu* PredictHead;  //这个放在原链表中找到相同日期的那个节点  这个只是个标志 不对它做任何malloc有关的东西
+struct stu* PreHead;      //这个放新创建的链表  存放预测的数据  预测数据用的
+
+struct stu* NowShowTable;   //两种可能   一种是show head 就是展示现有的数据 一种是show 预测的 展示预测的数据
 
 
 BOOL IsChooseXaxis, IsChooseYaxis,IsChooseLine;    //是否选中了xy轴 进行拉伸缩短等操作
 
 double ChooseLineMoveX, ChooseLineMoveY;    // 选择的线的移动的x，y
+
 int ChooseLineNum;  //选中的column的序号   从1开始计数
+
+BOOL IsPredict;

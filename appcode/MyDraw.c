@@ -2,6 +2,7 @@
 #include"MyData.h"
 #include "Readcsv.c"
 #include "MyDrawTable.c"
+#include "MyPredict.c"
 void DrawOpenDir();
 void DrawMenu();
 
@@ -11,7 +12,7 @@ void HandleToolButton(int selection);
 void DrawLeftButton(stu_Ptr Head);
 void drawMainPicture();
 void DrawEachDate(int tmpnum, char* Date);
-void DrawDate();
+void DrawDate(stu_Ptr HEAD);
 void DrawTextZH(string str, double bx, double by);
 void DrawTextChar(string str, double bx, double by);
 void DrawArrow();
@@ -23,6 +24,7 @@ void DrawBaseline();
 void DrawMainLine();
 void Add(int num);
 void Delete(int num);
+
 #define   MY_DRAW_K  10  //在画table的时候 两个x直接画多少个点
 #define  SHOWTIMEDRAW 0 //输出运行时间
 void DrawMenu()
@@ -89,9 +91,10 @@ void DrawOpenDir()
                     }
                     else
                     {
+                        NowShowTable = head;
                         IsOpen = 2;   //2的时候就是可以进行画图了
-                        Calculate();
-                        drawMainPicture();
+                        Calculate(NowShowTable);
+                       
                         return;
                     }
                 }
@@ -124,7 +127,9 @@ void DrawOpenDir()
                 }
                 else
                 {
+                    NowShowTable = head;
                     IsOpen = 2;
+                    Calculate(NowShowTable);
                     return;
                 }
             }
@@ -137,7 +142,6 @@ void DrawOpenDir()
     };
     
 }
-
 
 
 void DrawLeftButton(stu_Ptr Head)
@@ -154,7 +158,7 @@ void DrawLeftButton(stu_Ptr Head)
         if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * nowNum + 1.5) * GetFontHeight(), 0.08, 0.08, ""))
         {
             Head->IsSelect = !(Head->IsSelect);
-            Calculate();
+            Calculate(NowShowTable);
 
         }
         drawLabel(0.3, MaxY - (1.2 * nowNum + 1.5) * GetFontHeight(), Head->Date);
@@ -170,11 +174,30 @@ void DrawLeftButton(stu_Ptr Head)
             if (IsChooseColumn[i]) 
                 Add(i); //把i加到已经选择的里面 
             else Delete(i); //把i删去
-            Calculate();
+
+            Calculate(NowShowTable);
         
         }
         drawLabel(0.4, 4 - (1.4 * i + 1.5) * GetFontHeight(), ColumnName[i]);
     }
+
+
+    //画复原按钮   就是如果移动了xy轴或者某条曲线   则会显示这个按钮
+    if (IsChooseXaxis || IsChooseYaxis || IsChooseLine) {
+        setButtonColors("Orange", "Red", "Black", "Red", IsChooseColumn[i]);
+        if (button(GenUIID(0), 0.95 * MaxX, 0.9 * MaxY, 1, 0.5, "复原"))
+        {
+            IsChooseXaxis = IsChooseYaxis = IsChooseLine = 0;
+            ChooseLineNum = 0;
+            ChooseLineMoveX = ChooseLineMoveY = 0;
+            endTableX = StaticendTableX;
+            endTableY = StaticendTableY;
+            Calculate(NowShowTable);
+        }
+    }
+
+
+
 }
 
 void HandleFileButton(int selection)
@@ -239,17 +262,20 @@ void Drawlegend()  //画图例
             DrawTextString(ColumnName[column]);
 
             NowX = GetCurrentX(), NowY = GetCurrentY();
-            if (NowX > endTableX - PerX)
+            if (NowX > endTableX - PerX)   //换行
+            {
+                NowX = beginTableX + PerX;
                 NowY -= FontHeight * 1.5;
-        
+            
+            }
      
     }
     SetPenColor(precolor); //换回原来颜色
     SetPenSize(presize);   //换回原来尺寸
 }
-void DrawDate() {
+void DrawDate(stu_Ptr HEAD) {
     SetPenColor("Black");
-    stu_Ptr tmp = head->next;
+    stu_Ptr tmp = HEAD->next;
     int tmpnum = 0;
     while (tmp != NULL) {
         if (tmp->IsSelect) {
@@ -272,14 +298,15 @@ void DrawMainLine() {
         SetPenColor(COLOR[column]);   //正常的准备工作
 
 
-        if (IsChooseLine && column == ChooseLineNum) {   //如果这根线被选中
+        if (IsChooseLine&& column == ChooseLineNum) {   //如果这根线被选中
             SetPenColor("ChoosedColor");
             SetPenSize(4); 
-
+            
             for (j = 1; j <= ClassDataNum[column]; j++) {
                 TableData[column][j][0] += ChooseLineMoveX;
                 TableData[column][j][1] += ChooseLineMoveY;
             }    //把它的xy坐标改了
+           
         }
             if (IsChooseColumn[column] == 1)   //1是画曲线   2是柱状图
                 Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, i);
@@ -297,10 +324,18 @@ void DrawMainLine() {
 }
 void DrawArrow() {
     SetPenColor("Black");
+    SetPenSize(1);
+    if (IsChooseXaxis)
+        SetPenColor("ChoosedColor"), SetPenSize(3);
     MovePen(endTableX, beginTableY);
     DrawLine(-0.2, 0.2 );
     MovePen(endTableX, beginTableY);
     DrawLine(-0.2 , -0.2 );
+
+    SetPenColor("Black");
+    SetPenSize(1);
+    if (IsChooseYaxis)
+        SetPenColor("ChoosedColor"), SetPenSize(3);
     MovePen(beginTableX, endTableY);
     DrawLine(-0.2 , -0.2 );
     MovePen(beginTableX, endTableY);
@@ -366,7 +401,7 @@ void drawMainPicture()
 #endif // SHOWTIME
 
 
-    DrawDate();
+    DrawDate(NowShowTable);
     DrawXYLine();   //画出xy轴   如果选中就高亮
 
     DrawMainLine();  //最重要的曲线 啊啊还有柱状图
@@ -387,26 +422,28 @@ void drawMainPicture()
 }
 void DrawTextChar(string str,double bx,double by) {   //写字符（数字）
     string c;
+    c = (string)malloc(3);
+
     if (str[1] > 0 && str[1] <= 255)   //如果是两位数
     {
-        c= (string)malloc(3);
+      
         c[0] = str[0];
         c[1] = str[1];
         c[2] = 0;
     }
     else {
-        c = (string)malloc(2);
+       
         c[0] = str[0];
         c[1] = 0;
     }
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
-   // free(c);  这个好像有点异常处理  打开console的时候会报错  先这么着把
+   // free(c); 
 }
 
 void DrawTextZH(string str,double bx,double by) {   //写中文
-    string c = (string )malloc(3);
-    c[0] = str[0], c[1] = str[1], c[2] = '\0';
+    char* c = (string )malloc(3);
+    c[0] = str[0], c[1] = str[1], c[2] = 0;
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
     //free(c);
