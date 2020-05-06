@@ -1,0 +1,13 @@
+#git ignore  根据个人情况改  我现在这个应该挺通用
+
+demoprj-vs2017/.vs
+
+demoprj-vs2017/Debug
+
+
+demoprj-vs2017/readme
+
+
+demoprj-devc/output
+
+democode/*
