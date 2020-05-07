@@ -62,8 +62,10 @@ void Main()
 // 显示界面
 void display()
 {
-    
+    if(!IsSave)   //如果不在保存界面上  就update
+    UpdateDisplay();
     DisplayClear();
+
     DrawMenu();
     // 黑色选择按钮
     DrawMain();
@@ -81,6 +83,10 @@ void DrawMain()
     }
     else if (IsOpen == 2)
     {
+        if (IsSave == 1)
+        {
+            SaveToCsv(NowShowTable);
+        }
         if(!IsPredict)
         DrawPicture(head);
         else {
@@ -114,7 +120,7 @@ void MouseEventProcess(int x, int y, int button, int event)
     if (HandleMouse(x, y, button, event) && IsOpen == 2) {
       // num++;
         Calculate(NowShowTable); //如果移动了  重新计算
-        display();
+       // UpdateDisplay();
     }
        
     display();

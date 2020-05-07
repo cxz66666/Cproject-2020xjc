@@ -169,6 +169,18 @@ void DrawPredict() {
             Calculate(NowShowTable);   //重新计算
         }
     }
+    if (!IsChangeNum) {   //如果展示预测就不显示这个按钮
+        if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "更改数据")) {
+
+            IsChangeNum = TRUE;
+        }
+    }
+    else {
+        if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "撤销更改")) {
+
+            IsChangeNum = FALSE;
+        }
+    }
 }
 string GetDate(int month, int day) {
 
@@ -249,6 +261,7 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //预测数据的链表也带头节点
             tmp1->Date = GetDate(Date[0], Date[1] + nownum );
             tmp1->IsSelect = TRUE;
             nownum++;
+            tmp1->IsShowNum = FALSE;
             tmp1->Data[i] = CalY(nownum, coefficient);
             tmp1 = tmp1->next;
         }

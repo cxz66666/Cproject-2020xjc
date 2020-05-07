@@ -11,6 +11,7 @@ char penColor[16] = "Black";
 //static int Button1, Button2, Button3;
 int IsOpen;//是否在打开文件  1为选择界面  2为展示数据
 string OpenFileName;   //打开文件的名字
+int IsSave;    //是否正在保存了
 int MyError; //error小于0的话就报错   -1文件未打开
 int IsMusic; //放音乐就算了
 int IsOpenOther;
@@ -68,7 +69,7 @@ struct stu    //每一天
     BOOL IsSelect;   //是否显示   左侧按钮可以改变这个状态
     double nowx, nowy;   //
     double XPosition[10],YPosition[10];    //每一个数据的xy位置
-
+    BOOL IsShowNum;
 } *STU;
 struct stu *head, *ptr,*tail;
 struct stu* PredictHead;  //这个放在原链表中找到相同日期的那个节点  这个只是个标志 不对它做任何malloc有关的东西
@@ -83,4 +84,13 @@ double ChooseLineMoveX, ChooseLineMoveY;    // 选择的线的移动的x，y
 
 int ChooseLineNum;  //选中的column的序号   从1开始计数
 
-BOOL IsPredict;
+BOOL IsPredict;   //是否在预测
+
+
+BOOL IsChangeNum=TRUE;   //是否在 改数据
+
+stu_Ptr ChangingPtr;    //正在改变的Ptr
+
+string ChangingPtrStringNum[20];    //更改数据框里的数据   本质就是ChangingPtr里的data数据里的string化
+
+BOOL IsSavingOK;

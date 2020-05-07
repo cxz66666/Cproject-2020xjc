@@ -1,10 +1,10 @@
 #pragma once 
 #include"MyData.h"
 
-
-
+BOOL SaveToCsv(stu_Ptr HEAD);
+BOOL SaveCSV(string InputName,stu_Ptr HEAD);
 BOOL ReadCSVFile(char *Name);
-
+BOOL CheckSaveName(string InputName, string WrongAns);
 double stod(string str)    //string to double
 { 
     double ans;
@@ -25,7 +25,7 @@ string tostring(int num) {
         N++;
         tmp /= 10;
     }
-    string ans = (string)malloc(N + 1);
+    string ans = (string)malloc(sizeof(char)*(N + 5));
     
     tmp = num;
 
@@ -77,6 +77,7 @@ BOOL ReadCSVFile(char *Name)
                     STU = (stu_Ptr)malloc(sizeof(struct stu));
 
                     STU->IsSelect = TRUE;
+                    STU->IsShowNum = FALSE;
                     strcpy(STU->Nowcolor, COLOR[FileTotalNum % (sizeof(COLOR) / sizeof(COLOR[0]))]);
                     strcpy(STU->Changedcolor, "Pink");
                     STU->Date = (char *)malloc(sizeof(buffer) + 1);
@@ -109,6 +110,101 @@ BOOL ReadCSVFile(char *Name)
             }
         }
         //printf("wanshi");
+        fclose(fp);
         return 1;
+    }
+}
+
+
+BOOL SaveToCsv(stu_Ptr HEAD) {
+
+    static char tips[] = "请输入保存文件名";
+
+    static char WrongAns[20] = "";
+
+    static char  InputName[20] = "";
+
+    drawLabel(MaxX / 2 - TextStringWidth(tips)/2, MaxY / 2 + 2 * FontHeight, tips);
+
+    setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
+
+    textbox(GenUIID(0), MaxX / 2 -TextStringWidth(tips)/2, MaxY / 2 - 1, TextStringWidth(tips), FontHeight * 2, InputName, 15);
+
+    if (button(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2, MaxY / 2 - 2, 0.6, FontHeight * 1.2, "确认")) {
+
+        if (CheckSaveName(InputName, WrongAns)) {
+           if( !SaveCSV(InputName,HEAD))
+               strcpy(WrongAns," 保存失败");
+           else{
+               IsSavingOK = TRUE;
+               IsSave = 0;
+           }
+        }
+        SetPenColor("Black");
+        SetPenSize(2);
+        drawLabel(MaxX / 2 - TextStringWidth(WrongAns), MaxY / 2 - 2.5, WrongAns);
+        
+    }
+    if (button(GenUIID(0), MaxX / 2 + TextStringWidth(tips) / 2-0.6, MaxY / 2 - 2, 0.6, FontHeight * 1.2, "取消")) {
+
+       
+        IsSave = 0;
+    }
+
+
+    return TRUE;
+}
+BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
+    FILE *fp= fopen(InputName, "w+");
+    if (fp == NULL)
+        return FALSE;
+
+    fprintf(fp, "日期,");
+    int i;
+    for ( i= 1; i <= TotalColumnNum; i++) {
+        fprintf(fp,"%s", ColumnName[i]);
+        fprintf(fp,",");
+    }
+    fprintf(fp, "\n");
+
+    stu_Ptr tmp = HEAD->next;
+
+    while (tmp != NULL) {
+        fprintf(fp, "%s,", tmp->Date);
+        for (i = 1; i <= TotalColumnNum; i++) {
+            fprintf(fp, "%d,", tmp->Data[i]);
+        }
+        fprintf(fp, "\n");
+        tmp = tmp->next;
+    }
+    if (fp != NULL) {
+        fclose(fp);
+        return TRUE;
+    }
+    else {
+        return FALSE;
+    }
+
+}
+BOOL CheckSaveName(string InputName, string WrongAns) {
+
+    int i;
+    int flag = 0;
+    for (i = 0; InputName[i]; i++) {
+        if (InputName[i] == '.') {
+            if (InputName[i + 1] == 'c' && InputName[i + 2] == 's' && InputName[i + 3] == 'v') {
+                strcpy(WrongAns, "成功保存");
+                flag = 1;
+                return TRUE;
+            }
+        }
+    }
+    if (!flag) {
+        strcpy(WrongAns, "请输入正确名称");
+        return FALSE;
+    
+    }
+    else {
+        return TRUE;
     }
 }

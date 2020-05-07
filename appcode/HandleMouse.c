@@ -26,6 +26,8 @@ BOOL  ChooseYaxis(double nowx, double  nowy) {
 }
 
 BOOL ChooseLine(double nowx, double nowy) {
+	
+
 	if (nowx <= beginTableX+PerX || nowy <= beginTableY||nowx>endTableX||nowy>endTableY)
 		return 0;
 	int SNum = (nowx - beginTableX - PerX) / PerX;   //用第几个三次方程表达式
@@ -41,10 +43,10 @@ BOOL ChooseLine(double nowx, double nowy) {
 		//	printf("snum=%d  nowx=%lf\n", SNum,nowx);
 			//printf("PerX为%lf  tmpx为%lf  计算出来的y值为%lf   鼠标y值为%lf \n  ",PerX,xtmp, postmp,nowy);
 	
-			SetPenColor("Black");
-			SetPenSize(2);
-			MovePen(nowx, postmp);
-			DrawLine(0, 0.5);
+			//SetPenColor("Black");
+			//SetPenSize(2);
+			//MovePen(nowx, postmp);
+			//DrawLine(0, 0.5);   小测试  就画个位置我看看
 
 			if (fabs(nowy - postmp) < LINETOLERANCE) {
 				if (MinPos == 0) {
@@ -69,6 +71,9 @@ BOOL ChooseLine(double nowx, double nowy) {
 }
 
 BOOL HandleMouse(int x, int y, int button, int event) {
+
+	
+
 	double nowx, nowy;
 	static double oldx = 0, oldy = 0;			 //用静态存储存原来的x，y
 	static bool IsMove = FALSE;                   //是否移动

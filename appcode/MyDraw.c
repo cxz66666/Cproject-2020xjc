@@ -11,7 +11,7 @@ void HandleToolButton(int selection);
 
 void DrawLeftButton(stu_Ptr Head);
 void drawMainPicture();
-void DrawEachDate(int tmpnum, char* Date);
+void DrawEachDate(int tmpnum, char* Date,stu_Ptr ptr);
 void DrawDate(stu_Ptr HEAD);
 void DrawTextZH(string str, double bx, double by);
 void DrawTextChar(string str, double bx, double by);
@@ -32,6 +32,7 @@ void DrawMenu()
     static char *menuListFile[] = {"File",
                                    "Open | Ctrl-O",
                                    "Close | Ctrl-W",
+                                    "Save | Ctrl-S",
                                    "Exit | Ctrl-E"
 
     };
@@ -149,7 +150,7 @@ void DrawLeftButton(stu_Ptr Head)
     double fH = GetFontHeight();
     int nowNum = 0;
     Head = Head->next;   //是有头节点啊啊啊啊啊嗷嗷嗷嗷哦哦哦哦哦哦
-
+    SetPenSize(1);
     while (Head != NULL)  
     {
         int IsSelect = Head->IsSelect;
@@ -179,8 +180,28 @@ void DrawLeftButton(stu_Ptr Head)
         
         }
         drawLabel(0.4, 4 - (1.4 * i + 1.5) * GetFontHeight(), ColumnName[i]);
-    }
 
+        //画是否在更改/显示数据  是一个颜色蛮好看的输入框
+        if (IsChangeNum&&ChangingPtr!=NULL) {
+            setTextBoxColors("TextBoxFrame", COLOR[i], "TextBoxFrameHot", COLOR[i], 0);
+
+            textbox(GenUIID(i), 0.5 + TextStringWidth(ColumnName[i]), 4 - (1.4 * i + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 10);
+        }
+
+    }
+    static char ErrorAns[20];  //放置检查输入返回的值
+    //画确认按钮  确认之后立刻使用更新
+    if (IsChangeNum&&ChangingPtr!=NULL) {
+        setButtonColors("Orange", "Red", "Black", "Red", 0);
+        if (button(GenUIID(0), 1.5, 0.9 , 0.8, 0.4, "确认"))
+        {
+            if (CheckChangedNum(ChangingPtrStringNum, ErrorAns)) {
+                Calculate(NowShowTable);
+               
+            }
+            drawLabel(2.5, 0.9, ErrorAns);
+        }
+    }
 
     //画复原按钮   就是如果移动了xy轴或者某条曲线   则会显示这个按钮
     if (IsChooseXaxis || IsChooseYaxis || IsChooseLine) {
@@ -210,7 +231,11 @@ void HandleFileButton(int selection)
     {
         IsOpen = 0;
     }
-    else if (selection == 3)
+    else if (selection == 3) {
+        IsSave = 1;
+
+    }
+    else if (selection == 4)
     {
         exit(-1);
     }
@@ -245,7 +270,7 @@ void DrawLastTableNum() {
 }
 void Drawlegend()  //画图例 
 {  
-    double  NowX = beginTableX + PerX,NowY=beginTableY/2.5;
+    double  NowX = beginTableX + PerX,NowY=beginTableY/4;
     int presize = GetPenSize();
     string precolor = GetPenColor();
     int i;
@@ -280,7 +305,7 @@ void DrawDate(stu_Ptr HEAD) {
     while (tmp != NULL) {
         if (tmp->IsSelect) {
             ++tmpnum;
-            DrawEachDate(tmpnum, tmp->Date);
+            DrawEachDate(tmpnum, tmp->Date,tmp);
         }
         tmp = tmp->next;
     }      //画日期和两道线
@@ -370,6 +395,7 @@ void DrawBaseline() {
         string c = tostring(TableMark1 * i);
         MovePen(beginTableX - 0.1 - TextStringWidth(c), beginTableY + (endTableY - beginTableY) / 7 * i);
         DrawTextString(c);
+        if(c!=NULL)
         free(c);
     }
 }
@@ -422,41 +448,48 @@ void drawMainPicture()
 }
 void DrawTextChar(string str,double bx,double by) {   //写字符（数字）
     string c;
-    c = (string)malloc(3);
-
+    
     if (str[1] > 0 && str[1] <= 255)   //如果是两位数
     {
-      
+        c = (string)malloc(10);
         c[0] = str[0];
         c[1] = str[1];
         c[2] = 0;
     }
     else {
-       
+        c = (string)malloc(10);
         c[0] = str[0];
         c[1] = 0;
     }
+  
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
-   // free(c); 
+    if(c!=NULL)
+    free(c);   //如果c是NULL free时候会出问题
 }
 
 void DrawTextZH(string str,double bx,double by) {   //写中文
-    char* c = (string )malloc(3);
-    c[0] = str[0], c[1] = str[1], c[2] = 0;
+    string c = (string )malloc(sizeof(char)*5);   //我至今没搞懂为啥开3free时候就出错
+    string tmp = c;
+    memset(c, 0, sizeof(c));
+    c[0] = str[0], c[1] = str[1];
+    c[2] = 0;
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
-    //free(c);
+    if (tmp != NULL)
+    free(tmp);  //如果c是NULL free时候会出问题
 }
-void DrawEachDate(int tmpnum, char* Date)
+void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
 {
     SetPointSize(15);
     double midx = tmpnum * PerX+beginTableX;
 
-
-    double bx= midx , by = beginTableY ;
-
+    
+    double bx= midx , by = beginTableY-0.2 ;
+  
+   
     MovePen(bx, by);
+    SetPenColor("Black");
     int i;
     for ( i = 0; Date[i]; i++) {
         if (Date[i] > 0 && Date[i] < 255) {  //是数字
@@ -472,6 +505,40 @@ void DrawEachDate(int tmpnum, char* Date)
             DrawTextZH(Date+i,bx,by);
             i++;
         }
-     
     }
+    if (IsChangeNum) {  //如果处在更改数据模式  每个日期下面放一个小选择框
+        SetPenSize(1);
+        int i;
+        setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", ptr->IsShowNum);
+        stu_Ptr tmp = NowShowTable;
+        if (button(GenUIID(tmpnum), bx - FontHeight / 2.5, by - FontHeight, FontHeight * 0.8, FontHeight * 0.8, "")) {
+            if (!(ptr->IsShowNum))
+            {
+                while (tmp != NULL) { //如果这个即将被选中  那么把其他的都置为FALSE因为一次只能更改一个
+                    if (tmp != ptr)
+                        tmp->IsShowNum = FALSE;
+                    tmp = tmp->next;
+                }
+                for (i = 1; i <= TotalColumnNum; i++) {
+                    if(ChangingPtrStringNum[i]!=NULL)
+                    free(ChangingPtrStringNum[i]);
+                }
+
+               
+                ChangingPtr = ptr;   //将改变的ptr指向这个
+                for (i = 1; i <= TotalColumnNum; i++) {
+                    ChangingPtrStringNum[i] = tostring(ptr->Data[i]);
+                }
+            }
+            else {
+                ChangingPtr = NULL;   //否则指向NULL
+            }
+       
+                
+            ptr->IsShowNum = !(ptr->IsShowNum);
+           
+        }
+    }
+   
+
 }

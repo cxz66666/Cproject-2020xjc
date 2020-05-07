@@ -1203,7 +1203,7 @@ static void CheckEvents(void)
 {
     MSG msg;
 
-    while (PeekMessage(&msg, graphicsWindow, 0, 0, PM_REMOVE) != 0) {
+   while (PeekMessage(&msg, graphicsWindow, 0, 0, PM_REMOVE) != 0) {
         DispatchMessage(&msg);
     }
 }

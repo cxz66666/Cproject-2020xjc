@@ -10,7 +10,7 @@ void DefineMycolor();
 BOOL CheckName(char* name);
 void Calculate(stu_Ptr HEAD);
 void AssignTable();
-
+BOOL CheckChangedNum(string str[],string ans);
 void PreWork()
 {
 
@@ -33,8 +33,8 @@ void PreWork()
       StaticendTableY= endTableY = GetWindowHeight() * 0.9;
     /*for (int i = 0; i < FileNum; i++)
         printf("%s\n", FileName[i]);*/
+   memset(ChangingPtrStringNum, 0, sizeof(ChangingPtrStringNum));
    
-
 }
 void FindCSV()
 {
@@ -139,6 +139,31 @@ void AssignTable() {   //分配是用柱状图还是折线图
     }
         
         
+}
+BOOL CheckChangedNum(string str[], string ans) {
+    int i,j;
+    for (i = 1; i <= TotalColumnNum; i++) {
+        for (j = 0; str[i][j]; j++) {
+            if (str[i][j] == '.'||(str[i][j]<48||str[i][j]>58)) {
+                strcpy(ans, "请检测数据");
+                return FALSE;
+            }
+        }
+        if (!atoi(str[i]))   //如果返回0就是有问题！！！
+        {
+            strcpy(ans, "请检查数据");
+            return FALSE;
+        }
+    }
+
+    strcpy(ans, "更新成功");
+
+    for (i = 1; i <= TotalColumnNum; i++) {
+    
+        ChangingPtr->Data[i] = atoi(str[i]);
+    }
+   
+    return TRUE;
 }
 void Calculate(stu_Ptr HEAD)
 {
