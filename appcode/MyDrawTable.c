@@ -15,18 +15,22 @@ void lineto(double x, double y)   //画一条当前位置到x，y的直线
     DrawLine(x - nowx, y - nowy);
 }
 void DrawHistogram(double TableData[][2], int num) {
+   
     if (DrawWithColumn == 2) {
         if (!DrawWithColumnNow) {
             DrawWithColumnNow++;   //就是存到底画几个柱状图  烦死我了
             int i;
             for (i = 1; i <= num; i++) {
                 drawRectangle(TableData[i][0], beginTableY, -1 * ColumnWidth, TableData[i][1] - beginTableY, 1);
+                Histogram[i][0] = TableData[i][0], Histogram[i][1] = TableData[i][1];
+
             }
         }
         else {
             int i;
             for (i = 1; i <= num; i++) {
                 drawRectangle(TableData[i][0], beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
+                Histogram[i][2] = TableData[i][0], Histogram[i][3] = TableData[i][1];
             }
         }
     }
@@ -34,6 +38,7 @@ void DrawHistogram(double TableData[][2], int num) {
         int i;
         for (i = 1; i <= num; i++) {
             drawRectangle(TableData[i][0] - ColumnWidth / 2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
+            Histogram[i][0] = TableData[i][0], Histogram[i][1] = TableData[i][1];
         }
     }
 }
@@ -77,6 +82,9 @@ void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //能用就行了
     int n = num - 1;
     double x[N + 1], y[N + 1], h[N], A[N], l[N + 1],
         u[N + 1], z[N + 1], c[N + 1], b[N], d[N];
+    
+    memset(A, 0, sizeof(A));
+
     for (i = 0; i < n + 1; ++i)
         x[i] = data[i + 1][0], y[i] = data[i + 1][1];
 

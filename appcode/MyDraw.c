@@ -25,7 +25,7 @@ void DrawMainLine();
 void Add(int num);
 void Delete(int num);
 
-#define   MY_DRAW_K  10  //在画table的时候 两个x直接画多少个点
+#define   MY_DRAW_K  20  //在画table的时候 两个x直接画多少个点
 #define  SHOWTIMEDRAW 0 //输出运行时间
 void DrawMenu()
 {
@@ -172,9 +172,24 @@ void DrawLeftButton(stu_Ptr Head)
         if (button(GenUIID(i), 0.1, 4 - (1.4 * i + 1.5) * GetFontHeight(), 0.15, 0.15, ""))
         {
             IsChooseColumn[i] = !IsChooseColumn[i];
-            if (IsChooseColumn[i]) 
-                Add(i); //把i加到已经选择的里面 
-            else Delete(i); //把i删去
+            if (IsChooseColumn[i])
+            {
+                Add(i);
+                int j;
+                for (j = 1; j <= ChooseColumnNum; j++)
+                    printf("%d ", ChoosedColumn[j]);
+                printf("\n");
+            }
+                //把i加到已经选择的里面 
+            else
+            {
+                Delete(i); //把i删去
+                int j;
+                for (j = 1; j <= ChooseColumnNum; j++)
+                    printf("%d ", ChoosedColumn[j]);
+                printf("\n");
+            }
+                
 
             Calculate(NowShowTable);
         
@@ -261,11 +276,36 @@ void DrawLastTableNum() {
     for (i=1; i <= ChooseColumnNum; i++) {
         int column = ChoosedColumn[i];
             string ShowNum = tostring(tmp->Data[column]);
-            MovePen(tmp->XPosition[column] + 0.05, tmp->YPosition[column]);
             SetPenColor(COLOR[column]);
-            DrawTextString(ShowNum);
-            free(ShowNum);
-        
+            if (column != ChooseLineNum&&column!=ChooseHistogramNum) {
+                MovePen(tmp->XPosition[column] + 0.05, tmp->YPosition[column]);
+                DrawTextString(ShowNum);
+            }
+         
+            else  if (column == ChooseLineNum||column==ChooseHistogramNum) {
+               
+                stu_Ptr tmp1 = NowShowTable->next;
+                
+                while (tmp1 != NULL) {
+                    if (tmp1->IsSelect) {
+                        string ShowNum1 = tostring(tmp1->Data[column]);
+                        if (column == ChooseLineNum)
+                            MovePen(tmp1->XPosition[column] + ChooseLineMoveX + 0.05, tmp1->YPosition[column] + ChooseLineMoveY + 0.2);
+                        else
+                            MovePen(tmp1->XPosition[column] - TextStringWidth(ShowNum1)/2, tmp1->YPosition[column] + FontHeight);
+                       
+                        DrawTextString(ShowNum1);
+                        free(ShowNum1);
+                    }
+                    tmp1 = tmp1->next;
+
+                }
+
+            }
+          
+
+
+                free(ShowNum);
     }
 }
 void Drawlegend()  //画图例 
@@ -333,8 +373,13 @@ void DrawMainLine() {
             }    //把它的xy坐标改了
            
         }
+        if (IsChooseHistogram && column == ChooseHistogramNum)
+        {
+            SetPenColor("ChoosedColor");
+            SetPenSize(2);
+        }
             if (IsChooseColumn[column] == 1)   //1是画曲线   2是柱状图
-                Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, i);
+                Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, column);
             else {
                 DrawHistogram(TableData[column], ClassDataNum[column]);
             }
@@ -368,7 +413,13 @@ void DrawArrow() {
 }
 
 void Add(int num) {
-    ChoosedColumn[++ChooseColumnNum] = num;
+    int i;
+    for (i = ChooseColumnNum; ChoosedColumn[i]>=num&&i>0; i--) {
+        ChoosedColumn[i + 1] = ChoosedColumn[i];
+    }
+
+    ChoosedColumn[i+1] = num;
+    ++ChooseColumnNum;
 }
 void Delete(int num) {
     int i;
@@ -490,6 +541,9 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
    
     MovePen(bx, by);
     SetPenColor("Black");
+    if (ptr->IsShowNum) {
+        SetPenColor("Red");
+    }
     int i;
     for ( i = 0; Date[i]; i++) {
         if (Date[i] > 0 && Date[i] < 255) {  //是数字

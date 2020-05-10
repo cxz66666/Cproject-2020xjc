@@ -62,7 +62,7 @@ void Main()
 // 显示界面
 void display()
 {
-    if(!IsSave)   //如果不在保存界面上  就update
+    if(!IsSave)   //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文
     UpdateDisplay();
     DisplayClear();
 
@@ -88,9 +88,9 @@ void DrawMain()
             SaveToCsv(NowShowTable);
         }
         if(!IsPredict)
-        DrawPicture(head);
+        DrawPicture(head);  //如果不是预测模式就画文件里的图
         else {
-            DrawPicture(PreHead);
+            DrawPicture(PreHead);  //如果是预测就画预测的 图
         }
     }
 }
@@ -117,6 +117,7 @@ void MouseEventProcess(int x, int y, int button, int event)
     //clock_t start_time, end_time;
     //start_time = clock();
     //static num = 0;
+   
     if (HandleMouse(x, y, button, event) && IsOpen == 2) {
       // num++;
         Calculate(NowShowTable); //如果移动了  重新计算

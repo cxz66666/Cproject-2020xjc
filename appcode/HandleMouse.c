@@ -8,7 +8,7 @@
 BOOL  ChooseXaxis(double nowx,double  nowy);
 BOOL  ChooseYaxis(double nowx,double  nowy);
 BOOL  ChooseLine(double nowx, double  nowy);
-
+BOOL	ChooseHistogram(double nowx, double nowy);
 
 
 BOOL  ChooseXaxis(double nowx, double nowy) {
@@ -69,7 +69,40 @@ BOOL ChooseLine(double nowx, double nowy) {
 	}
 	else return 0;
 }
+BOOL	ChooseHistogram(double nowx, double nowy) {
+	int i;
+	if (DrawWithColumn == 2) {
+		
+		
+		
+			for (i = 1; i <= ShowDateNum; i++) {
+				if (nowx >= Histogram[i][0] - ColumnWidth && nowx <= Histogram[i][0] && nowy >= beginTableY && nowy <= Histogram[i][1]) {
+					ChooseHistogramNum = ChoosedColumn[1];
+					return TRUE;
+				}
+			}
+			for (i = 1; i <= ShowDateNum; i++) {
+				if (nowx >= Histogram[i][2] && nowx <= Histogram[i][2] + ColumnWidth && nowy >= beginTableY && nowy <= Histogram[i][3]) {
+					ChooseHistogramNum = ChoosedColumn[2];
+					return TRUE;
+				}
+			}
+			return FALSE;
+	}
+	else if (DrawWithColumn == 1) {
 
+
+		for (i = 1; i <= ShowDateNum; i++) {
+			if (nowx >= Histogram[i][0] - ColumnWidth/2 && nowx <= Histogram[i][0]+ColumnWidth/2 && nowy >= beginTableY && nowy <= Histogram[i][1]) {
+				ChooseHistogramNum = ChoosedColumn[1];  //我设置这里第一个放的是第一个柱状图的序号  第二个放的是第二个柱状图的序号
+				return TRUE;
+			}
+		}
+		
+		return FALSE;
+	}
+	return FALSE;
+}
 BOOL HandleMouse(int x, int y, int button, int event) {
 
 	
@@ -83,8 +116,9 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 	switch (event)
 	{
 	case BUTTON_DOWN:
+	//	printf("%d %d %d %d\n", IsChooseXaxis, IsChooseYaxis, IsChooseLine, IsChooseHistogram);
 		if (button == LEFT_BUTTON&&!IsChooseXaxis&&
-			!IsChooseYaxis&&!IsChooseLine)   //前提是左键 + 其他没有被选中
+			!IsChooseYaxis&&!IsChooseLine&&!IsChooseHistogram)   //前提是左键 + 其他没有被选中
 		{
 			if (IsChooseXaxis == FALSE && ChooseXaxis(nowx, nowy))  //
 				IsChooseXaxis = TRUE;
@@ -92,11 +126,17 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 				IsChooseYaxis = TRUE;
 			else if (IsChooseLine == FALSE && ChooseLine(nowx, nowy))
 				IsChooseLine = TRUE;
-		}
-		if (button == RIGHT_BUTTON && (IsChooseXaxis || IsChooseYaxis || IsChooseLine)) {
-			IsChooseXaxis = IsChooseYaxis = IsChooseLine = 0;
-			ChooseLineNum = 0;
+			else if (IsChooseHistogram == FALSE && ChooseHistogram(nowx, nowy))
+			{
+				printf("nowx is %lf nowy is %lf\n", nowx, nowy);
+				IsChooseHistogram = TRUE;
+			}
 		
+		}
+		if (button == RIGHT_BUTTON && (IsChooseXaxis || IsChooseYaxis || IsChooseLine||IsChooseHistogram )) {
+			IsChooseXaxis = IsChooseYaxis = IsChooseLine =IsChooseHistogram= 0;
+			ChooseLineNum = 0;
+			ChooseHistogramNum = 0;
 			ChooseLineMoveX = ChooseLineMoveY = 0;
 
 		}   //右键直接置零
