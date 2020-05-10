@@ -19,7 +19,7 @@ void PreWork()
     FontHeight = GetFontHeight();
     FontAscent = GetFontAscent();
     FontDescent = GetFontDescent();
-  printf("%lf %lf %lf \n", FontHeight, FontAscent, FontDescent);
+  	printf("%lf %lf %lf \n", FontHeight, FontAscent, FontDescent);
     
     GetCurrentDirectory(100, FilePath); 
     //printf("%s\n", FilePath);
@@ -27,9 +27,9 @@ void PreWork()
     MaxX = GetWindowWidth();
     MaxY = GetWindowHeight();
     DefineMycolor();
-   StaticbeginTableX= beginTableX = GetWindowWidth() * 0.2,
-     StaticbeginTableY= beginTableY = GetWindowHeight() * 0.2;
-   StaticendTableX=endTableX = GetWindowWidth() * 0.8, 
+   	StaticbeginTableX= beginTableX = GetWindowWidth() * 0.2,
+    StaticbeginTableY= beginTableY = GetWindowHeight() * 0.2;
+  	StaticendTableX=endTableX = GetWindowWidth() * 0.8, 
       StaticendTableY= endTableY = GetWindowHeight() * 0.9;
     /*for (int i = 0; i < FileNum; i++)
         printf("%s\n", FileName[i]);*/
@@ -121,7 +121,7 @@ void AssignTable() {   //分配是用柱状图还是折线图
             IsChooseColumn[column] = 1;   //无论是1还是2 都先设为1
     }
 
-    if (ChooseColumnNum && ChooseColumnNum <4)      //是二代表柱状图  一代表折线图  原来默认是1  那我只要改成2 就行
+    if (ChooseColumnNum && ChooseColumnNum <4)      //2代表柱状图  1代表折线图  原来默认是1  那我只要改成2 就行
     {
         int change1 = ChoosedColumn[1];    //把第一个选中的置为2
         IsChooseColumn[change1] = 2;

@@ -24,15 +24,15 @@
 #include "PreWork.c"
 #include "MyDraw.c"
 #include "HandleMouse.c"
-// 窗口有关坐标  MaxX和MaxY
-
 
 // 显示界面
 void display();
 
 // 鼠标事件回调函数
 void MouseEventProcess(int x, int y, int button, int event);
+// 字符事件回调函数
 void CharEventProcess(char ch);
+// 键盘事件回调函数
 void KeyboardEventProcess(int key, int event);
 
 
@@ -49,13 +49,12 @@ void Main()
     // 初始化图形窗口
     SetWindowSize(24, 13.5);
     InitGraphics();
-   InitConsole();
+   	InitConsole();
     PreWork(); //把一堆定义的事干完
     // 注册回调函数
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());
-    registerMouseEvent(MouseEventProcess); //鼠标
+    registerMouseEvent(MouseEventProcess); 
     registerKeyboardEvent(KeyboardEventProcess);
- 
     registerCharEvent(CharEventProcess);
 }
 
@@ -103,7 +102,7 @@ void DrawPicture(stu_Ptr Head)
    
     DrawLeftButton(Head);   //左侧的一堆按钮
    
-    drawMainPicture();   //主要那个表
+    drawMainPicture();   //画主图 
     DrawPredict();     //画预测的输入框
 }
 

@@ -2,6 +2,9 @@
 
 #include "genlib.h"
 
+#define MAXCOLUMN 13  // 数据的最多列数 
+#define MAXDATE   50  // 最多支持的日期 
+
 double MaxX, MaxY; //最大宽度 长度
 
 double lx = -1, ly = -1;
@@ -19,9 +22,9 @@ int IsOpenAdvance;
 
 int FileTotalNum;    //一共多少日期
 int TotalColumnNum ;  //一共有多少列  就是类似 全国感染   湖北感染  全国疑似这种列
-BOOL IsChooseColumn[13];  //是否选择了该列    只要非零都为选中 
+BOOL IsChooseColumn[MAXCOLUMN];  //是否选择了该列    只要非零都为选中 
 int ChooseColumnNum;   //选中的column的数目  相当于一个数据结构
-int ChoosedColumn[13];   //放所有选中的column的序号  
+int ChoosedColumn[MAXCOLUMN];   //放所有选中的column的序号  
 
 char *ColumnName[20];  //每一列的名字
 char FilePath[100];   //文件路径
@@ -34,8 +37,8 @@ double StaticbeginTableX, StaticbeginTableY;  //定死的数据
 double StaticendTableX, StaticendTableY;
 int TableMark1, TableMark2, TableMark3, TableMark4, TableMark5,TableMark6;    //第1234条y轴上的灰色线
 
-double TableData[13][50][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
-double CubicEquation[13][50][4]; //放三次方程的数据  第一个为各列   第二个为日期    第三个分别为a b c d  对应 y=a+bx+cx^2+dx^3
+double TableData[MAXCOLUMN][MAXDATE][2];    //table数据     第一个为选的列   第二个为日期   第三个为xy
+double CubicEquation[MAXCOLUMN][MAXDATE][4]; //放三次方程的数据  第一个为各列   第二个为日期    第三个分别为a b c d  对应 y=a+bx+cx^2+dx^3
 
 double PerX, PerY;      //单位长度的xy
 double FontHeight, FontAscent, FontDescent; //见定义
@@ -43,7 +46,7 @@ double FontHeight, FontAscent, FontDescent; //见定义
 char* COLOR[] = { "NULL","TableColor1","TableColor2" ,"TableColor3" , "TableColor4" , "TableColor5" , "TableColor6" ,
 "TableColor7" , "TableColor8","TableColor9","TableColor10","TableColor11","TableColor12" };    //画图颜色
 
-int ClassDataNum[13];    //用来存放每个种类的展示的日期数量
+int ClassDataNum[MAXCOLUMN];    //用来存放每个种类的展示的日期数量
 
 
 int ShowDateNum; //选中的日期数
