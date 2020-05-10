@@ -20,6 +20,8 @@ void polyfit2(int n, double* x, double* y, int poly_n, double a[]);//ÕÒµ½µÄ¶¼±È½
 void  PreparePredict(stu_Ptr HEAD,int Date[4]);
 string GetDate(int month, int day);
 
+void FindBestPredict(int n, double* x, double* y, double a[]);
+
 int CalY(int num, double c[]);
 
 /*==================polyfit(n,x,y,poly_n,a)===================*/
@@ -139,10 +141,13 @@ void DrawPredict() {
     if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 4, MaxX * 0.05, FontHeight * 2, "Ô¤²â")) {
 
         if (CheckPredict(WrongTip, InputMonth, InputDay, DateLength, PredictLength,Poly, ans)) {
-            MyFree(PreHead);
+            MyFree(PreHead);  //Ê×ÏÈÊÍ·ÅÁËÔ­À´´æÔ¤²âÊı¾İµÄÁ´±í
             IsPredict = TRUE;
             ISOK = TRUE;
-            PreparePredict(PredictHead,ans);
+            
+
+            PreparePredict(PredictHead,ans);  //ÉêÇëÄÚ´æ    ¼ÆËãÊı¾İ  ÌáÇ°¼ÆËãºÃ´æµ½preHeadÀï
+           
             NowShowTable = PreHead;
             Calculate(NowShowTable);
             //printf("Check!!\n");
@@ -152,7 +157,7 @@ void DrawPredict() {
         }
 
     }
-    if (!IsPredict && !ISOK) {
+    if ( !ISOK) {
         SetPenColor("Red");
         SetPenSize(3);
         drawLabel(0.99 * MaxX - TextStringWidth(WrongTip), beginY -= 2 * FontHeight, WrongTip);
@@ -222,7 +227,7 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //Ô¤²âÊı¾İµÄÁ´±íÒ²´øÍ·½Úµã
     //¸ù¾İ¿ÉÒÔ²É¼¯µÄ¿ªÊ¼malloc
 
     tmp1 = PreHead;
-    int i;
+    int i,j;
     for (i = 0; i < HaveNum + Date[3]; i++) {
         tmp2 = (stu_Ptr)malloc(sizeof(struct stu));
         tmp1->next = tmp2;
@@ -231,9 +236,10 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //Ô¤²âÊı¾İµÄÁ´±íÒ²´øÍ·½Úµã
     tmp1->next = NULL;
 
 
-    for (int i = 1; i <= TotalColumnNum; i++) {
+    for ( i = 1; i <= TotalColumnNum; i++) {
         
         int nownum = 0;
+        int reset = 0;
         memset(x, 0, sizeof(double) * (Date[2] + Date[3]));
         memset(y, 0, sizeof(double) * (Date[2] + Date[3]));
         memset(coefficient, 0, sizeof(double) * 6);
@@ -244,17 +250,29 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //Ô¤²âÊı¾İµÄÁ´±íÒ²´øÍ·½Úµã
             nownum++;
             tmp1 = tmp1->next;
         }
-       
-        polyfit1(nownum, x, y, PolyNum, coefficient);  //½øĞĞ¼ÆËã  ½«ËãµÃµÄ¶àÏîÊ½ÄâºÏµÄÏµÊı·Åµ½coefficientÀï
+        if (PolyNum == -1) {
+            FindBestPredict(nownum, x, y, coefficient);  //½«polynumÖÃÎªºÏÊÊµÄÖµ 0-5Ö®¼ä
+            reset = 1;
+        }
 
-        for (int i = 0; i < nownum; i++) {
+       if(PolyNum>0)   //Èç¹û²»ÊÇ0
+        polyfit1(nownum, x, y, PolyNum, coefficient);  //½øĞĞ¼ÆËã  ½«ËãµÃµÄ¶àÏîÊ½ÄâºÏµÄÏµÊı·Åµ½coefficientÀï
+       else if(!PolyNum){
+           for (j = 0; j < nownum; j++)
+               y[j] = log(y[j]);
+
+           polyfit1(nownum, x, y, 1, coefficient);
+       }
+       
+     /*   for (int i = 0; i < nownum; i++) {
             printf("µÚ %d¸öxÎª%lf yÎª%lf", i, x[i], y[i]);
         }
         printf("\n");
         for (int i = 0; i <= PolyNum; i++) {
             printf("µÚ%d¸öÏµÊıÎª%lf   ", i, coefficient[i]);
         }
-        printf("\n");
+        printf("\n");*/
+
         nownum = 0;
         tmp1 = PreHead->next;   //ÓĞÍ·½Úµã   ¿ªÊ¼ÈûÊı¾İÁË
         while (tmp1 != NULL) {
@@ -266,21 +284,90 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //Ô¤²âÊı¾İµÄÁ´±íÒ²´øÍ·½Úµã
             tmp1 = tmp1->next;
         }
 
+        if(reset)
+        PolyNum = -1; //ÖØÖÃÎª-1·½±ãÏÂÒ»¸öÑ­»·Ê¹ÓÃ
 
     }
          
     
 }
+
+void FindBestPredict(int n, double* x, double* y, double a[]) {
+    int Findpoly;   //Ä¿µÄ½×Êı
+    int i, j;
+    double R_2 = -100;
+    double TmpR_2;
+
+    double AverageY = 0;
+
+    for (i = 0; i < n; i++) {
+        AverageY += y[i];
+    }
+    AverageY /= n;
+
+
+    for (i = 0; i <= 5; i++) {
+        double SSE = 0, SST = 0;   //SSRÎª»Ø¹éÆ½·½ºÍ£¬SSEÎª²Ğ²îÆ½·½ºÍ£¬SSTÎª×ÜÀë²îÆ½·½ºÍ
+            if (!i)
+            for (j = 0; j < n; j++) {
+                y[j] = log(y[j]);
+
+            }   //Èç¹ûiÊÇ0ÏÈÈ¡¶ÔÊı
+
+            if (i) {
+                polyfit1(n, x, y, i, a);
+                if (a[i] < 0)
+                    continue;
+            }
+            
+            else {
+                polyfit1(n, x, y, 1, a);   //Èç¹ûÊÇi=0 ÄÇ¾ÍÓÃÏßĞÔµÄlny=lnk+ax
+                if (a[1] < 0)
+                    continue;
+            }
+         
+        
+        PolyNum = i;  //ÏÈÖÃÎªi
+        for (j = 0; j < n; j++) {
+            double tmp = CalY(j + 1, a);
+            SSE += pow((y[j] - tmp), 2);
+            SST += pow(y[j] - AverageY, 2);
+        }
+
+
+        TmpR_2 = 1.0 - SSE / SST; //¹Ø¼üÒ»²½
+
+        printf("µÚ%d¸öÄ£ĞÍÄâºÏ¶ÈÎª%lf\n", i, TmpR_2);
+
+        if (TmpR_2 > R_2) {   //Èç¹û¸ü¼ÓÄâºÏ
+            R_2 = TmpR_2;
+            Findpoly = i;
+        }
+
+        if (!i)  //Èç¹û¸Õ²ÅÈ¡ÁË¶ÔÊı ÄÇ¾ÍÖØĞÂ±ä»ØÈ¥ ·ÀÖ¹Ó°ÏìºóĞøÊ¹ÓÃ
+            for (j = 0; j < n; j++) {
+                y[j] = exp(y[j]);
+            }
+
+    }
+    PolyNum = Findpoly;
+}
 int CalY(int num, double  c[]) {
     double ans = 0;
-    for (int i = 0; i <= PolyNum; i++) {
+    if (PolyNum) {
+        for (int i = 0; i <= PolyNum; i++) {    //Èç¹ûÊÇ¶àÏîÊ½ÄâºÏ  ¾Í°´ÕâÑùËã
         ans += pow(num, i) * c[i];
+        }
+    }
+    
+    else {
+            ans= exp(c[0]) * exp(num * c[1]);  //Èç¹ûÊÇÖ¸ÊıÄâºÏ  ¾ÍÕâÑùËã
     }
     return (int)ans;
 
 }
 BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, string  DateLength, string PredictLength, string poly,int ans[4]) {
-    if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(PredictLength) || !strcmp(InputMonth, "ÔÂ")||!strlen(poly) || !strcmp(InputDay, "ÈÕ") || InputMonth[0] < 0 || InputDay[0] < 0) {
+    if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(PredictLength) || !strcmp(InputMonth, "ÔÂ") ||!strcmp(InputDay, "ÈÕ") || InputMonth[0] < 0 || InputDay[0] < 0) {
 
         strcpy(WrongTip, "ÇëÊäÈëÍêÕûÊı¾İ");
         return FALSE;
@@ -304,6 +391,10 @@ BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, string  D
         strcpy(WrongTip, "²ÉÑùÌìÊı²»ÄÜ³¬¹ı20Å¶");
         return FALSE;
     }
+    if (Datelen <10) {
+        strcpy(WrongTip, "²ÉÑùÌìÊı²»ÄÜÉÙÓÚ10Å¶");
+        return  FALSE;
+    }
     if (!Predict) {
         strcpy(WrongTip, "ÇëÊäÈëÕıÈ·Ô¤²â");
         return FALSE;
@@ -312,12 +403,15 @@ BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, string  D
         strcpy(WrongTip, "Ô¤²âÌìÊı²»ÄÜ³¬¹ı20Å¶");
         return FALSE;
     }
-    if (polynum <= 0)
+    if (!strlen(poly)) {
+        polynum = -1;
+    }
+    else  if (polynum < 0)
     {
         strcpy(WrongTip, "Ä£ĞÍ½×Êı´íÎó");
         return FALSE;
     }
-    if (polynum > 5) {
+    else if (polynum > 5) {
         strcpy(WrongTip, "½×ÊıÌ«´óÁËÎØ");
         return FALSE;
     }

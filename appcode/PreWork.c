@@ -172,6 +172,11 @@ void Calculate(stu_Ptr HEAD)
     start_time = clock();   //获取开始执行时间
 #endif //  SHOWTIME
 
+    if (HEAD == NULL) {
+        printf("内存错误无法计算\n");
+        return;
+    }
+
     memset(CubicEquation, 0, sizeof(CubicEquation));   //每次计算出的方程都不一样  都得清空了再说
     int ShowNum = 0;
     int Maxnum = 0;
