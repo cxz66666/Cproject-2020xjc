@@ -144,7 +144,7 @@ void DrawPredict() {
             MyFree(PreHead);  //首先释放了原来存预测数据的链表
             IsPredict = TRUE;
             ISOK = TRUE;
-            
+            NowDateNum = NowDateColumn = 0;
 
             PreparePredict(PredictHead,ans);  //申请内存    计算数据  提前计算好存到preHead里
            
@@ -171,6 +171,7 @@ void DrawPredict() {
 
             NowShowTable = head;   //改变视图   改为展示原来已有的数据
             IsPredict = FALSE;
+            NowDateNum = NowDateColumn = 0;
             Calculate(NowShowTable);   //重新计算
         }
     }

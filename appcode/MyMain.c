@@ -25,14 +25,13 @@
 #include "MyDraw.c"
 #include "HandleMouse.c"
 
-// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 
 
-// ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
+// Êó±êÊÂ¼þ»Øµ÷º¯Êý
 void MouseEventProcess(int x, int y, int button, int event);
-// ï¿½Ö·ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
+// ×Ö·ûÊÂ¼þ»Øµ÷º¯Êý
 void CharEventProcess(char ch);
-// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
+// ¼üÅÌÊÂ¼þ»Øµ÷º¯Êý
 void KeyboardEventProcess(int key, int event);
 
 
@@ -40,17 +39,15 @@ void KeyboardEventProcess(int key, int event);
 
 
 
-// ï¿½ï¿½Ú£ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
-
 
 void Main()
 {
-    // ï¿½ï¿½Ê¼ï¿½ï¿½Í¼ï¿½Î´ï¿½ï¿½ï¿½
+    // ³õÊ¼»¯Í¼ÐÎ´°¿Ú
     SetWindowSize(24, 13.5);
     InitGraphics();
    	InitConsole();
-    PreWork(); //ï¿½ï¿½Ò»ï¿½Ñ¶ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½ï¿½ï¿½
-    // ×¢ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
+    PreWork(); //°ÑÒ»¶Ñ¶¨ÒåµÄÊÂ¸ÉÍê
+    // ×¢²á»Øµ÷º¯Êý
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());
     registerMouseEvent(MouseEventProcess); 
     registerKeyboardEvent(KeyboardEventProcess);
@@ -65,20 +62,11 @@ void Main()
 
 
 
-void DrawPicture(stu_Ptr Head)
-{
-   
-    DrawLeftButton(Head);   //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ñ°ï¿½Å¥
-   
-    drawMainPicture();   //ï¿½ï¿½ï¿½ï¿½Í¼ 
-    DrawPredict();     //ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-}
 
-
-// ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
+// Êó±êÊÂ¼þ»Øµ÷º¯Êý
 void MouseEventProcess(int x, int y, int button, int event)
 {
-    // UI ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
+    // UI »ñÈ¡Êó±êÊÂ¼þ
   
     uiGetMouse(x, y, button, event);
     //clock_t start_time, end_time;
@@ -87,7 +75,7 @@ void MouseEventProcess(int x, int y, int button, int event)
    
     if (HandleMouse(x, y, button, event) && IsOpen == 2) {
       // num++;
-        Calculate(NowShowTable); //ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½
+        Calculate(NowShowTable); //Èç¹ûÒÆ¶¯ÁË  ÖØÐÂ¼ÆËã
        // UpdateDisplay();
     }
        
@@ -103,11 +91,11 @@ void MouseEventProcess(int x, int y, int button, int event)
 
 void CharEventProcess(char ch)
 {
-    uiGetChar(ch); // GUIï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½
+    uiGetChar(ch); // GUI×Ö·ûÊäÈë
     display();
 }
 void KeyboardEventProcess(int key, int event)
 {
-    uiGetKeyboard(key, event); // GUIï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
+    uiGetKeyboard(key, event); // GUI»ñÈ¡¼üÅÌ
     display();
 }

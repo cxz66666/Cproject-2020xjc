@@ -69,6 +69,7 @@ void DrawMain()
             DrawPicture(PreHead);  //如果是预测就画预测的 图
         }
     }
+    DrawStatus();   //左下角画当前状态
 }
 
 
@@ -79,8 +80,8 @@ void DrawPicture(stu_Ptr Head)
 
     drawMainPicture();   //主要那个表
     DrawPredict();     //画预测的输入框
-
-    DrawStatus();   //左下角画当前状态
+   
+  
     if (IsRedisplay)
     {
         IsRedisplay = 0;
@@ -91,18 +92,19 @@ void DrawPicture(stu_Ptr Head)
 
 
 void DrawStatus() {
+    SetPenSize(1);
+    SetPenColor("Black");
     char NowStatus[30];
     memset(NowStatus, 0, sizeof(NowStatus));
     if (IsSave)
         strcpy(NowStatus, "正在文件保存");
-
     else if (IsChooseXaxis)
         strcpy(NowStatus, "正在移动X轴");
     else if (IsChooseYaxis)
         strcpy(NowStatus, "正在移动Y轴");
     else if (IsChooseLine)
         strcpy(NowStatus, "正在移动曲线");
-    else if (IsChooseColumn)
+    else if (IsChooseHistogram)
         strcpy(NowStatus, "选中柱体");
     else if (IsChangeNum)
         strcpy(NowStatus, "正在更改数据");
@@ -110,14 +112,14 @@ void DrawStatus() {
         strcpy(NowStatus, "正在进行预测");
     else if (IsOpen == 1)
         strcpy(NowStatus, "正在打开文件");
-    else if (IsOpen == 2) {
+    else if (IsOpen == 2) 
         sprintf(NowStatus, "正在查看%s文件", OpenFileName);
+    else
+        strcpy(NowStatus, "正在摸鱼");
+    
+    MovePen(0.1, 0.1);
 
-        MovePen(0.1, 0.1);
-        SetPenSize(1);
-        SetPenColor("Red");
-        DrawTextString(NowStatus);
-    }
+    DrawTextString(NowStatus);
 }
 void DrawMenu()
 {
