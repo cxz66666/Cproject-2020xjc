@@ -2,98 +2,100 @@
 
 #include "genlib.h"
 
-#define MAXCOLUMN 13  // Êý¾ÝµÄ×î¶àÁÐÊý 
-#define MAXDATE   50  // ×î¶àÖ§³ÖµÄÈÕÆÚ 
+#define MAXCOLUMN 13  // ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+#define MAXDATE   50  // ï¿½ï¿½ï¿½Ö§ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ 
 
-double MaxX, MaxY; //×î´ó¿í¶È ³¤¶È
+double MaxX, MaxY; //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 double lx = -1, ly = -1;
 
+BOOL IsRedisplay;
 
 char penColor[16] = "Black";
 //static int Button1, Button2, Button3;
-int IsOpen;//ÊÇ·ñÔÚ´ò¿ªÎÄ¼þ  1ÎªÑ¡Ôñ½çÃæ  2ÎªÕ¹Ê¾Êý¾Ý
-string OpenFileName;   //´ò¿ªÎÄ¼þµÄÃû×Ö
-int IsSave;    //ÊÇ·ñÕýÔÚ±£´æÁË
-int MyError; //errorÐ¡ÓÚ0µÄ»°¾Í±¨´í   -1ÎÄ¼þÎ´´ò¿ª
-int IsMusic; //·ÅÒôÀÖ¾ÍËãÁË
+int IsOpen;//ï¿½Ç·ï¿½ï¿½Ú´ï¿½ï¿½Ä¼ï¿½  1ÎªÑ¡ï¿½ï¿½ï¿½ï¿½ï¿½  2ÎªÕ¹Ê¾ï¿½ï¿½ï¿½ï¿½
+string OpenFileName;   //ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+int IsSave;    //ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½
+int MyError; //errorÐ¡ï¿½ï¿½0ï¿½Ä»ï¿½ï¿½Í±ï¿½ï¿½ï¿½   -1ï¿½Ä¼ï¿½Î´ï¿½ï¿½
+int IsMusic; //ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½
 int IsOpenOther;
 int IsOpenAdvance;
 
-int FileTotalNum;    //Ò»¹²¶àÉÙÈÕÆÚ
-int TotalColumnNum ;  //Ò»¹²ÓÐ¶àÉÙÁÐ  ¾ÍÊÇÀàËÆ È«¹ú¸ÐÈ¾   ºþ±±¸ÐÈ¾  È«¹úÒÉËÆÕâÖÖÁÐ
-BOOL IsChooseColumn[MAXCOLUMN];  //ÊÇ·ñÑ¡ÔñÁË¸ÃÁÐ    Ö»Òª·ÇÁã¶¼ÎªÑ¡ÖÐ 
-int ChooseColumnNum;   //Ñ¡ÖÐµÄcolumnµÄÊýÄ¿  Ïàµ±ÓÚÒ»¸öÊý¾Ý½á¹¹
-int ChoosedColumn[MAXCOLUMN];   //·ÅËùÓÐÑ¡ÖÐµÄcolumnµÄÐòºÅ  
+int FileTotalNum;    //Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+int NowDateNum;    //10ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+int TotalColumnNum ;  //Ò»ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È«ï¿½ï¿½ï¿½ï¿½È¾   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¾  È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+BOOL IsChooseColumn[MAXCOLUMN];  //ï¿½Ç·ï¿½Ñ¡ï¿½ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½    Ö»Òªï¿½ï¿½ï¿½ã¶¼ÎªÑ¡ï¿½ï¿½ 
+int ChooseColumnNum;   //Ñ¡ï¿½Ðµï¿½columnï¿½ï¿½ï¿½ï¿½Ä¿  ï¿½àµ±ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ý½á¹¹
+int ChoosedColumn[MAXCOLUMN];   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½Ðµï¿½columnï¿½ï¿½ï¿½ï¿½ï¿½  
 
-char *ColumnName[20];  //Ã¿Ò»ÁÐµÄÃû×Ö
-char FilePath[100];   //ÎÄ¼þÂ·¾¶
-char *FileName[20];   //¸÷¸öÎÄ¼þÃû
-int FileNum;  //×ÜÎÄ¼þÊýÄ¿
+char *ColumnName[20];  //Ã¿Ò»ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½
+char FilePath[100];   //ï¿½Ä¼ï¿½Â·ï¿½ï¿½
+char *FileName[20];   //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
+int FileNum;  //ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ä¿
 
-double beginTableX, beginTableY;   //¿ªÊ¼»­Í¼µÄxy
-double endTableX, endTableY;   //½áÊø»­Í¼µÄxy
-double StaticbeginTableX, StaticbeginTableY;  //¶¨ËÀµÄÊý¾Ý
+double beginTableX, beginTableY;   //ï¿½ï¿½Ê¼ï¿½ï¿½Í¼ï¿½ï¿½xy
+double endTableX, endTableY;   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½xy
+double StaticbeginTableX, StaticbeginTableY;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 double StaticendTableX, StaticendTableY;
-int TableMark1, TableMark2, TableMark3, TableMark4, TableMark5,TableMark6;    //µÚ1234ÌõyÖáÉÏµÄ»ÒÉ«Ïß
+int TableMark1, TableMark2, TableMark3, TableMark4, TableMark5,TableMark6;    //ï¿½ï¿½1234ï¿½ï¿½yï¿½ï¿½ï¿½ÏµÄ»ï¿½É«ï¿½ï¿½
 
-double TableData[MAXCOLUMN][MAXDATE][2];    //tableÊý¾Ý     µÚÒ»¸öÎªÑ¡µÄÁÐ   µÚ¶þ¸öÎªÈÕÆÚ   µÚÈý¸öÎªxy
-double CubicEquation[MAXCOLUMN][MAXDATE][4]; //·ÅÈý´Î·½³ÌµÄÊý¾Ý  µÚÒ»¸öÎª¸÷ÁÐ   µÚ¶þ¸öÎªÈÕÆÚ    µÚÈý¸ö·Ö±ðÎªa b c d  ¶ÔÓ¦ y=a+bx+cx^2+dx^3
+double TableData[MAXCOLUMN][MAXDATE][2];    //tableï¿½ï¿½ï¿½ï¿½     ï¿½ï¿½Ò»ï¿½ï¿½ÎªÑ¡ï¿½ï¿½ï¿½ï¿½   ï¿½Ú¶ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªxy
+double CubicEquation[MAXCOLUMN][MAXDATE][4]; //ï¿½ï¿½ï¿½ï¿½ï¿½Î·ï¿½ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½Ò»ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½   ï¿½Ú¶ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Îªa b c d  ï¿½ï¿½Ó¦ y=a+bx+cx^2+dx^3
 
-double PerX, PerY;      //µ¥Î»³¤¶ÈµÄxy
-double FontHeight, FontAscent, FontDescent; //¼û¶¨Òå
+double PerX, PerY;      //ï¿½ï¿½Î»ï¿½ï¿½ï¿½Èµï¿½xy
+double FontHeight, FontAscent, FontDescent; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 char* COLOR[] = { "NULL","TableColor1","TableColor2" ,"TableColor3" , "TableColor4" , "TableColor5" , "TableColor6" ,
-"TableColor7" , "TableColor8","TableColor9","TableColor10","TableColor11","TableColor12" };    //»­Í¼ÑÕÉ«
+"TableColor7" , "TableColor8","TableColor9","TableColor10","TableColor11","TableColor12" };    //ï¿½ï¿½Í¼ï¿½ï¿½É«
 
-int ClassDataNum[MAXCOLUMN];    //ÓÃÀ´´æ·ÅÃ¿¸öÖÖÀàµÄÕ¹Ê¾µÄÈÕÆÚÊýÁ¿
-
-
-int ShowDateNum; //Ñ¡ÖÐµÄÈÕÆÚÊý
-
-int DrawWithLine, DrawWithColumn; //ÓÃÕÛÏßÍ¼»­µÄ   ÓÃÉ¢µãÍ¼»­µÄÊý   Öù×´Í¼²»ÄÜ³¬¹øÁ½¸ö   ³¬¹ýÁ½¸ö»­Í¼ÏÔÊ¾Ð§¹û¾ÍºÜ¿ÉÏ§ÁË
-int DrawWithColumnNow;       //Èç¹ûÓÃÕÛÏß»­ÄÇÃ´»­µ½µÚ¼¸¸öÁË   ·´Õý¾ÍÁ© ´óÁ¦ÌÖÂÛ
+int ClassDataNum[MAXCOLUMN];    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
-double ColumnWidth;    //Öù×´Í¼µÄ¿í¶È
+int ShowDateNum; //Ñ¡ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-double Histogram[50][4];  //´æÖù×´Í¼µÄ¸÷¸öÊý¾Ý   ¡¾0¡¿Îªx  ¡¾1¡¿Îªy
+int DrawWithLine, DrawWithColumn; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½É¢ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½×´Í¼ï¿½ï¿½ï¿½Ü³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ê¾Ð§ï¿½ï¿½ï¿½ÍºÜ¿ï¿½Ï§ï¿½ï¿½
+int DrawWithColumnNow;       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß»ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
+
+double ColumnWidth;    //ï¿½ï¿½×´Í¼ï¿½Ä¿ï¿½ï¿½
+
+double Histogram[50][4];  //ï¿½ï¿½ï¿½ï¿½×´Í¼ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½0ï¿½ï¿½Îªx  ï¿½ï¿½1ï¿½ï¿½Îªy
 
 
 typedef struct stu* stu_Ptr;
-struct stu    //Ã¿Ò»Ìì
+struct stu    //Ã¿Ò»ï¿½ï¿½
 {
-    char* Date;   //ÈÕÆÚ
+    char* Date;   //ï¿½ï¿½ï¿½ï¿½
      
-    int Data[10];    //Ã¿Ò»ÐÐµÄÊý¾Ý
-    stu_Ptr next;   //ÏÂÒ»¸ö
-    char Nowcolor[16];   //ÑÕÉ«
-    char Changedcolor[16];   //Ñ¡ÖÐµÄÑÕÉ«
-    BOOL IsSelect;   //ÊÇ·ñÏÔÊ¾   ×ó²à°´Å¥¿ÉÒÔ¸Ä±äÕâ¸ö×´Ì¬
+    int Data[10];    //Ã¿Ò»ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½
+    stu_Ptr next;   //ï¿½ï¿½Ò»ï¿½ï¿½
+    char Nowcolor[16];   //ï¿½ï¿½É«
+    char Changedcolor[16];   //Ñ¡ï¿½Ðµï¿½ï¿½ï¿½É«
+    BOOL IsSelect;   //ï¿½Ç·ï¿½ï¿½ï¿½Ê¾   ï¿½ï¿½à°´Å¥ï¿½ï¿½ï¿½Ô¸Ä±ï¿½ï¿½ï¿½ï¿½×´Ì¬
     double nowx, nowy;   //
-    double XPosition[10],YPosition[10];    //Ã¿Ò»¸öÊý¾ÝµÄxyÎ»ÖÃ
-    BOOL IsShowNum;  //ÊÇ·ñÕýÔÚ¸ü¸Ä
+    double XPosition[10],YPosition[10];    //Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½xyÎ»ï¿½ï¿½
+    BOOL IsShowNum;  //ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½
 } *STU;
 struct stu *head, *ptr,*tail;
-struct stu* PredictHead;  //Õâ¸ö·ÅÔÚÔ­Á´±íÖÐÕÒµ½ÏàÍ¬ÈÕÆÚµÄÄÇ¸ö½Úµã  Õâ¸öÖ»ÊÇ¸ö±êÖ¾ ²»¶ÔËü×öÈÎºÎmallocÓÐ¹ØµÄ¶«Î÷
-struct stu* PreHead;      //Õâ¸ö·ÅÐÂ´´½¨µÄÁ´±í  ´æ·ÅÔ¤²âµÄÊý¾Ý  Ô¤²âÊý¾ÝÓÃµÄ
+struct stu* PredictHead;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Úµï¿½ï¿½Ç¸ï¿½ï¿½Úµï¿½  ï¿½ï¿½ï¿½Ö»ï¿½Ç¸ï¿½ï¿½ï¿½Ö¾ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½mallocï¿½Ð¹ØµÄ¶ï¿½ï¿½ï¿½
+struct stu* PreHead;      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½
 
-struct stu* NowShowTable;   //Á½ÖÖ¿ÉÄÜ   Ò»ÖÖÊÇshow head ¾ÍÊÇÕ¹Ê¾ÏÖÓÐµÄÊý¾Ý Ò»ÖÖÊÇshow Ô¤²âµÄ Õ¹Ê¾Ô¤²âµÄÊý¾Ý
-
-
-BOOL IsChooseXaxis=FALSE, IsChooseYaxis = FALSE,IsChooseLine = FALSE, IsChooseHistogram = FALSE;    //ÊÇ·ñÑ¡ÖÐÁËxyÖá ½øÐÐÀ­ÉìËõ¶ÌµÈ²Ù×÷
-
-double ChooseLineMoveX, ChooseLineMoveY;    // Ñ¡ÔñµÄÏßµÄÒÆ¶¯µÄx£¬y
-
-int ChooseLineNum,ChooseHistogramNum;  //Ñ¡ÖÐµÄcolumnµÄÐòºÅ   ´Ó1¿ªÊ¼¼ÆÊý
-
-BOOL IsPredict;   //ÊÇ·ñÔÚÔ¤²â
+struct stu* NowShowTable;   //ï¿½ï¿½ï¿½Ö¿ï¿½ï¿½ï¿½   Ò»ï¿½ï¿½ï¿½ï¿½show head ï¿½ï¿½ï¿½ï¿½Õ¹Ê¾ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ Ò»ï¿½ï¿½ï¿½ï¿½show Ô¤ï¿½ï¿½ï¿½ Õ¹Ê¾Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
-BOOL IsChangeNum=TRUE;   //ÊÇ·ñÔÚ ¸ÄÊý¾Ý
+BOOL IsChooseXaxis=FALSE, IsChooseYaxis = FALSE,IsChooseLine = FALSE, IsChooseHistogram = FALSE;    //ï¿½Ç·ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½xyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌµÈ²ï¿½ï¿½ï¿½
 
-stu_Ptr ChangingPtr;    //ÕýÔÚ¸Ä±äµÄPtr
+double ChooseLineMoveX, ChooseLineMoveY;    // Ñ¡ï¿½ï¿½ï¿½ï¿½ßµï¿½ï¿½Æ¶ï¿½ï¿½ï¿½xï¿½ï¿½y
 
-string ChangingPtrStringNum[20];    //¸ü¸ÄÊý¾Ý¿òÀïµÄÊý¾Ý   ±¾ÖÊ¾ÍÊÇChangingPtrÀïµÄdataÊý¾ÝÀïµÄstring»¯
+int ChooseLineNum,ChooseHistogramNum;  //Ñ¡ï¿½Ðµï¿½columnï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½1ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
+
+BOOL IsPredict;   //ï¿½Ç·ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½
+
+
+BOOL IsChangeNum;   //ï¿½Ç·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
+stu_Ptr ChangingPtr;    //ï¿½ï¿½ï¿½Ú¸Ä±ï¿½ï¿½Ptr
+
+string ChangingPtrStringNum[20];    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ChangingPtrï¿½ï¿½ï¿½dataï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½stringï¿½ï¿½
 
 BOOL IsSavingOK;

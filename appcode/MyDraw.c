@@ -3,9 +3,15 @@
 #include "Readcsv.c"
 #include "MyDrawTable.c"
 #include "MyPredict.c"
+
+
+void display();
+void DrawPicture(stu_Ptr Head);
+
+void DrawMain();
 void DrawOpenDir();
 void DrawMenu();
-
+void DrawStatus();
 void HandleFileButton(int selection);
 void HandleToolButton(int selection);
 
@@ -27,6 +33,92 @@ void Delete(int num);
 
 #define   MY_DRAW_K  20  //在画table的时候 两个x直接画多少个点
 #define  SHOWTIMEDRAW 0 //输出运行时间
+
+
+
+// 显示界面
+void display()
+{
+    if (!IsSave)   //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文
+        UpdateDisplay();
+    DisplayClear();
+
+    DrawMenu();
+    // 黑色选择按钮
+    DrawMain();
+
+}
+
+
+void DrawMain()
+{
+    // printf("%d", IsOpen);
+    if (IsOpen == 1)
+    {
+        DrawOpenDir();
+    }
+    else if (IsOpen == 2)
+    {
+        if (IsSave == 1)
+        {
+            SaveToCsv(NowShowTable);
+        }
+        if (!IsPredict)
+            DrawPicture(head);  //如果不是预测模式就画文件里的图
+        else {
+            DrawPicture(PreHead);  //如果是预测就画预测的 图
+        }
+    }
+}
+
+
+void DrawPicture(stu_Ptr Head)
+{
+
+    DrawLeftButton(Head);   //左侧的一堆按钮
+
+    drawMainPicture();   //主要那个表
+    DrawPredict();     //画预测的输入框
+
+    DrawStatus();   //左下角画当前状态
+    if (IsRedisplay)
+    {
+        IsRedisplay = 0;
+        display();
+    }
+}
+
+
+
+void DrawStatus() {
+    char NowStatus[30];
+    memset(NowStatus, 0, sizeof(NowStatus));
+    if (IsSave)
+        strcpy(NowStatus, "正在文件保存");
+
+    else if (IsChooseXaxis)
+        strcpy(NowStatus, "正在移动X轴");
+    else if (IsChooseYaxis)
+        strcpy(NowStatus, "正在移动Y轴");
+    else if (IsChooseLine)
+        strcpy(NowStatus, "正在移动曲线");
+    else if (IsChooseColumn)
+        strcpy(NowStatus, "选中柱体");
+    else if (IsChangeNum)
+        strcpy(NowStatus, "正在更改数据");
+    else if (IsPredict)
+        strcpy(NowStatus, "正在进行预测");
+    else if (IsOpen == 1)
+        strcpy(NowStatus, "正在打开文件");
+    else if (IsOpen == 2) {
+        sprintf(NowStatus, "正在查看%s文件", OpenFileName);
+
+        MovePen(0.1, 0.1);
+        SetPenSize(1);
+        SetPenColor("Red");
+        DrawTextString(NowStatus);
+    }
+}
 void DrawMenu()
 {
     static char *menuListFile[] = {"File",
@@ -150,57 +242,116 @@ void DrawLeftButton(stu_Ptr Head)
     double fH = GetFontHeight();
     int nowNum = 0;
     Head = Head->next;   //是有头节点啊啊啊啊啊嗷嗷嗷嗷哦哦哦哦哦哦
+   
+
+  
+
+
     SetPenSize(1);
     while (Head != NULL)  
     {
         int IsSelect = Head->IsSelect;
         setButtonColors("Orange", "Red", "Black", "Red", IsSelect);
         nowNum++;
-        if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * nowNum + 1.5) * GetFontHeight(), 0.08, 0.08, ""))
-        {
-            Head->IsSelect = !(Head->IsSelect);
-            Calculate(NowShowTable);
+       
+        if (nowNum > 10 * NowDateNum&&nowNum<=10*(NowDateNum+1)) {
+            if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum-1)%10+1) + 1.5) * FontHeight, 0.08, 0.08, ""))
+            {
+                Head->IsSelect = !(Head->IsSelect);
+                Calculate(NowShowTable);
 
+            }
+            drawLabel(0.3, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
+        
         }
-        drawLabel(0.3, MaxY - (1.2 * nowNum + 1.5) * GetFontHeight(), Head->Date);
+        if (nowNum+1 > 10 * (NowDateNum + 1))
+            break;
         Head = Head->next;
+     
     }
+    SetPenSize(1);
+
+
+
+    if (NowDateNum) {
+        setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
+        if (button(GenUIID(0), 0.2, MaxY - 15 * FontHeight, 1, FontHeight, "上一页"))
+        { 
+            IsRedisplay = 1;
+            NowDateNum--;//日期的换页
+        //display();
+        }
+
+    }
+    if (nowNum != FileTotalNum) {
+        setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
+        if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight, 1, FontHeight, "下一页"))
+        {
+            IsRedisplay = 1;
+            NowDateNum++;//日期的换页
+          //  display();
+        }
+            
+
+    }
+
 	int i;
-    for (i=1; i <= TotalColumnNum; i++)
+    for (i=NowDateColumn*4+1; i <= TotalColumnNum&&i<=(NowDateColumn+1)*4; i++)
     {
         setButtonColors("Orange", "Red", "Black", "Red", IsChooseColumn[i]);
-        if (button(GenUIID(i), 0.1, 4 - (1.4 * i + 1.5) * GetFontHeight(), 0.15, 0.15, ""))
+        if (button(GenUIID(i), 0.1, 4 - (1.4 * ((i-1)%4+1) + 1.5) * GetFontHeight(), 0.15, 0.15, ""))
         {
             IsChooseColumn[i] = !IsChooseColumn[i];
             if (IsChooseColumn[i])
             {
                 Add(i);
-                int j;
-                for (j = 1; j <= ChooseColumnNum; j++)
-                    printf("%d ", ChoosedColumn[j]);
-                printf("\n");
+           //     int j;
+            //    for (j = 1; j <= ChooseColumnNum; j++)
+              //      printf("%d ", ChoosedColumn[j]);
+               // printf("\n");
             }
                 //把i加到已经选择的里面 
             else
             {
                 Delete(i); //把i删去
-                int j;
+               /* int j;
                 for (j = 1; j <= ChooseColumnNum; j++)
                     printf("%d ", ChoosedColumn[j]);
-                printf("\n");
+                printf("\n");*/
             }
                 
 
             Calculate(NowShowTable);
         
         }
-        drawLabel(0.4, 4 - (1.4 * i + 1.5) * GetFontHeight(), ColumnName[i]);
+        drawLabel(0.4, 4 - (1.4 * ((i - 1) % 4 + 1)  + 1.5) * GetFontHeight(), ColumnName[i]);
 
         //画是否在更改/显示数据  是一个颜色蛮好看的输入框
         if (IsChangeNum&&ChangingPtr!=NULL) {
             setTextBoxColors("TextBoxFrame", COLOR[i], "TextBoxFrameHot", COLOR[i], 0);
 
-            textbox(GenUIID(i), 0.5 + TextStringWidth(ColumnName[i]), 4 - (1.4 * i + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 10);
+            textbox(GenUIID(i), 0.5 + TextStringWidth(ColumnName[i]), 4 - (1.4 * ((i - 1) % 4 + 1) + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 10);
+        }
+
+        if (NowDateColumn) {
+            setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
+            if (button(GenUIID(0), 0.2, 4 - 9 * FontHeight, 1, FontHeight, "上一页"))
+            {
+                IsRedisplay = 1;
+                NowDateColumn--;   //列的换页
+                //display();
+            }
+        }
+
+        if ((NowDateColumn + 1) * 4 < TotalColumnNum) {
+            setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
+            if (button(GenUIID(0), 0.2, 4 - 11 * FontHeight, 1, FontHeight, "下一页"))
+            {
+                IsRedisplay = 1;
+                NowDateColumn++;//列的换页
+                //display();
+            }
+
         }
 
     }

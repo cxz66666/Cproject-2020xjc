@@ -25,74 +25,42 @@
 #include "MyDraw.c"
 #include "HandleMouse.c"
 
-// ÏÔÊ¾½çÃæ
-void display();
+// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 
-// Êó±êÊÂ¼ş»Øµ÷º¯Êı
+
+// ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
 void MouseEventProcess(int x, int y, int button, int event);
-// ×Ö·ûÊÂ¼ş»Øµ÷º¯Êı
+// ï¿½Ö·ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
 void CharEventProcess(char ch);
-// ¼üÅÌÊÂ¼ş»Øµ÷º¯Êı
+// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
 void KeyboardEventProcess(int key, int event);
 
 
 
 
-void DrawMain();
 
 
-// Èë¿Ú£¬Ö»µ÷ÓÃÒ»´Î
-void DrawPicture(stu_Ptr Head);
+// ï¿½ï¿½Ú£ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
+
 
 void Main()
 {
-    // ³õÊ¼»¯Í¼ĞÎ´°¿Ú
+    // ï¿½ï¿½Ê¼ï¿½ï¿½Í¼ï¿½Î´ï¿½ï¿½ï¿½
     SetWindowSize(24, 13.5);
     InitGraphics();
    	InitConsole();
-    PreWork(); //°ÑÒ»¶Ñ¶¨ÒåµÄÊÂ¸ÉÍê
-    // ×¢²á»Øµ÷º¯Êı
+    PreWork(); //ï¿½ï¿½Ò»ï¿½Ñ¶ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½ï¿½ï¿½
+    // ×¢ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());
     registerMouseEvent(MouseEventProcess); 
     registerKeyboardEvent(KeyboardEventProcess);
     registerCharEvent(CharEventProcess);
 }
 
-// ÏÔÊ¾½çÃæ
-void display()
-{
-    if(!IsSave)   //Èç¹û²»ÔÚ±£´æ½çÃæÉÏ  ¾Íupdate  ÒòÎª±£´æ½çÃæ¿ÉÄÜÊäÈëÖĞÎÄ  Ê¹ÓÃupdateÎŞ·¨ÊäÈëÖĞÎÄ
-    UpdateDisplay();
-    DisplayClear();
-
-    DrawMenu();
-    // ºÚÉ«Ñ¡Ôñ°´Å¥
-    DrawMain();
-
-}
 
 
 
-void DrawMain()
-{
-    // printf("%d", IsOpen);
-    if (IsOpen == 1)
-    {
-        DrawOpenDir();
-    }
-    else if (IsOpen == 2)
-    {
-        if (IsSave == 1)
-        {
-            SaveToCsv(NowShowTable);
-        }
-        if(!IsPredict)
-        DrawPicture(head);  //Èç¹û²»ÊÇÔ¤²âÄ£Ê½¾Í»­ÎÄ¼şÀïµÄÍ¼
-        else {
-            DrawPicture(PreHead);  //Èç¹ûÊÇÔ¤²â¾Í»­Ô¤²âµÄ Í¼
-        }
-    }
-}
+
 
 
 
@@ -100,17 +68,17 @@ void DrawMain()
 void DrawPicture(stu_Ptr Head)
 {
    
-    DrawLeftButton(Head);   //×ó²àµÄÒ»¶Ñ°´Å¥
+    DrawLeftButton(Head);   //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ñ°ï¿½Å¥
    
-    drawMainPicture();   //»­Ö÷Í¼ 
-    DrawPredict();     //»­Ô¤²âµÄÊäÈë¿ò
+    drawMainPicture();   //ï¿½ï¿½ï¿½ï¿½Í¼ 
+    DrawPredict();     //ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 
-// Êó±êÊÂ¼ş»Øµ÷º¯Êı
+// ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
 void MouseEventProcess(int x, int y, int button, int event)
 {
-    // UI »ñÈ¡Êó±êÊÂ¼ş
+    // UI ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
   
     uiGetMouse(x, y, button, event);
     //clock_t start_time, end_time;
@@ -119,7 +87,7 @@ void MouseEventProcess(int x, int y, int button, int event)
    
     if (HandleMouse(x, y, button, event) && IsOpen == 2) {
       // num++;
-        Calculate(NowShowTable); //Èç¹ûÒÆ¶¯ÁË  ÖØĞÂ¼ÆËã
+        Calculate(NowShowTable); //ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½
        // UpdateDisplay();
     }
        
@@ -135,11 +103,11 @@ void MouseEventProcess(int x, int y, int button, int event)
 
 void CharEventProcess(char ch)
 {
-    uiGetChar(ch); // GUI×Ö·ûÊäÈë
+    uiGetChar(ch); // GUIï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½
     display();
 }
 void KeyboardEventProcess(int key, int event)
 {
-    uiGetKeyboard(key, event); // GUI»ñÈ¡¼üÅÌ
+    uiGetKeyboard(key, event); // GUIï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
     display();
 }
