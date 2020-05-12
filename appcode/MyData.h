@@ -13,6 +13,7 @@ int IsRedisplay;
 char penColor[16] = "Black";
 //static int Button1, Button2, Button3;
 int IsOpen;//是否在打开文件  1为选择界面  2为展示数据
+int IsNew;//是否在新建文件
 string OpenFileName;   //打开文件的名字
 int IsSave;    //是否正在保存了
 int MyError; //error小于0的话就报错   -1文件未打开

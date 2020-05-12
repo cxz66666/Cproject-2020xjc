@@ -3,7 +3,7 @@
 #include "Readcsv.c"
 #include "MyDrawTable.c"
 #include "MyPredict.c"
-
+#include "MyCreat.c"
 
 void display();
 void DrawPicture(stu_Ptr Head);
@@ -11,6 +11,7 @@ void DrawPicture(stu_Ptr Head);
 void DrawMain();
 void DrawOpenDir();
 void DrawMenu();
+void DrawCreateNewFile();
 void DrawStatus();
 void HandleFileButton(int selection);
 void HandleToolButton(int selection);
@@ -43,30 +44,36 @@ void display()
         UpdateDisplay();
     DisplayClear();
 
-    DrawMenu();
-    // 黑色选择按钮
+  
     DrawMain();
-
+    DrawMenu();
+    //先画主要的部分再画菜单  防止遮挡
 }
 
 
 void DrawMain()
 {
     // printf("%d", IsOpen);
-    if (IsOpen == 1)
+    if (IsNew == 1) {       //展示图像有几种情况   如果正在新建  画出新建的情况 Isopendir选择打开的
+       
+        DrawCreateNewFile();
+    }
+    else if (IsOpen == 1)
     {
         DrawOpenDir();
     }
-    else if (IsOpen == 2)
+    else if (IsOpen == 2)    //如果读取到了该csv文件那么将isopen值设为2
     {
-        if (IsSave == 1)
-        {
-            SaveToCsv(NowShowTable);
-        }
-        if (!IsPredict)
-            DrawPicture(head);  //如果不是预测模式就画文件里的图
+        
+        if (!IsPredict)   
+            DrawPicture(head);  //非预测模式就按照文件里的数据画图
         else {
-            DrawPicture(PreHead);  //如果是预测就画预测的 图
+            DrawPicture(PreHead);  //如果是预测就画预测的图
+        }
+
+        if (IsSave == 1)  //如果正在保存状态
+        {
+            SaveToCsv(NowShowTable);  //保存当前的链表
         }
     }
     DrawStatus();   //左下角画当前状态
@@ -112,9 +119,11 @@ void DrawStatus() {
         strcpy(NowStatus, "正在进行预测");
     else if (IsOpen == 1)
         strcpy(NowStatus, "正在打开文件");
-    else if (IsOpen == 2) 
+    else if (IsOpen == 2)
         sprintf(NowStatus, "正在查看%s文件", OpenFileName);
-    else
+    else if (IsNew == 1)
+        strcpy(NowStatus, "正在新建文件");
+    else 
         strcpy(NowStatus, "正在摸鱼");
     
     MovePen(0.1, 0.1);
@@ -124,6 +133,7 @@ void DrawStatus() {
 void DrawMenu()
 {
     static char *menuListFile[] = {"File",
+                                    "New | Ctrl-N",
                                    "Open | Ctrl-O",
                                    "Close | Ctrl-W",
                                     "Save | Ctrl-S",
@@ -234,7 +244,7 @@ void DrawOpenDir()
             SetPenColor("Red");
             drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "请确保输入了正确的文件名哦");
         }
-    };
+    }
     
 }
 
@@ -332,7 +342,7 @@ void DrawLeftButton(stu_Ptr Head)
         if (IsChangeNum&&ChangingPtr!=NULL) {
             setTextBoxColors("TextBoxFrame", COLOR[i], "TextBoxFrameHot", COLOR[i], 0);
 
-            textbox(GenUIID(i), 0.5 + TextStringWidth(ColumnName[i]), 4 - (1.4 * ((i - 1) % 4 + 1) + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 10);
+            textbox(GenUIID(i), 0.5 + TextStringWidth(ColumnName[i]), 4.0 - (1.4 * ((i - 1) % 4 + 1) + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 10);
         }
 
         if (NowDateColumn) {
@@ -391,22 +401,25 @@ void DrawLeftButton(stu_Ptr Head)
 
 void HandleFileButton(int selection)
 {
-    if (selection == 1)
-    {
+    switch (selection) {
+    
+    case 1:
+        IsNew = 1;    //对于每个操作改变data里的设定值
+        break;
+    case 2:
         IsOpen = 1;
-    }
-    else if (selection == 2)
-    {
+        break;
+    case 3:
         IsOpen = 0;
-    }
-    else if (selection == 3) {
+        break;
+    case 4:
         IsSave = 1;
-
-    }
-    else if (selection == 4)
-    {
+        break;
+    case 5:
         exit(-1);
     }
+
+
 }
 void HandleToolButton(int selection)
 {
@@ -461,6 +474,7 @@ void DrawLastTableNum() {
                 free(ShowNum);
     }
 }
+
 void Drawlegend()  //画图例 
 {  
     double  NowX = beginTableX + PerX,NowY=beginTableY/4;
@@ -735,6 +749,7 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
                 ChangingPtr = ptr;   //将改变的ptr指向这个
                 for (i = 1; i <= TotalColumnNum; i++) {
                     ChangingPtrStringNum[i] = tostring(ptr->Data[i]);
+                    printf("%s\n", ChangingPtrStringNum[i]);
                 }
             }
             else {

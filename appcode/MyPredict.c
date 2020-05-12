@@ -3,7 +3,7 @@
 #include "MyData.h"
 
 static int PolyNum = 3;
-static int MonthDate[13] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };  //月份天数
+int MonthDate[13] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };  //月份天数
 
 void DrawPredict();
 BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, string  DateLength, string PredictLength, string ploy,int ans[4]);
@@ -111,7 +111,7 @@ void DrawPredict() {
     static char DateLength[20] = "", PredictLength[20] = ""; //起始的时间   模型原始数据长度 预测天数
     static char Poly[20] ="";
     static char WrongTip[30] = "";
-    int ans[4] = { 0 };
+    int ans[4] = { 0 };   //分别记录Inputmonth，day ，datelength，predictlength
    static BOOL ISOK = TRUE;  //是否需要提示
     SetPenColor("TextBoxLabel");
     SetPenSize(3);
@@ -187,8 +187,8 @@ void DrawPredict() {
             IsChangeNum = FALSE;
         }
     }
-}
-string GetDate(int month, int day) {
+} 
+string GetDate(int month, int day) {    //初始month   初始day+走过的day
 
     while (day > MonthDate[month]) {
         day -= MonthDate[month];

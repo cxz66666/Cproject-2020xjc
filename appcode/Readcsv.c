@@ -25,13 +25,19 @@ string tostring(int num) {
         N++;
         tmp /= 10;
     }
-    string ans = (string)malloc(sizeof(char)*(N + 5));
+    string ans = (string)malloc(sizeof(char)*(N + 6));
     
     tmp = num;
 
     ans[N] = '\0';
 
     N--;
+    if (num < 0) {
+        N++;
+        ans[N + 1] = '\0';
+        ans[0] = '-';
+    }
+    tmp = abs(tmp);
     while (tmp) {
         ans[N] = tmp % 10+'0';
         tmp /= 10;

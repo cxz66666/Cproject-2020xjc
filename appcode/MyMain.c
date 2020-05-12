@@ -35,7 +35,7 @@ void CharEventProcess(char ch);
 void KeyboardEventProcess(int key, int event);
 
 
-
+void TimerEventProcess(int timerID);/*定时器消息回调函数*/
 
 
 
@@ -45,19 +45,24 @@ void Main()
     // 初始化图形窗口
     SetWindowSize(24, 13.5);
     InitGraphics();
-   	InitConsole();
+  // 	InitConsole();
     PreWork(); //把一堆定义的事干完
     // 注册回调函数
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());
     registerMouseEvent(MouseEventProcess); 
     registerKeyboardEvent(KeyboardEventProcess);
     registerCharEvent(CharEventProcess);
+    registerTimerEvent(TimerEventProcess);
 }
 
 
 
 
-
+void TimerEventProcess(int timerID)/*定时器消息回调函数*/
+{
+    if (timerID == 1)
+        display();
+}
 
 
 
@@ -92,7 +97,12 @@ void MouseEventProcess(int x, int y, int button, int event)
 void CharEventProcess(char ch)
 {
     uiGetChar(ch); // GUI字符输入
+  
+    if (HandleKeyBoard(ch) && IsOpen == 2) {
+        Calculate(NowShowTable);
+    }
     display();
+   
 }
 void KeyboardEventProcess(int key, int event)
 {

@@ -9,7 +9,7 @@ BOOL  ChooseXaxis(double nowx,double  nowy);
 BOOL  ChooseYaxis(double nowx,double  nowy);
 BOOL  ChooseLine(double nowx, double  nowy);
 BOOL	ChooseHistogram(double nowx, double nowy);
-
+BOOL HandleKeyBoard(char ch);
 
 BOOL  ChooseXaxis(double nowx, double nowy) {
 	if (nowx > beginTableX && nowx < endTableX &&
@@ -168,8 +168,65 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 			}
 		}
 		oldx = nowx, oldy = nowy;
+		break;
+
+	case ROLL_UP:
+		ReCalculate = 1;    //滚轮可以直接放大放小
+		endTableX += 0.2;
+		break;
+	case ROLL_DOWN:
+		ReCalculate = 1;
+		endTableX -= 0.2;
 	default:
 		break;
 	}
 	return ReCalculate;
+}
+
+BOOL HandleKeyBoard(char ch) {
+	
+	BOOL Recalculate = FALSE;
+	if (NowShowTable == NULL)
+		return FALSE;
+	stu_Ptr tmp = NowShowTable->next,tmp1=NowShowTable->next;   //tmp是用来遍历的 tmp1是用来记录的
+
+	/*  作用  +号则放大一个日期单位   通过减少第一个日期显示实习    
+			-号则恢复一个日期显示  从最后一个未被选中回复
+
+			两者都需要重新计算
+	*/
+	switch (ch) {
+	case '-':
+
+		Recalculate = TRUE;
+
+		while (tmp != NULL) {
+			if (!(tmp->IsSelect))
+			{
+				tmp1 = tmp;
+			}
+			tmp = tmp->next;
+		}
+		if (!(tmp1->IsSelect))
+			tmp1->IsSelect = TRUE;
+		break;
+
+	case '+':
+		Recalculate = TRUE;
+		while (tmp != NULL) {
+			if (tmp->IsSelect)
+			{
+				tmp->IsSelect = FALSE;
+				break;
+			}
+			tmp = tmp->next;
+				
+		}
+		break;
+
+
+	default:
+		break;
+	}
+	return Recalculate;
 }

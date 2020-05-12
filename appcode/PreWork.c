@@ -3,6 +3,8 @@
 #include"MyData.h"
 #include <direct.h>
 #define  SHOWTIMEPRE 0 //输出运行时间
+#define  DISPLAY   1  //每过400ms进行重新display  因为担心有些操作者按完按钮后不进行鼠标移动无法更新
+#define  REFRESHTIME  400
 
 void PreWork();
 void FindCSV();
@@ -11,11 +13,12 @@ BOOL CheckName(char* name);
 void Calculate(stu_Ptr HEAD);
 void AssignTable();
 BOOL CheckChangedNum(string str[],string ans);
+
 void PreWork()
 {
 
 
-    SetFont("KaiTi_GB2312");
+    
     FontHeight = GetFontHeight();
     FontAscent = GetFontAscent();
     FontDescent = GetFontDescent();
@@ -26,6 +29,7 @@ void PreWork()
     FindCSV(); //找到当前目录下的csv文件并放到FileName中
     MaxX = GetWindowWidth();
     MaxY = GetWindowHeight();
+  
     DefineMycolor();
    	StaticbeginTableX= beginTableX = GetWindowWidth() * 0.2,
     StaticbeginTableY= beginTableY = GetWindowHeight() * 0.2;
@@ -165,6 +169,7 @@ BOOL CheckChangedNum(string str[], string ans) {
    
     return TRUE;
 }
+
 void Calculate(stu_Ptr HEAD)
 {
 #if  SHOWTIMEPRE
