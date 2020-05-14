@@ -147,7 +147,15 @@ void DrawPredict() {
             NowDateNum = NowDateColumn = 0;
 
             PreparePredict(PredictHead,ans);  //申请内存    计算数据  提前计算好存到preHead里
-           
+        
+            memset(InputMonth, 0, sizeof(InputMonth));
+            memset(InputDay, 0, sizeof(InputDay));
+            memset(DateLength, 0, sizeof(DateLength));
+            memset(PredictLength, 0, sizeof(PredictLength));
+            memset(Poly, 0, sizeof(Poly));
+            memset(WrongTip, 0, sizeof(WrongTip));
+            memset(ans, 0, sizeof(ans));    //重新清零
+
             NowShowTable = PreHead;
             Calculate(NowShowTable);
             //printf("Check!!\n");
@@ -456,11 +464,17 @@ void    MyFree(stu_Ptr Head) {
     if (Head == NULL)
         return;
     stu_Ptr next=Head,tmp=Head;
+   
+    next = tmp->next;
+    free(tmp);   //头节点单独释放
+    tmp = next;
+
     while (next!=NULL)
     {
-        tmp =next;
+        tmp =next; 
         next = tmp->next;
-        free(tmp);
+        free(tmp->Date);   //日期单独释放
+        free(tmp);  //其余正常释放
     }
    
 }

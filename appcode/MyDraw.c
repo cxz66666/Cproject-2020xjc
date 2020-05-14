@@ -40,7 +40,7 @@ void Delete(int num);
 // 显示界面
 void display()
 {
-    if (!IsSave)   //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文
+    if (!IsSave&&!IsNew)   //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文
         UpdateDisplay();
     DisplayClear();
 
@@ -65,11 +65,8 @@ void DrawMain()
     else if (IsOpen == 2)    //如果读取到了该csv文件那么将isopen值设为2
     {
         
-        if (!IsPredict)   
-            DrawPicture(head);  //非预测模式就按照文件里的数据画图
-        else {
-            DrawPicture(PreHead);  //如果是预测就画预测的图
-        }
+            DrawPicture(NowShowTable);  //非预测模式就按照文件里的数据画图 预测模式就按照预测的链表画图
+     
 
         if (IsSave == 1)  //如果正在保存状态
         {
@@ -407,10 +404,14 @@ void HandleFileButton(int selection)
         IsNew = 1;    //对于每个操作改变data里的设定值
         break;
     case 2:
-        IsOpen = 1;
+        IsOpen = 1;  //进入选择csv文件界面
+        InitData();   //提前把数据初始化了
+
         break;
     case 3:
         IsOpen = 0;
+        MyFree(NowShowTable);
+        FreeColumn(TmpColumnName);
         break;
     case 4:
         IsSave = 1;

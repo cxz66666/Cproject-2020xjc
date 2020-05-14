@@ -29,7 +29,8 @@ BOOL IsChooseColumn[MAXCOLUMN];  //是否选择了该列    只要非零都为选中
 int ChooseColumnNum;   //选中的column的数目  相当于一个数据结构
 int ChoosedColumn[MAXCOLUMN];   //放所有选中的column的序号  
 
-char *ColumnName[20];  //每一列的名字
+char *ColumnName[MAXCOLUMN];  //每一列的名字
+char* TmpColumnName[MAXCOLUMN]; //暂时存放地址
 char FilePath[100];   //文件路径
 char *FileName[20];   //各个文件名
 int FileNum;  //总文件数目

@@ -45,7 +45,7 @@ void Main()
     // 初始化图形窗口
     SetWindowSize(24, 13.5);
     InitGraphics();
-  // 	InitConsole();
+  //	InitConsole();
     PreWork(); //把一堆定义的事干完
     // 注册回调函数
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());

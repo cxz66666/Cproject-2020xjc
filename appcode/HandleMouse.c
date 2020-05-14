@@ -30,7 +30,7 @@ BOOL ChooseLine(double nowx, double nowy) {
 
 	if (nowx <= beginTableX+PerX || nowy <= beginTableY||nowx>endTableX||nowy>endTableY)
 		return 0;
-	int SNum = (nowx - beginTableX - PerX) / PerX;   //用第几个三次方程表达式
+	int SNum = (int)(nowx - beginTableX - PerX) / PerX;   //用第几个三次方程表达式
 
 	double MinPos = 0;
 	int tmpNum=0;

@@ -13,7 +13,8 @@ BOOL CheckName(char* name);
 void Calculate(stu_Ptr HEAD);
 void AssignTable();
 BOOL CheckChangedNum(string str[],string ans);
-
+void InitData();
+void  FreeColumn(char *Ptr[]);
 void PreWork()
 {
 
@@ -185,7 +186,7 @@ void Calculate(stu_Ptr HEAD)
     memset(CubicEquation, 0, sizeof(CubicEquation));   //每次计算出的方程都不一样  都得清空了再说
     int ShowNum = 0;
     int Maxnum = 0;
-    stu_Ptr tmp = HEAD->next;
+    stu_Ptr tmp = HEAD->next;   //所有的都有头节点的  注意了
     while (tmp != NULL)  
     {
      
@@ -208,14 +209,15 @@ void Calculate(stu_Ptr HEAD)
     ShowDateNum = ShowNum;   //显示的日期数目
     //printf("Maxnum=%d   ShowNum=%d\n", Maxnum,ShowNum);
     if (Maxnum > 1000) {
- 
-        (Maxnum / 6) % 100 > 50 ? (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 100) + 100 ):( TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 100));
-         
+
+        (Maxnum / 6) % 100 > 50 ? (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 100) + 100) : (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 100));
+
     }
-    else {
+    else if (Maxnum > 100) {
         (Maxnum / 6) % 10 > 5 ? (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 10) + 10) : (TableMark1 = ((Maxnum / 6) - (Maxnum / 6) % 10));
 
     }
+    else TableMark1 = 10;
     TableMark2 = TableMark1 * 2;
     TableMark3 = TableMark1 * 3;
     TableMark4 = TableMark1 * 4;
@@ -268,4 +270,31 @@ void Calculate(stu_Ptr HEAD)
 
 #endif //  SHOWTIME
 
+}
+void InitData() {
+    
+    memset(IsChooseColumn, 0, sizeof(IsChooseColumn));
+    memset(ChoosedColumn, 0, sizeof(ChoosedColumn));
+    ChooseColumnNum = 0;
+    TotalColumnNum = 0;
+    NowDateColumn = 0;
+    memset(ClassDataNum, 0, sizeof(ClassDataNum));
+    ChooseLineMoveX = ChooseLineMoveY = 0;
+    ChooseLineNum = ChooseHistogramNum = 0;
+    memset(ChangingPtrStringNum, 0, sizeof(ChangingPtrStringNum));
+    ChangingPtr = NULL;
+    IsPredict = IsChangeNum = IsSave=FALSE;
+    IsRedisplay = 0;
+    IsChooseXaxis = FALSE, IsChooseYaxis = FALSE, IsChooseLine = FALSE, IsChooseHistogram = FALSE;
+    DrawWithLine = DrawWithColumn = DrawWithColumnNow = 0;
+    FileTotalNum = 0;
+    NowDateNum = NowDateColumn = 0;
+}
+
+void  FreeColumn(char* Ptr[]) {
+    for (int i = 1; i <= TotalColumnNum; i++) {
+        if (Ptr[i] != NULL)
+            if(Ptr[i][0] != 0)
+            free(Ptr[i]);
+    }
 }
