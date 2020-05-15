@@ -17,21 +17,22 @@ void InitData();
 void  FreeColumn(char *Ptr[]);
 void PreWork()
 {
-
-
-    
+    /*定义许多常量  防止以后再获取浪费资源*/
     FontHeight = GetFontHeight();
     FontAscent = GetFontAscent();
     FontDescent = GetFontDescent();
-  	printf("%lf %lf %lf \n", FontHeight, FontAscent, FontDescent);
+  	//printf("%lf %lf %lf \n", FontHeight, FontAscent, FontDescent);
     
+    /*调用direct.h里的currentDirectory接口获取当前目录 并放到FilePath里*/
     GetCurrentDirectory(100, FilePath); 
     //printf("%s\n", FilePath);
     FindCSV(); //找到当前目录下的csv文件并放到FileName中
     MaxX = GetWindowWidth();
     MaxY = GetWindowHeight();
   
-    DefineMycolor();
+    DefineMycolor(); //把需要的颜色全部注册
+
+    /*一下静态数据以后不会变动*/
    	StaticbeginTableX= beginTableX = GetWindowWidth() * 0.2,
     StaticbeginTableY= beginTableY = GetWindowHeight() * 0.2;
   	StaticendTableX=endTableX = GetWindowWidth() * 0.8, 
@@ -145,27 +146,29 @@ void AssignTable() {   //分配是用柱状图还是折线图
         
         
 }
+/*主要检查数据里有没有点或者不是数字*/
 BOOL CheckChangedNum(string str[], string ans) {
     int i,j;
     for (i = 1; i <= TotalColumnNum; i++) {
-        for (j = 0; str[i][j]; j++) {
+        for (j = 0; str[i][j]; j++) {     //如果有点或者ASCII码不是数字的
             if (str[i][j] == '.'||(str[i][j]<48||str[i][j]>58)) {
                 strcpy(ans, "请检测数据");
                 return FALSE;
             }
         }
+        /*注意atoi返回0则表示有问题   返回数值表示没问题*/
         if (!atoi(str[i]))   //如果返回0就是有问题！！！
         {
             strcpy(ans, "请检查数据");
             return FALSE;
         }
     }
-
+    //将状态改为更新成功
     strcpy(ans, "更新成功");
 
     for (i = 1; i <= TotalColumnNum; i++) {
     
-        ChangingPtr->Data[i] = atoi(str[i]);
+        ChangingPtr->Data[i] = atoi(str[i]);    //改变Ptr里的各个数据
     }
    
     return TRUE;

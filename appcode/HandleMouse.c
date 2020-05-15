@@ -108,19 +108,21 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 	
 
 	double nowx, nowy;
-	static double oldx = 0, oldy = 0;			 //用静态存储存原来的x，y
-	static bool IsMove = FALSE;                   //是否移动
-	nowx = ScaleXInches(x);						 //转换成英寸
+	static double oldx = 0, oldy = 0;			 //用静态存储存原来的x，y位置
+	static bool IsMove = FALSE;                  //是否移动
+	nowx = ScaleXInches(x);						 //将xy转换成英寸
 	nowy = ScaleYInches(y);
 	BOOL ReCalculate = FALSE;
 	switch (event)
 	{
 	case BUTTON_DOWN:
+
+		/*先分别使用ChooseXaxis等函数判断选中的地方时候是x轴  y轴  直线  柱状图 等等*/
 	//	printf("%d %d %d %d\n", IsChooseXaxis, IsChooseYaxis, IsChooseLine, IsChooseHistogram);
 		if (button == LEFT_BUTTON&&!IsChooseXaxis&&
-			!IsChooseYaxis&&!IsChooseLine&&!IsChooseHistogram)   //前提是左键 + 其他没有被选中
+			!IsChooseYaxis&&!IsChooseLine&&!IsChooseHistogram)   //前提是使用的是左键   并且   其他没有被选中
 		{
-			if (IsChooseXaxis == FALSE && ChooseXaxis(nowx, nowy))  //
+			if (IsChooseXaxis == FALSE && ChooseXaxis(nowx, nowy))  
 				IsChooseXaxis = TRUE;
 			else if (IsChooseYaxis == FALSE && ChooseYaxis(nowx, nowy))
 				IsChooseYaxis = TRUE;
@@ -128,13 +130,14 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 				IsChooseLine = TRUE;
 			else if (IsChooseHistogram == FALSE && ChooseHistogram(nowx, nowy))
 			{
-				printf("nowx is %lf nowy is %lf\n", nowx, nowy);
+				//printf("nowx is %lf nowy is %lf\n", nowx, nowy);
 				IsChooseHistogram = TRUE;
 			}
 		
 		}
+		//如果是右键  将所有玩意清零
 		if (button == RIGHT_BUTTON && (IsChooseXaxis || IsChooseYaxis || IsChooseLine||IsChooseHistogram )) {
-			IsChooseXaxis = IsChooseYaxis = IsChooseLine =IsChooseHistogram= 0;
+			IsChooseXaxis = IsChooseYaxis = IsChooseLine =IsChooseHistogram= FALSE;
 			ChooseLineNum = 0;
 			ChooseHistogramNum = 0;
 			ChooseLineMoveX = ChooseLineMoveY = 0;
@@ -143,19 +146,25 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 
 		if ((IsChooseXaxis || IsChooseYaxis || IsChooseLine))
 			IsMove = TRUE;
-
+		//注意别忘了更新当前的oldx，y
 		oldx = nowx, oldy = nowy;
 		break;
 	case BUTTON_UP:
 		ReCalculate = TRUE;
 		if(button == LEFT_BUTTON)
-			IsMove = FALSE;
+			IsMove = FALSE;   //IsMove表示是否在移动鼠标
 
 		break;
 	case MOUSEMOVE:
 		
+		/*前提必须是在IsMove状态下 
+		*/
 		if (IsMove) {
 			ReCalculate = TRUE;
+			/*如果选的是x/y 更改endTableX/y
+			
+			如果选的是Line   更新ChooseLineMoveXY
+			*/
 			if (IsChooseXaxis) {
 				endTableX += nowx - oldx;
 			}
@@ -171,10 +180,12 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 		break;
 
 	case ROLL_UP:
+		//滚轮往上滚时候就放大图
 		ReCalculate = 1;    //滚轮可以直接放大放小
 		endTableX += 0.2;
 		break;
 	case ROLL_DOWN:
+		//滚轮往下滚时候缩小图
 		ReCalculate = 1;
 		endTableX -= 0.2;
 	default:
@@ -186,15 +197,17 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 BOOL HandleKeyBoard(char ch) {
 	
 	BOOL Recalculate = FALSE;
-	if (NowShowTable == NULL)
+	if (NowShowTable == NULL)  //简易的判断
 		return FALSE;
 	stu_Ptr tmp = NowShowTable->next,tmp1=NowShowTable->next;   //tmp是用来遍历的 tmp1是用来记录的
 
-	/*  作用  +号则放大一个日期单位   通过减少第一个日期显示实习    
+	/* 
+	作用  +号则放大一个日期单位   通过减少第一个日期显示实现    
 			-号则恢复一个日期显示  从最后一个未被选中回复
 
 			两者都需要重新计算
 	*/
+	//如果ch为+/-则重新计算为TRUE
 	switch (ch) {
 	case '-':
 
@@ -225,8 +238,8 @@ BOOL HandleKeyBoard(char ch) {
 		break;
 
 
-	default:
+	default:  //其他的输入暂时不需要管
 		break;
 	}
-	return Recalculate;
+	return Recalculate;   //返回是否重新计算
 }

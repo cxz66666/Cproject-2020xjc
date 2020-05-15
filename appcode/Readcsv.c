@@ -5,6 +5,8 @@ BOOL SaveToCsv(stu_Ptr HEAD);
 BOOL SaveCSV(string InputName,stu_Ptr HEAD);
 BOOL ReadCSVFile(char *Name);
 BOOL CheckSaveName(string InputName, string WrongAns);
+
+/*模仿c++定义部分stod/stoi函数*/
 double stod(string str)    //string to double
 { 
     double ans;
@@ -25,14 +27,14 @@ string tostring(int num) {
         N++;
         tmp /= 10;
     }
-    string ans = (string)malloc(sizeof(char)*(N + 6));
+    string ans = (string)malloc(sizeof(char)*(N + 6));  //数组开大防止free时候出错
     
     tmp = num;
 
     ans[N] = '\0';
 
     N--;
-    if (num < 0) {
+    if (num < 0) {   //如果负数情况特殊讨论
         N++;
         ans[N + 1] = '\0';
         ans[0] = '-';
@@ -59,7 +61,7 @@ BOOL ReadCSVFile(char *Name)
     if (fp == NULL)
     {
         printf("NULL");
-        MyError = -1;
+        MyError = -1;  //如果没打开就要报错了
         return 0;
     }
 
@@ -69,14 +71,19 @@ BOOL ReadCSVFile(char *Name)
         char buffer[256];
         char flagbuffer[10];
                              
-        while (fscanf(fp, "%[^,\n]", buffer) != EOF) //   正表达式  buffer里放的是数据   flagbuffer里放的是,或者\n  flag是第一行是否完事了
+        while (fscanf(fp, "%[^,\n]", buffer) != EOF) //   使用部分正则表达式  buffer里放的是数据   flagbuffer里放的是,或者\n  flag是第一行是否读取完毕  是否应该进入读取日期模式
         {
             num++;
-            fgets(flagbuffer, 2, fp);
+            fgets(flagbuffer, 2, fp); //读取一个逗号
           
             if (flag)
             {
                 int tmpnum = num % (TotalColumnNum + 1);
+                /*只有三种情况   0  1  其他 
+                0是需要挂载节点
+                1是需要申请  初始化节点
+                其他需要赋值
+                */
                 switch (tmpnum)
                 {
                 case 1:
@@ -102,7 +109,7 @@ BOOL ReadCSVFile(char *Name)
                     break;
                 }
             }
-            else
+            else  //如果正在读取第一列
             {
                 ColumnName[num - 1] = (char *)malloc(sizeof(buffer) + 1); //这里放的是每列的表头   第一个是日期 所以跳过   所有的ColumnName都从一开始计数
                 strcpy(ColumnName[num - 1], buffer);
@@ -123,13 +130,11 @@ BOOL ReadCSVFile(char *Name)
 
 
 BOOL SaveToCsv(stu_Ptr HEAD) {
+    //将HEAD里的数据保存到csv文件
 
     static char tips[] = "请输入保存文件名";
-
     static char WrongAns[20] = "";
-
     static char  InputName[20] = "";
-
     drawLabel(MaxX / 2 - TextStringWidth(tips)/2, MaxY / 2 + 2 * FontHeight, tips);
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
@@ -139,7 +144,7 @@ BOOL SaveToCsv(stu_Ptr HEAD) {
     if (button(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2, MaxY / 2 - 2, 0.6, FontHeight * 1.2, "确认")) {
 
         if (CheckSaveName(InputName, WrongAns)) {
-           if( !SaveCSV(InputName,HEAD))
+           if( !SaveCSV(InputName,HEAD))  //如果没保存成功
                strcpy(WrongAns," 保存失败");
            else{
                IsSavingOK = TRUE;
@@ -161,13 +166,14 @@ BOOL SaveToCsv(stu_Ptr HEAD) {
     return TRUE;
 }
 BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
-    FILE *fp= fopen(InputName, "w+");
-    if (fp == NULL)
+    FILE *fp= fopen(InputName, "w+");  //使用w+进行文件写入
+    if (fp == NULL)  //没打开直接返回
         return FALSE;
 
+    /*写入第一行*/
     fprintf(fp, "日期,");
     int i;
-    for ( i= 1; i <= TotalColumnNum; i++) {
+    for ( i= 1; i <= TotalColumnNum; i++) {   //将每一列数据都写入
         fprintf(fp,"%s", ColumnName[i]);
         fprintf(fp,",");
     }
@@ -175,6 +181,7 @@ BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
 
     stu_Ptr tmp = HEAD->next;
 
+    /*写入每个日期不管是否选中*/
     while (tmp != NULL) {
         fprintf(fp, "%s,", tmp->Date);
         for (i = 1; i <= TotalColumnNum; i++) {
@@ -184,7 +191,7 @@ BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
         tmp = tmp->next;
     }
     if (fp != NULL) {
-        fclose(fp);
+        fclose(fp);   //关闭fp并且返回
         return TRUE;
     }
     else {
@@ -193,12 +200,12 @@ BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
 
 }
 BOOL CheckSaveName(string InputName, string WrongAns) {
-
+    //检查保存的名字  注意需要满足*.csv才可以
     int i;
     int flag = 0;
     for (i = 0; InputName[i]; i++) {
         if (InputName[i] == '.') {
-            if (InputName[i + 1] == 'c' && InputName[i + 2] == 's' && InputName[i + 3] == 'v') {
+            if (InputName[i + 1] == 'c' && InputName[i + 2] == 's' && InputName[i + 3] == 'v') {   //如果没找到.csv直接报错就完事
                 strcpy(WrongAns, "成功保存");
                 flag = 1;
                 return TRUE;

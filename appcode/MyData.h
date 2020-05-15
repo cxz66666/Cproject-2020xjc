@@ -100,4 +100,4 @@ stu_Ptr ChangingPtr;    //正在改变的Ptr
 
 string ChangingPtrStringNum[20];    //更改数据框里的数据   本质就是ChangingPtr里的data数据里的string化
 
-BOOL IsSavingOK;
+BOOL IsSavingOK;  //是否保存正确

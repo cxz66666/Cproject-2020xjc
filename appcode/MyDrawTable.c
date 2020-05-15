@@ -16,11 +16,11 @@ void lineto(double x, double y)   //画一条当前位置到x，y的直线
 }
 void DrawHistogram(double TableData[][2], int num) {
    
-    if (DrawWithColumn == 2) {
-        if (!DrawWithColumnNow) {
-            DrawWithColumnNow++;   //就是存到底画几个柱状图  烦死我了
+    if (DrawWithColumn == 2) {  //如果一共要画两个柱状图
+        if (!DrawWithColumnNow) { 
+            DrawWithColumnNow++;   //记录一共画到了第几个
             int i;
-            for (i = 1; i <= num; i++) {
+            for (i = 1; i <= num; i++) {  //画第一个的情况
                 drawRectangle(TableData[i][0], beginTableY, -1 * ColumnWidth, TableData[i][1] - beginTableY, 1);
                 Histogram[i][0] = TableData[i][0], Histogram[i][1] = TableData[i][1];
 
@@ -28,13 +28,13 @@ void DrawHistogram(double TableData[][2], int num) {
         }
         else {
             int i;
-            for (i = 1; i <= num; i++) {
+            for (i = 1; i <= num; i++) {  //画第二个的情况
                 drawRectangle(TableData[i][0], beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
                 Histogram[i][2] = TableData[i][0], Histogram[i][3] = TableData[i][1];
             }
         }
     }
-    else if (DrawWithColumn == 1) {
+    else if (DrawWithColumn == 1) {  //如果只用画一个柱状图
         int i;
         for (i = 1; i <= num; i++) {
             drawRectangle(TableData[i][0] - ColumnWidth / 2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
@@ -42,7 +42,7 @@ void DrawHistogram(double TableData[][2], int num) {
         }
     }
 }
-void parspl(double p[][2], int n, int k)
+void parspl(double p[][2], int n, int k)   //这个同样也是画曲线图的算法   但是没有三次样条插值法合适  具体实现原理同样不表
 {
     int i, j;
     double t1, t2, t3, t, a, b, c, d, x, y;
@@ -73,9 +73,9 @@ void parspl(double p[][2], int n, int k)
     }
     lineto(p[i + 2][0], p[i + 2][1]);
 }
-#define N 50   //懒得用malloc了  可以改下
+#define N 50   //最大的数据量
 
-void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //能用就行了   别管那么多了 笑哭
+void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //具体算法细节不表  实现原理自行百度
 {
     int i, j;
 
@@ -115,6 +115,7 @@ void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //能用就行了
         b[j] = (y[j + 1] - y[j]) / h[j] - h[j] * (c[j + 1] + 2 * c[j]) / 3;
         d[j] = (c[j + 1] - c[j]) / (3 * h[j]);
     }
+    /*为了能实现选中曲线 我们这里必须记着曲线的三次方程*/
     for (i = 0; i < n; ++i) {
         CubicEquation[ColumnNum][i][0] = y[i];
         CubicEquation[ColumnNum][i][1] = b[i];
@@ -131,7 +132,7 @@ void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //能用就行了
         for (j = 0; j < k; j++) {
             tmpx += h[i] / k;
             tmpy = pow((tmpx - x[i]), 3) * d[i] + pow((tmpx - x[i]), 2) * c[i] + (tmpx - x[i]) * b[i] + y[i];
-            DrawLine(h[i] / k, tmpy - prey);
+            DrawLine(h[i] / k, tmpy - prey);   //原理就是画一极小段线
             prey = tmpy;
            // printf("%.4lf %.4lf \n", GetCurrentX(), GetCurrentY());
         }
