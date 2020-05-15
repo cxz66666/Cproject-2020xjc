@@ -7,7 +7,7 @@
 #define  REFRESHTIME  400
 
 void PreWork();
-void FindCSV();
+void FindCSV(char *Dir);
 void DefineMycolor();
 BOOL CheckName(char* name);
 void Calculate(stu_Ptr HEAD);
@@ -24,9 +24,8 @@ void PreWork()
   	//printf("%lf %lf %lf \n", FontHeight, FontAscent, FontDescent);
     
     /*调用direct.h里的currentDirectory接口获取当前目录 并放到FilePath里*/
-    GetCurrentDirectory(100, FilePath); 
-    //printf("%s\n", FilePath);
-    FindCSV(); //找到当前目录下的csv文件并放到FileName中
+    
+
     MaxX = GetWindowWidth();
     MaxY = GetWindowHeight();
   
@@ -42,13 +41,13 @@ void PreWork()
    memset(ChangingPtrStringNum, 0, sizeof(ChangingPtrStringNum));
    
 }
-void FindCSV()
+void FindCSV(char *Dir)
 {
-    //"E:\\linux\\Compressed\\LibGraphics2019Hanoi\\demoprj-vs2017\\*.c";
-    strcat(FilePath, "\\*.csv");
+    //"E:\\linux\\Compressed\\LibGraphics2019Hanoi\\demoprj-vs2017\\*.csv";
+    strcat(Dir, "\\*.csv");
     //printf("%s", FilePath);
     struct _finddata_t data;
-    long handle = _findfirst(FilePath, &data);
+    long handle = _findfirst(Dir, &data);
 
     if (handle < 0)
     {

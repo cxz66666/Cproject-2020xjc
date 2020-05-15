@@ -53,9 +53,9 @@ void DrawCreateNewFile() {
         }
         if (!strlen(ErrorAns)) {
         
-            SetPenColor("Red");
+            SetPenColor("Red"); 
             SetPenSize(3);
-            drawLabel((MaxX - TextStringWidth(ErrorAns)) / 2, BeginY -= FontHeight * 3, ErrorAns);
+            drawLabel((MaxX - TextStringWidth(ErrorAns)) / 2, BeginY -= FontHeight * 3, ErrorAns);  //输入错误提示
         
         }
     }
@@ -97,7 +97,7 @@ void DrawCreateNewFile() {
 
 BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, string  ColumnNum, string  ErrorAns, int *Data) {
  
-    if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(ColumnNum))
+    if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(ColumnNum))  //如果没输入东西
     {
         strcpy(ErrorAns, "请输入完整数据");
         return FALSE;
@@ -131,7 +131,7 @@ BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, 
         return FALSE;
     }
 
-    Data[1] = MonthNum, Data[2] = DayNum, Data[3] = DateNum, Data[4] = Column;
+    Data[1] = MonthNum, Data[2] = DayNum, Data[3] = DateNum, Data[4] = Column;  //对data进行赋值
     return TRUE;
 }
 
@@ -172,18 +172,19 @@ BOOL CheckColumnName( int ColumnNum,string ErrorAns) {
       //对列名字简单检查   拒绝输入英文  但是可以改 就怕有人中英结合所以禁止输入英文
     int i,j;
     for (i = 1; i <= ColumnNum; i++) {
-        if (!strlen(ColumnData[i])) {
+        if (!strlen(ColumnData[i])) {   //用strlen判断是否写了数据
             strcpy(ErrorAns, "有数据缺失");
             return FALSE;
             }
 
-        for (j = 0; ColumnData[i][j]; j++) {
-            if (ColumnData[i][j] >0) {
+        for (j = 0; ColumnData[i][j]; j++) {  
+            if (ColumnData[i][j] >0) {   //中文的GBK码全部小于0
+                //因此我们直接屏蔽所有ASCII大于0的
                 strcpy(ErrorAns, "请输入中文");
                 return FALSE;
             }
         }
     }
-    strcpy(ErrorAns, "成功");
+    strcpy(ErrorAns, "成功");  
     return TRUE;
 }
