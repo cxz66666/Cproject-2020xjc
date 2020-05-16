@@ -128,7 +128,7 @@ void DrawPicture(stu_Ptr Head)
 void DrawStatus() {
     SetPenSize(1);
     SetPenColor("Black");
-    char NowStatus[30];
+    char NowStatus[100];
     memset(NowStatus, 0, sizeof(NowStatus));
     SetPointSize(15);
     if (IsSave)
@@ -233,6 +233,7 @@ void DrawOpenDir()
                     {
                         NowShowTable = head;
                         IsOpen = 2;   //2的时候就是可以进行画图了
+                        ChangeIsSelect(NowShowTable);
                         Calculate(NowShowTable);
                        
                         return;
@@ -269,6 +270,7 @@ void DrawOpenDir()
                 {
                     NowShowTable = head;
                     IsOpen = 2;
+                    ChangeIsSelect(NowShowTable);
                     Calculate(NowShowTable);
                     return;
                 }
@@ -303,7 +305,7 @@ void DrawLeftButton(stu_Ptr Head)
         nowNum++;
        /*这里设定10个就显示翻页   只显示当前十个*/
         if (nowNum > 10 * NowDateNum&&nowNum<=10*(NowDateNum+1)) {
-            if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum-1)%10+1) + 1.5) * FontHeight, 0.08, 0.08, ""))
+            if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum-1)%10+1) + 1.5) * FontHeight, 0.15, 0.15, ""))
             {
                 Head->IsSelect = !(Head->IsSelect);
                 Calculate(NowShowTable);
