@@ -83,25 +83,33 @@ void DefineMycolor()
     DefineColor("TextBoxFrameHot", 124.0 / 255, 205.0 / 255, 244.0 / 255);
     DefineColor("TextBoxLabel", 11.0 / 255, 19.0 / 255, 43.0 / 255); //输入框
 
-    DefineColor("DirSelectionFrameHot", 91.0 / 255, 192.0 / 255, 235.0 / 255); //文件选择框
-    DefineColor("DirSelectionFrame", 112.0 / 255, 214.0 / 255, 1.0);
+    DefineColor("DirSelectionFrameHot", 0.21,0.71,0.97); //文件选择框
+    DefineColor("DirSelectionFrame", 0.24,0.84,1);
+    DefineColor("PreWordColor",0.3,0.3,0.3);
     DefineColor("ChoosedColor", 254.0 / 255, 95.0 / 255, 85.0 / 255); //选中后的颜色
 
     DefineColor("DataButton", 218.0 / 255, 215.0 / 255, 205.0 / 255); //日期选择框的颜色
 
-    DefineColor("TableColor1", 239.0/255, 106.0/255, 46.0/255);
-    DefineColor("TableColor2", 64.0/255, 199.0/255, 120.0/255);
-    DefineColor("TableColor3", 37.0/255, 74.0/255, 178.0/255);
-    DefineColor("TableColor4", 255.0/255, 33.0/255, 127.0/255);
-    DefineColor("TableColor5", 204.0/255, 0, 213.0/255);
-    DefineColor("TableColor6", 102.0/255, 44.0/255, 145.0/255);
-    DefineColor("TableColor7", 23.0/255, 163.0/255, 152.0/255);
-    DefineColor("TableColor8", 255.0 / 255, 198.0 / 255, 255.0 / 255);
-    DefineColor("TableColor9", 51.0/255, 49.0/255, 46.0/255);
-    DefineColor("TableColor10", 253.0/255, 255.0/255, 182.0/255);
-    DefineColor("TableColor11", 202.0/255, 255.0/255, 191.0/255);
-    DefineColor("TableColor12", 155.0/255, 246.0/255, 255.0/255);
-
+    DefineColor("TableColor1", 1,0.22,0.53);//桃红色 
+    DefineColor("TableColor2", 1,0.82,0.22);//橙黄色 
+    DefineColor("TableColor3", 0.51,1,0.22);//嫩绿色 
+    DefineColor("TableColor4", 0.25, 0.79, 1);//天蓝色 
+    DefineColor("TableColor5", 0.59, 0.29, 1);//浅紫色 
+    DefineColor("TableColor6", 0.72,0,0);//深红色 
+    DefineColor("TableColor7", 0.13, 0.18, 0.69);//深蓝色 
+    DefineColor("TableColor8", 0.24,0.6,0);//竹青色 
+    DefineColor("TableColor9", 0.77,0.38,0.07);//琥珀色 
+    DefineColor("TableColor10", 1,0.98,0.45);//鹅黄 
+    DefineColor("TableColor11", 1,0.6,0.72);//浅粉色 
+    DefineColor("TableColor12",1,0.71,0.6);//形容不出来的颜色 
+    
+    DefineColor("DarkBlue",0.13,0.07,0.65) ;
+    
+    DefineColor("TitleColor",0.17,0.62,0.84);
+	DefineColor("TextColor",0.1,0.1,0.1);
+	DefineColor("VirusColor",0.24,0.36,0.62);
+	DefineColor("CircleColor",0.6,0.84,1);
+	DefineColor("WoodColor",1,0.95,0.08);
 }
 
 BOOL CheckName(char* name)
@@ -295,7 +303,8 @@ void InitData() {
 }
 
 void  FreeColumn(char* Ptr[]) {
-    for (int i = 1; i <= TotalColumnNum; i++) {
+	int i=0; 
+    for (i = 1; i <= TotalColumnNum; i++) {
         if (Ptr[i] != NULL)
             if(Ptr[i][0] != 0)
             free(Ptr[i]);
