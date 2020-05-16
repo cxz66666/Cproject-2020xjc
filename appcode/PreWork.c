@@ -5,6 +5,7 @@
 #define  SHOWTIMEPRE 0 //输出运行时间
 #define  DISPLAY   1  //每过400ms进行重新display  因为担心有些操作者按完按钮后不进行鼠标移动无法更新
 #define  REFRESHTIME  400
+#define ChooseIsSelect 20
 
 void PreWork();
 void FindCSV(char *Dir);
@@ -15,6 +16,7 @@ void AssignTable();
 BOOL CheckChangedNum(string str[],string ans);
 void InitData();
 void  FreeColumn(char *Ptr[]);
+void ChangeIsSelect(stu_Ptr HEAD);
 void PreWork()
 {
     /*定义许多常量  防止以后再获取浪费资源*/
@@ -308,5 +310,19 @@ void  FreeColumn(char* Ptr[]) {
         if (Ptr[i] != NULL)
             if(Ptr[i][0] != 0)
             free(Ptr[i]);
+    }
+}
+void ChangeIsSelect(stu_Ptr HEAD) {  //最多选中20个日期  再多不好看了
+
+    int NowNum = 0;
+
+    stu_Ptr tmp = HEAD->next;
+    while (tmp != NULL) {
+
+        NowNum++;
+        if (NowNum > ChooseIsSelect) {
+            tmp->IsSelect = FALSE;
+        }
+        tmp = tmp->next;
     }
 }

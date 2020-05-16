@@ -3,7 +3,7 @@
 #include "genlib.h"
 
 #define MAXCOLUMN 13  // 数据的最多列数 
-#define MAXDATE   50  // 最多支持的日期 
+#define MAXDATE   60  // 最多支持的日期 
 
 double MaxX, MaxY; //最大宽度 长度
 
@@ -61,7 +61,7 @@ int DrawWithColumnNow;       //如果用折线画那么画到第几个了   反正就俩 大力讨论
 
 double ColumnWidth;    //柱状图的宽度
 
-double Histogram[50][4];  //存柱状图的各个数据   【0】为x  【1】为y
+double Histogram[MAXDATE][4];  //存柱状图的各个数据   【0】为x  【1】为y
 
 
 typedef struct stu* stu_Ptr;

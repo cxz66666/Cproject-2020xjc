@@ -65,9 +65,9 @@ void DrawCreateNewFile() {
         setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
         int i;
         drawLabel((MaxX - TextStringWidth("请输入列名")) / 2, BeginY - FontHeight, "请输入列名");  
-        for (i = 1; i <= 4; i++) {
-            printf("data %d is %d\n", i, Data[i]);
-        }
+    //    for (i = 1; i <= 4; i++) {
+      //      printf("data %d is %d\n", i, Data[i]);
+       // }
         for (i = 1; i <= Data[4]; i++) {
             textbox(GenUIID(i), MaxX * 0.47, BeginY -= 3 * FontHeight, MaxX * 0.06, 1.5 * FontHeight, ColumnData[i], 10);
         }
@@ -76,7 +76,9 @@ void DrawCreateNewFile() {
                 
                 stu_Ptr NewHead = CreatNewPtr(Data);   //拿到新的头节点
                 NowShowTable = NewHead; //将目前展示的变为新的表
+                ChangeIsSelect(NowShowTable);
                 Calculate(NowShowTable);   //重新计算该放置的位置
+
                 IsNew = 0;
                 IsOpen = 2;
                 ShowColumn = 0; //重新展示输入框

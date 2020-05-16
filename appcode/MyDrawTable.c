@@ -73,7 +73,7 @@ void parspl(double p[][2], int n, int k)   //这个同样也是画曲线图的算法   但是没
     }
     lineto(p[i + 2][0], p[i + 2][1]);
 }
-#define N 50   //最大的数据量
+#define N 100   //最大的数据量
 
 void Cubic_Spline(double data[][2], int num, int k,int ColumnNum)   //具体算法细节不表  实现原理自行百度
 {

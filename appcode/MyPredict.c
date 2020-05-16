@@ -157,6 +157,7 @@ void DrawPredict() {
             memset(ans, 0, sizeof(ans));    //÷ÿ–¬«Â¡„
 
             NowShowTable = PreHead;
+            ChangeIsSelect(NowShowTable);
             Calculate(NowShowTable);
             //printf("Check!!\n");
        }
