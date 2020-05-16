@@ -25,7 +25,8 @@ void PreWork()
     
     /*调用direct.h里的currentDirectory接口获取当前目录 并放到FilePath里*/
     
-
+    GetCurrentDirectory(100, FilePath);
+    FindCSV(FilePath);
     MaxX = GetWindowWidth();
     MaxY = GetWindowHeight();
   
