@@ -855,7 +855,7 @@ void WriteTitle(){
     SetPenSize(8); 
 	SetFont("圆体");
 	drawLabel(titleX,titleY,"战疫，我们在一起");
-	SetFont("KaiTi_GB2312");
+	SetFont("宋体");
 	SetPointSize(25);
 	SetPenColor("TextColor"); 
 	drawLabel(textX,textY,"欢迎使用疫情数据分析工具") ;

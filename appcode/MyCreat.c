@@ -88,7 +88,7 @@ void DrawCreateNewFile() {
             drawLabel(MaxX * 0.5 - TextStringWidth(ErrorAns) / 2, BeginY -= 2 * FontHeight, ErrorAns);
         }
     }
-    if (button(GenUIID(0), MaxX * 0.47, BeginY -= FontHeight * 2, MaxX * 0.06, FontHeight * 1.5, "取消")) {
+    if (button(GenUIID(0), MaxX * 0.475, BeginY -= FontHeight * 2, MaxX * 0.05, FontHeight * 1.4, "取消")) {
 
         IsNew = 0;
     }
