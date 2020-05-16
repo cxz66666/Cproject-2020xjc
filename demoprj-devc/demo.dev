@@ -191,16 +191,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\democode\demo.c
-CompileCpp=0
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit16]
 FileName=..\simpleGUI\imgui.c
 CompileCpp=0
 Folder=simpleGUI
@@ -210,10 +200,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit16]
 FileName=..\simpleGUI\imgui.h
 CompileCpp=0
 Folder=simpleGUI
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=..\appcode\demo.c
+CompileCpp=0
+Folder=demo
 Compile=1
 Link=1
 Priority=1000

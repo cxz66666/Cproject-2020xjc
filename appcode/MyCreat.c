@@ -11,7 +11,7 @@ BOOL CheckColumnName( int ColumnNum,string ErrorAns);
 static char ColumnData[11][20];
 void DrawCreateNewFile() {
 
-    static char InputMonth[20] = "", InputDay[20] = "";  //这些都是基本的输入数据存储
+    static char InputMonth[20] = "", InputDay[20] = "";
     static char DateLength[20] = "";
     static char ColumnNum[20] = "";
     static int Data[10];   //1放月份 2放日子 3放日期长度 4放列数
@@ -21,29 +21,29 @@ void DrawCreateNewFile() {
     double BeginY = MaxY * 0.8;  //定死开始的Y值
     /*总体思路 每次画图是Y轴减去固定的高度 X轴始终剧中  确保画的图是让人舒服的*/
     if (!ShowColumn) {
-        //如果没有进入输入列名模式
         SetPenColor("TextBoxLabel");
         SetPenSize(3);
-
-     
-        drawLabel(MaxX / 2 - TextStringWidth("起始日期") / 2, BeginY, "起始日期");
-
+        SetPointSize(22); 
+        SetPenColor("Black");
+        drawLabel(MaxX / 2 - TextStringWidth("起始日期") / 2, BeginY -= FontHeight * 3, "起始日期");
+    
+        SetPenColor("Black");   
         setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
-        drawLabel(MaxX * 0.46, BeginY -= FontHeight * 3, "月");
-        drawLabel(MaxX * 0.51, BeginY, "日");
-        textbox(GenUIID(0), MaxX * 0.475, BeginY -= 1.5 * FontDescent, MaxX * 0.02, FontHeight * 1.3, InputMonth, 3);  //Month
-        textbox(GenUIID(0), MaxX * 0.525, BeginY, MaxX * 0.02, FontHeight * 1.3, InputDay, 3);//Day
+        drawLabel(MaxX * 0.485, BeginY -= FontHeight * 2.5, "月");
+        drawLabel(MaxX * 0.535, BeginY, "日");
+        textbox(GenUIID(0), MaxX * 0.46, BeginY -= 1.5 * FontDescent, MaxX * 0.02, FontHeight * 1.3, InputMonth, 3);
+        textbox(GenUIID(0), MaxX * 0.51, BeginY, MaxX * 0.02, FontHeight * 1.3, InputDay, 3);
 
-        SetPenColor("Red");
-        drawLabel(MaxX * 0.5 - TextStringWidth("日期长度") / 2, BeginY -= FontHeight * 2, "日期长度");   
-        textbox(GenUIID(0), MaxX * 0.48, BeginY -= FontHeight * 3, MaxX * 0.04, FontHeight * 1.3, DateLength, 4);  //Datalength
+        SetPenColor("Black");
+        drawLabel(MaxX * 0.5 - TextStringWidth("日期长度") / 2, BeginY -= FontHeight * 2.5, "日期长度");
+        textbox(GenUIID(0), MaxX * 0.48, BeginY -= FontHeight * 2.5, MaxX * 0.04, FontHeight * 1.3, DateLength, 4);
 
-        SetPenColor("Green");
-        drawLabel(MaxX * 0.5 - TextStringWidth("列的个数") / 2, BeginY -= FontHeight * 2, "列的个数");
-        textbox(GenUIID(0), MaxX * 0.48, BeginY -= FontHeight * 3, MaxX * 0.04, FontHeight * 1.4, ColumnNum, 3);//ColumnNum
+        SetPenColor("Black");
+        drawLabel(MaxX * 0.5 - TextStringWidth("列的个数") / 2, BeginY -= FontHeight *2.5, "列的个数");
+        textbox(GenUIID(0), MaxX * 0.48, BeginY -= FontHeight * 2.5, MaxX * 0.04, FontHeight * 1.4, ColumnNum, 3);
 
-        setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 1);
-        if (button(GenUIID(0), MaxX * 0.475, BeginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 1.4, "确定")) {
+        setButtonColors("DirSelectionFrame", "PreWordColor", "DirSelectionFrameHot", "Black", 1);
+        if (button(GenUIID(0), MaxX * 0.475, BeginY -= FontHeight * 4, MaxX * 0.05, FontHeight * 1.4, "确定")) {
 
             if (CheckCreateNewFile(InputMonth, InputDay, DateLength, ColumnNum, ErrorAns, Data)) {//进行简单的检查和约束  如果没问题就进入输入列模式
                 
@@ -59,7 +59,7 @@ void DrawCreateNewFile() {
         
         }
     }
-    else {
+   else {
         
         BeginY = MaxY * 0.8; //最高处置为初始
         setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
@@ -88,7 +88,7 @@ void DrawCreateNewFile() {
             drawLabel(MaxX * 0.5 - TextStringWidth(ErrorAns) / 2, BeginY -= 2 * FontHeight, ErrorAns);
         }
     }
-    if (button(GenUIID(0), MaxX * 0.475, BeginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 1.4, "取消")) {
+    if (button(GenUIID(0), MaxX * 0.47, BeginY -= FontHeight * 2, MaxX * 0.06, FontHeight * 1.5, "取消")) {
 
         IsNew = 0;
     }
@@ -97,7 +97,7 @@ void DrawCreateNewFile() {
 
 BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, string  ColumnNum, string  ErrorAns, int *Data) {
  
-    if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(ColumnNum))  //如果没输入东西
+    if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(ColumnNum)) //如果没输入东西
     {
         strcpy(ErrorAns, "请输入完整数据");
         return FALSE;
@@ -131,7 +131,7 @@ BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, 
         return FALSE;
     }
 
-    Data[1] = MonthNum, Data[2] = DayNum, Data[3] = DateNum, Data[4] = Column;  //对data进行赋值
+    Data[1] = MonthNum, Data[2] = DayNum, Data[3] = DateNum, Data[4] = Column;
     return TRUE;
 }
 
@@ -144,11 +144,11 @@ stu_Ptr CreatNewPtr(int* Data) {
     for (i = 1; i <= Data[4]; i++) {
       
         TmpColumnName[i] = (char*)malloc(sizeof(sizeof(ColumnData[i]) +10 ));
-        strcpy(TmpColumnName[i], ColumnData[i]);   //将其复制进去 tmp用来村地址 close的时候全部free掉
+        strcpy(TmpColumnName[i], ColumnData[i]);   //将其复制进去
         ColumnName[i] = TmpColumnName[i];
     }
-    TotalColumnNum = Data[4];  //总列数
-    FileTotalNum = Data[3];    //总日期数
+    TotalColumnNum = Data[4];
+    FileTotalNum = Data[3];
 
 
     stu_Ptr ans, tmp,tmp1;    //tmp用来遍历 tmp1用来新建 
@@ -169,22 +169,21 @@ stu_Ptr CreatNewPtr(int* Data) {
     return ans;
 }
 BOOL CheckColumnName( int ColumnNum,string ErrorAns) {
-      //对列名字简单检查   拒绝输入英文  但是可以改 就怕有人中英结合所以禁止输入英文
+
     int i,j;
     for (i = 1; i <= ColumnNum; i++) {
-        if (!strlen(ColumnData[i])) {   //用strlen判断是否写了数据
+        if (!strlen(ColumnData[i])) {
             strcpy(ErrorAns, "有数据缺失");
             return FALSE;
             }
 
-        for (j = 0; ColumnData[i][j]; j++) {  
-            if (ColumnData[i][j] >0) {   //中文的GBK码全部小于0
-                //因此我们直接屏蔽所有ASCII大于0的
+        for (j = 0; ColumnData[i][j]; j++) {
+            if (ColumnData[i][j] >0) {
                 strcpy(ErrorAns, "请输入中文");
                 return FALSE;
             }
         }
     }
-    strcpy(ErrorAns, "成功");  
+    strcpy(ErrorAns, "成功");
     return TRUE;
 }

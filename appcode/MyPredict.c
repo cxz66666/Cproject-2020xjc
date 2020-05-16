@@ -15,7 +15,7 @@ void polyfit1(int n, double *x, double *y, int poly_n, double a[]); //aÖĞ·ÅµÄÊÇ·
 void gauss_solve(int n, double A[], double x[], double b[]);//ÅäºÏpolyfit1Ê³ÓÃ
 
 
-void polyfit2(int n, double* x, double* y, int poly_n, double a[]);//polyfit2ÎªÒÔºóµÄÍØÕ¹·½Ïò
+void polyfit2(int n, double* x, double* y, int poly_n, double a[]);//ÕÒµ½µÄ¶¼±È½Ï´À µ«ÊÇ¸Ğ¾õ1ÓĞÎÊÌâ  ËùÒÔÏÈÍÚ¸ö¿Ó
 
 void  PreparePredict(stu_Ptr HEAD,int Date[4]);
 string GetDate(int month, int day);
@@ -66,7 +66,7 @@ void polyfit1(int n, double x[], double y[], int poly_n, double a[])
     free(ata);
 }
 
-void gauss_solve(int n, double A[], double x[], double b[])   //½â¸ßË¹·½³Ì
+void gauss_solve(int n, double A[], double x[], double b[])
 {
     int i, j, k, r;
     double max;
@@ -118,7 +118,6 @@ void DrawPredict() {
     double beginY = MaxY * 0.8;
     drawLabel(MaxX * 0.9, beginY, "Ô¤²âÆğÊ¼ÈÕÆÚ");
 
-    /*Õâ¸öĞèÒª¸Ä£¡£¡£¡*/
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
 
     drawLabel(MaxX * 0.9, beginY -= FontHeight * 3, "ÔÂ");
@@ -135,8 +134,9 @@ void DrawPredict() {
     drawLabel(MaxX * 0.9, beginY -= FontHeight * 2, "Ä£ĞÍ½×Êı");
     textbox(GenUIID(0), MaxX * 0.9, beginY -= FontHeight * 3, MaxX * 0.04, FontHeight * 1.3, Poly, 20);
 
-    /*Èç¹û°´ÁËÔ¤²â°´Å¥ ¾Í½øĞĞÔ¤²âÇ°µÄ×¼±¸*/
     setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
+    
+    
 
     if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 4, MaxX * 0.05, FontHeight * 2, "Ô¤²â")) {
 
@@ -363,8 +363,9 @@ void FindBestPredict(int n, double* x, double* y, double a[]) {
 }
 int CalY(int num, double  c[]) {
     double ans = 0;
+    int i=0;
     if (PolyNum) {
-        for (int i = 0; i <= PolyNum; i++) {    //Èç¹ûÊÇ¶àÏîÊ½ÄâºÏ  ¾Í°´ÕâÑùËã
+        for (i = 0; i <= PolyNum; i++) {    //Èç¹ûÊÇ¶àÏîÊ½ÄâºÏ  ¾Í°´ÕâÑùËã
         ans += pow(num, i) * c[i];
         }
     }
@@ -383,7 +384,6 @@ BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, string  D
     }   //Èç¹ûÊÇ¿ÕµÄ  »òÕß»¹ÊÇ³õÊ¼µÄÔÂ  ÈÕ   Ö±½Ó·µ»Ø
 
     int month = atoi(InputMonth), day = atoi(InputDay), Datelen = atoi(DateLength), Predict = atoi(PredictLength),polynum=atoi(poly);   //Èç¹ûÒì³£Ö±½Óatoi·µ»Ø0
-    /*ÒÔÏÂÎª¼òµ¥µÄ¼ì²â  ×¢ÊÍÇë¿´ÖĞÎÄ¼´¿É*/
     if (month <= 0 || month > 12) {
         strcpy(WrongTip, "ÇëÊäÈëÕıÈ·ÔÂ·İ");
         return FALSE;

@@ -8,35 +8,58 @@
 绝大部分采用大驼峰命名法
 应该按功能来看 不能硬看
 */
-void display();  //最主要的展示函数
-void DrawPicture(stu_Ptr Head);   //画最重要的图
+void display(); //最主要的展示函数
+void DrawPicture(stu_Ptr Head); //画最重要的图
 
-void DrawMain();   //Main部分
-void DrawOpenDir();  //打开各个文件按钮
-void DrawMenu();  //工具栏
-void DrawCreateNewFile(); //创建新文件
-void DrawStatus();   //左下角状态
-void HandleFileButton(int selection);  //处理工具栏的输入
+void DrawMain();//Main部分
+void DrawOpenDir(); //打开各个文件按钮
+void DrawMenu();//工具栏
+void DrawCreateNewFile();//创建新文件
+void DrawStatus(); //左下角状态
+void HandleFileButton(int selection);//处理工具栏的输入
 void HandleToolButton(int selection);
 
-void DrawLeftButton(stu_Ptr Head); //左侧的选择日期 选择列的显示
+void DrawLeftButton(stu_Ptr Head);//左侧的选择日期 选择列的显示
 void drawMainPicture();
 void DrawEachDate(int tmpnum, char* Date,stu_Ptr ptr);//画每一天的日期
-void DrawDate(stu_Ptr HEAD);   //画下方的日期
-void DrawTextZH(string str, double bx, double by);   //输出中文
-void DrawTextChar(string str, double bx, double by);  //输出字符
-void DrawArrow();  //画xy箭头
-void DrawLastTableNum();  //画嘴上
-void Drawlegend();  //画图例  
-void DrawHistogram(double TableData[][2],int ClassDataNum);  //画柱状图
-void DrawXYLine();  //画xy线
-void DrawBaseline();  //画6条基准线
-void DrawMainLine();  //画主要的线
-void Add(int num);  
+void DrawDate(stu_Ptr HEAD);  //画下方的日期
+void DrawTextZH(string str, double bx, double by);//输出中文
+void DrawTextChar(string str, double bx, double by);//输出字符
+void DrawArrow();//画xy箭头
+void DrawLastTableNum();//画嘴上
+void Drawlegend(); //画图例  
+void DrawHistogram(double TableData[][2],int ClassDataNum);//画柱状图
+void DrawXYLine();//画xy线
+void DrawBaseline(); //画6条基准线
+void DrawMainLine();//画主要的线
+void Add(int num);
 void Delete(int num);
+
+void WriteTitle(); //标题函数 
+void DrawVirusAll();//画病毒的函数 
+void DrawVirus();
+void DrawMagnifier();//画放大镜的函数 
+void DrawPart(double x,double y,double degree);
+void DrawWelcomeWindow();
+
 
 #define   MY_DRAW_K  20  //在画table的时候 两个x直接画多少个点
 #define  SHOWTIMEDRAW 0 //输出运行时间
+
+
+
+
+
+
+
+#define titleX       7
+#define titleY       10
+#define textX        9
+#define textY        7
+#define PI           3.1415926
+
+
+static double currentX=0.0,currentY=0.0; //当前画笔所在位置 
 
 
 
@@ -44,36 +67,40 @@ void Delete(int num);
 /*注意为了输入中文开发者将textbox进行些许的修改 使其可以输入GBK编码的中文*/
 void display()
 {
-    if (!IsSave&&!IsNew)   //如果不在保存界面上  就update  因为保存界面可能输入中文  使用updateDisplay刷新的话无法输入中文
+    if (!IsSave&&!IsNew)   //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文
         UpdateDisplay();
-    DisplayClear();   //清屏
+    DisplayClear();//清屏
 
-    DrawMain();  //画下方的
-    DrawMenu();   //画菜单
+    DrawMain(); //画下方的
+    DrawMenu();//画菜单
     //先画主要的部分再画菜单  防止遮挡
 }
 
 
 void DrawMain()
-{
-    // printf("%d", IsOpen);
-    if (IsNew == 1) {       //展示图像有几种情况   如果正在新建  画出新建的情况 Isopendir选择打开的
+{   
+    DisplayClear();
+   
+     if (IsNew == 1) {       //展示图像有几种情况   如果正在新建  画出新建的情况 Isopendir选择打开的
        
-        DrawCreateNewFile();   
+        DrawCreateNewFile();
     }
-    else if (IsOpen == 1)
+    else if( IsOpen == 0){
+    	DrawWelcomeWindow();//画欢迎界面 
+    }
+	else if (IsOpen == 1)
     {
-        DrawOpenDir();   //画选择文件框
+        DrawOpenDir();//画选择文件框
     }
     else if (IsOpen == 2)    //如果读取到了该csv文件那么将isopen值设为2
     {
         
-            DrawPicture(NowShowTable);  //非预测模式就按照文件里的数据画图 预测模式就按照预测的链表画图  新建就按照新建的画图
+            DrawPicture(NowShowTable);  //非预测模式就按照文件里的数据画图 预测模式就按照预测的链表画图
      
 
         if (IsSave == 1)  //如果正在保存状态
         {
-            SaveToCsv(NowShowTable);  //保存当前的链表 
+            SaveToCsv(NowShowTable);  //保存当前的链表
         }
     }
     DrawStatus();   //左下角画当前状态
@@ -98,11 +125,12 @@ void DrawPicture(stu_Ptr Head)
 
 
 
-void DrawStatus() {  //这个函数比较清晰  不需要过多注释
+void DrawStatus() {
     SetPenSize(1);
     SetPenColor("Black");
     char NowStatus[30];
     memset(NowStatus, 0, sizeof(NowStatus));
+    SetPointSize(15);
     if (IsSave)
         strcpy(NowStatus, "正在文件保存");
     else if (IsChooseXaxis)
@@ -120,12 +148,11 @@ void DrawStatus() {  //这个函数比较清晰  不需要过多注释
     else if (IsOpen == 1)
         strcpy(NowStatus, "正在打开文件");
     else if (IsOpen == 2)
-        if (OpenFileName[0])
-            sprintf(NowStatus, "正在查看%s文件", OpenFileName);
-        else sprintf(NowStatus, "正在查看新建立的文件");
+        sprintf(NowStatus, "正在查看%s文件", OpenFileName);
     else if (IsNew == 1)
         strcpy(NowStatus, "正在新建文件");
-    else 
+    else if ( IsOpen == 0);
+    else
         strcpy(NowStatus, "正在摸鱼");
     
     MovePen(0.1, 0.1);
@@ -134,7 +161,8 @@ void DrawStatus() {  //这个函数比较清晰  不需要过多注释
 }
 void DrawMenu()
 {
-    /*menulistFile和MenulistTool里放两个工具栏里的东西*/
+	 /*menulistFile和MenulistTool里放两个工具栏里的东西*/
+	SetPointSize(16);
     static char *menuListFile[] = {"File",
                                     "New | Ctrl-N",
                                    "Open | Ctrl-O",
@@ -147,41 +175,40 @@ void DrawMenu()
                                    "Advance Setting",
                                    "Music",
                                    "Other"};
-    double fH =FontHeight;
+    double fH = GetFontHeight();
     double x = 0;
-    double y = MaxY;
+    double y = GetWindowHeight();
     double height = fH * 1.5;
     double w = TextStringWidth(menuListFile[0]) * 2;
     setMenuColors("MenuBar", "White", "White", "White", 1);
     //画出Bar的颜色
-    drawMenuBar(0, y - height, MaxY, height);
-    
+    drawMenuBar(0, y - height, GetWindowWidth(), height);
     //画出两个功能选项
     setMenuColors("MenuBar", "Black", "MenuFrameHot", "Black", 1);
     int selection;
-    
     selection = menuList(GenUIID(0), x, y - height, w * 1.5, w * 3, height, menuListFile, sizeof(menuListFile) / sizeof(menuListFile[0]));
-    HandleFileButton(selection);  //每个菜单对应handle函数
+    HandleFileButton(selection);//每个菜单对应handle函数
     selection = menuList(GenUIID(0), x + w * 1.5, y - height, w * 1.5, w * 3, height, menuListTool, sizeof(menuListFile) / sizeof(menuListFile[0]));
     HandleToolButton(selection);
 }
 void DrawOpenDir()
-{
-    double BoxHeight = FontHeight * 2;
+{   
+    SetPointSize(18);
+    double BoxHeight = GetFontHeight() * 2;
     double BeginY = MaxY - MaxY / 4;
     SetPenColor("TextBoxLabel");
     char InputWelcome[] = "您也可以输入文件全称";
     SetPenSize(2);
     char NameDemo[] = "demo.csv";
-    if (!FileNum)  //如果没找到csv文件
+    if (!FileNum)//如果没找到csv文件
     {
-
+       
         char tmpLabel[] = "当前目录下无csv文件";
         drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY, tmpLabel);
     }
     else
     {
-        //画出一共有多少个
+    	 //画出一共有多少个
         char tmplabel[40] = "";
         sprintf(tmplabel, "当前目录下共有%d个csv文件", FileNum);
         drawLabel(MaxX / 2 - TextStringWidth(tmplabel) / 2, BeginY, tmplabel);
@@ -189,24 +216,24 @@ void DrawOpenDir()
         int i;
 		for ( i= 1; i <= FileNum; i++)
         {
-        //    printf("1\n");
-            if (button(GenUIID(i ), MaxX / 2 - TextStringWidth(NameDemo), BeginY - i * BoxHeight * 1.5 + 0.25 * BoxHeight, TextStringWidth(NameDemo) * 2, BoxHeight, FileName[i - 1]))
+            printf("1\n");
+            if (button(GenUIID(i - 1), MaxX / 2 - TextStringWidth(NameDemo), BeginY - i * BoxHeight * 1.5 + 0.25 * BoxHeight, TextStringWidth(NameDemo) * 2, BoxHeight, FileName[i - 1]))
             {
                 OpenFileName = (char *)malloc(sizeof(strlen(FileName[i - 1]) + 1));
                 strcpy(OpenFileName, FileName[i - 1]);
                 //printf("ok\n");
                 if (ReadCSVFile(FileName[i - 1]))  //read正确返回1   不正确返回0
                 {
-                    if (!FileTotalNum)  //如果当前目录没有csv文件
+                    if (!FileTotalNum)//如果当前目录没有csv文件
                     {
                         SetPenColor("Red");
-                        drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "呜呜呜请确保文件已经关闭且不为NaN呢");//画出提示语
+                        drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "呜呜呜请确保文件已经关闭且不为NaN呢");
                     }
                     else
                     {
                         NowShowTable = head;
                         IsOpen = 2;   //2的时候就是可以进行画图了
-                        Calculate(NowShowTable);   //需要重新计算
+                        Calculate(NowShowTable);
                        
                         return;
                     }
@@ -218,11 +245,11 @@ void DrawOpenDir()
     static char dirName[30] = "";
 
     SetPenColor("TextBoxLabel");
-    drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 0.5 * BoxHeight, InputWelcome); //这里的y   简单介绍下 一个总的boxheight是两倍的字体高度  一个按钮占1.5倍的boxheight  其中上下各空出0.25boxheight
+    drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 0.5 * BoxHeight, InputWelcome); //这里的y   简单说一哈 一个boxheight是两倍的字体高度  一个按钮占1.5倍的boxheight  其中上下各空出0.25boxheight
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
-    textbox(GenUIID(0), MaxX / 2 - 1, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 2, BoxHeight, dirName, 21); //这里的输入宽度为1 最多输20个
-    setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);   //下面画确认按钮
+    textbox(GenUIID(0), MaxX / 2 - 1, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 2, BoxHeight, dirName, 30); //这里的输入宽度为1 最多输30个 谁能输那么多啊
+    setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
     if (button(GenUIID(0), MaxX / 2 + 1.5, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 1, BoxHeight, "确认"))
     {
         if (CheckName(dirName))
@@ -250,7 +277,7 @@ void DrawOpenDir()
         else
         {
             SetPenColor("Red");
-            drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "请确保输入了正确的文件名哦");   
+            drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "请确保输入了正确的文件名哦");
         }
     }
     
@@ -259,40 +286,45 @@ void DrawOpenDir()
 
 void DrawLeftButton(stu_Ptr Head)
 {
+	
     double fH = GetFontHeight();
-    int NowNum = 0; 
+    int nowNum = 0;
     Head = Head->next;   //所有的数据链表是有头节点的
-   
+    
 
+  
+
+    
     SetPenSize(1);
     while (Head != NULL)  
-    {
-        int IsSelect = Head->IsSelect;  //主要用来判断是否填涂
-        setButtonColors("Orange", "Red", "Black", "Red", IsSelect);  //注意是否填涂
-        NowNum++;
+    {   
+        int IsSelect = Head->IsSelect;//主要用来判断是否填涂
+        setButtonColors("Black", "Black", "Red", "Red", IsSelect);//注意是否填涂
+        nowNum++;
        /*这里设定10个就显示翻页   只显示当前十个*/
-        if (NowNum > 10 * NowDateNum&&NowNum<=10*(NowDateNum+1)) {
-            if (button(GenUIID(NowNum), 0.1, MaxY - (1.2 * ((NowNum-1)%10+1) + 1.5) * FontHeight, 0.1, 0.1, ""))
+        if (nowNum > 10 * NowDateNum&&nowNum<=10*(NowDateNum+1)) {
+            if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum-1)%10+1) + 1.5) * FontHeight, 0.08, 0.08, ""))
             {
                 Head->IsSelect = !(Head->IsSelect);
                 Calculate(NowShowTable);
 
             }
             /*！！这些位置基本可以微调一哈  注意了！！*/
-            drawLabel(0.3, MaxY - (1.2 * ((NowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
+            SetPenColor("Black");
+            drawLabel(0.3, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
         
         }
-        if (NowNum+1 > 10 * (NowDateNum + 1))
-            break;   //只显示10个多了就翻页
+        if (nowNum+1 > 10 * (NowDateNum + 1))
+            break; //只显示10个多了就翻页
         Head = Head->next;
      
     }
-    SetPenSize(1);
+    SetPenSize(2);
+    SetPointSize(15); 
 
-
-
-    if (NowDateNum) {  //如果不是第0页就显示上一页按钮
-        setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
+    
+    if (NowDateNum) { //如果不是第0页就显示上一页按钮
+        setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot","Black", 0);
         if (button(GenUIID(0), 0.2, MaxY - 15 * FontHeight, 1, FontHeight, "上一页"))
         { 
             IsRedisplay = 1;
@@ -301,7 +333,7 @@ void DrawLeftButton(stu_Ptr Head)
         }
 
     }
-    if (NowNum != FileTotalNum) {   //如果不是最后一页就显示下一页按钮
+    if (nowNum != FileTotalNum) {
         setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
         if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight, 1, FontHeight, "下一页"))
         {
@@ -314,8 +346,7 @@ void DrawLeftButton(stu_Ptr Head)
     }
 
 	int i;
-    /*每个页面只显示4个列数*/
-    for (i=NowDateColumn*4+1; i <= TotalColumnNum&&i<=(NowDateColumn+1)*4; i++)  //只显示4个
+    for (i=NowDateColumn*4+1; i <= TotalColumnNum&&i<=(NowDateColumn+1)*4; i++)
     {
         setButtonColors("Orange", "Red", "Black", "Red", IsChooseColumn[i]);
         if (button(GenUIID(i), 0.1, 4 - (1.4 * ((i-1)%4+1) + 1.5) * GetFontHeight(), 0.15, 0.15, ""))
@@ -323,7 +354,7 @@ void DrawLeftButton(stu_Ptr Head)
             IsChooseColumn[i] = !IsChooseColumn[i];
             if (IsChooseColumn[i])
             {
-                Add(i);   //模拟一个有序队列  ，每次选中i就将i加入ChoosedColumn里
+                Add(i);
            //     int j;
             //    for (j = 1; j <= ChooseColumnNum; j++)
               //      printf("%d ", ChoosedColumn[j]);
@@ -332,7 +363,7 @@ void DrawLeftButton(stu_Ptr Head)
                 //把i加到已经选择的里面 
             else
             {
-                Delete(i); //把i从有序队列里删去  保持队列的有序
+                Delete(i); //把i删去
                /* int j;
                 for (j = 1; j <= ChooseColumnNum; j++)
                     printf("%d ", ChoosedColumn[j]);
@@ -349,12 +380,12 @@ void DrawLeftButton(stu_Ptr Head)
         if (IsChangeNum&&ChangingPtr!=NULL) {
             setTextBoxColors("TextBoxFrame", COLOR[i], "TextBoxFrameHot", COLOR[i], 0);
 
-            textbox(GenUIID(i), 0.5 + TextStringWidth("这里放四个字"), 4.0 - (1.4 * ((i - 1) % 4 + 1) + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 13);
+            textbox(GenUIID(i), 0.5 + TextStringWidth(ColumnName[i]), 4.0 - (1.4 * ((i - 1) % 4 + 1) + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 10);
         }
 
-        if (NowDateColumn) {  //如果不在第一页
+        if (NowDateColumn) { //如果不在第一页
             setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-            if (button(GenUIID(0), 0.2, 4 - 9 * FontHeight, 1, FontHeight*1.1, "上一页"))
+            if (button(GenUIID(0), 0.2, 4 - 9 * FontHeight, 1, FontHeight, "上一页"))
             {
                 IsRedisplay = 1;
                 NowDateColumn--;   //列的换页
@@ -362,9 +393,9 @@ void DrawLeftButton(stu_Ptr Head)
             }
         }
 
-        if ((NowDateColumn + 1) * 4 < TotalColumnNum) {   //如果不在最后一页
+        if ((NowDateColumn + 1) * 4 < TotalColumnNum) { //如果不在最后一页
             setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-            if (button(GenUIID(0), 0.2, 4 - 11 * FontHeight, 1, FontHeight*1.1, "下一页"))
+            if (button(GenUIID(0), 0.2, 4 - 11 * FontHeight, 1, FontHeight, "下一页"))
             {
                 IsRedisplay = 1;
                 NowDateColumn++;//列的换页
@@ -380,27 +411,28 @@ void DrawLeftButton(stu_Ptr Head)
         setButtonColors("Orange", "Red", "Black", "Red", 0);
         if (button(GenUIID(0), 1.5, 0.9 , 0.8, 0.4, "确认"))
         {
-            if (CheckChangedNum(ChangingPtrStringNum, ErrorAns)) {  //传数据和返回的提示语数组
-                Calculate(NowShowTable);   //注意需要重新计算
+            if (CheckChangedNum(ChangingPtrStringNum, ErrorAns)) {//传数据和返回的提示语数组
+                Calculate(NowShowTable);//注意需要重新计算
                
             }
-            drawLabel(2.5, 0.9, ErrorAns);   
+            drawLabel(2.5, 0.9, ErrorAns);
         }
     }
 
-    //画复原按钮   就是如果移动了xy轴或者某条曲线 或者选中了列   则会显示这个按钮
-    if (IsChooseXaxis || IsChooseYaxis || IsChooseLine||IsChooseHistogram) {
-        setButtonColors("Orange", "Red", "Black", "Red", IsChooseColumn[i]);
+    //画复原按钮   就是如果移动了xy轴或者某条曲线   则会显示这个按钮
+    if (IsChooseXaxis || IsChooseYaxis || IsChooseLine) {
+        setButtonColors("Orange", "Red", "Black", "Black", IsChooseColumn[i]);
         if (button(GenUIID(0), 0.95 * MaxX, 0.9 * MaxY, 1, 0.5, "复原"))
         {
-            /*将所有改变还原
+        	
+        	  /*将所有改变还原
             改变包括是否选中 选中的列数   移动的长度   图表结束位置*/
-            IsChooseXaxis = IsChooseYaxis = IsChooseLine =IsChooseHistogram= FALSE; 
-            ChooseLineNum = ChooseHistogramNum=0;
+            IsChooseXaxis = IsChooseYaxis = IsChooseLine = 0;
+            ChooseLineNum = 0;
             ChooseLineMoveX = ChooseLineMoveY = 0;
             endTableX = StaticendTableX;
             endTableY = StaticendTableY;
-            Calculate(NowShowTable);  //务必记住重新计算
+            Calculate(NowShowTable);//务必记住重新计算
         }
     }
 
@@ -411,19 +443,21 @@ void DrawLeftButton(stu_Ptr Head)
 void HandleFileButton(int selection)
 {
     switch (selection) {
-        //对于每个操作改变data.h里的设定值 
+    
     case 1:
-        IsNew = 1;      //如果是创建新的 将New改为1
+        IsNew = 1;    //对于每个操作改变data里的设定值
         break;
     case 2:
         IsOpen = 1;  //进入选择csv文件界面
-        InitData();   //将数据初始化  防止多次操作导致的数据交叉
+        IsNew = 0;
+        InitData();   //提前把数据初始化了
 
         break;
     case 3:
         IsOpen = 0;
-        MyFree(NowShowTable);  //close时候要把申请的节点free了 
-        FreeColumn(TmpColumnName);   //再把申请的存储列的空间free了
+        IsNew = 0; 
+        MyFree(NowShowTable);//close时候要把申请的节点free了 
+        FreeColumn(TmpColumnName); //再把申请的存储列的空间free了
         break;
     case 4:
         IsSave = 1;
@@ -450,34 +484,35 @@ void HandleToolButton(int selection)
     }
 }
 
+
 /*作用
 画尾部的数字显示
 如果某数据被选中  那么显示所有日期的数据
 
 */
 void DrawLastTableNum() {
-    stu_Ptr tmp = tail;  //注意tail放的是所有选中日期的最后一个节点
+    stu_Ptr tmp = tail;//注意tail放的是所有选中日期的最后一个节点
     int i;
     for (i=1; i <= ChooseColumnNum; i++) {
         int column = ChoosedColumn[i];
             string ShowNum = tostring(tmp->Data[column]); //这里申请出来的最后需要free掉
-            SetPenColor(COLOR[column]);  //将颜色变为设定的颜色
-
+            SetPenColor(COLOR[column]); //将颜色变为设定的颜色
             if (column != ChooseLineNum&&column!=ChooseHistogramNum) {
                 MovePen(tmp->XPosition[column] + 0.05, tmp->YPosition[column]);
                 DrawTextString(ShowNum);
             }
          
-            else  if (column == ChooseLineNum||column==ChooseHistogramNum) {  //如果该列是选中的直线或者柱状图
+            else  if (column == ChooseLineNum||column==ChooseHistogramNum) { //如果该列是选中的直线或者柱状图
                
-                stu_Ptr tmp1 = NowShowTable->next;   //开始将每个选中的日期都画数字
+               
+                stu_Ptr tmp1 = NowShowTable->next;//开始将每个选中的日期都画数字
                 
                 while (tmp1 != NULL) {
                     if (tmp1->IsSelect) {
                         string ShowNum1 = tostring(tmp1->Data[column]);
-                        if (column == ChooseLineNum) //如果是选的直线
+                        if (column == ChooseLineNum)//如果是选的直线
                             MovePen(tmp1->XPosition[column] + ChooseLineMoveX + 0.05, tmp1->YPosition[column] + ChooseLineMoveY + 0.2);
-                        else   //否则就是选的列，
+                        else //否则就是选的列，
                             MovePen(tmp1->XPosition[column] - TextStringWidth(ShowNum1)/2, tmp1->YPosition[column] + FontHeight);
                        
                         DrawTextString(ShowNum1);
@@ -497,8 +532,8 @@ void DrawLastTableNum() {
 
 void Drawlegend()  //画图例 
 {  
-    double  NowX = beginTableX ,NowY=beginTableY/4;
-    int presize = GetPenSize();  //拿到当前笔的数据，之后会恢复
+    double  NowX = beginTableX + PerX,NowY=beginTableY/4;
+    int presize = GetPenSize();//拿到当前笔的数据，之后会恢复
     string precolor = GetPenColor();
     int i;
     for (i = 1; i <=ChooseColumnNum; i++) {
@@ -507,17 +542,17 @@ void Drawlegend()  //画图例
 
             MovePen(NowX, NowY);
          
-           IsChooseColumn[column]==1? SetPenSize(2):SetPenSize(5);     //画的是折线还是柱    1就是折现  2是柱
+           IsChooseColumn[column]==1? SetPenSize(2):SetPenSize(5);     //画的是折线还是柱   1就是折现  2是柱
             SetPenColor(COLOR[column]);
             DrawLine(0.6, 0);//画图例的线
             MovePen(GetCurrentX() + 0.25, GetCurrentY());         
-            DrawTextString(ColumnName[column]);  //写列信息
+            DrawTextString(ColumnName[column]);//写列信息
 
             NowX = GetCurrentX(), NowY = GetCurrentY();
-            if (NowX > endTableX - PerX)   //注意这个换行
+            if (NowX > endTableX - PerX)   //换行
             {
-                NowX = beginTableX + PerX;
-                NowY -= FontHeight * 1.4;
+                NowX = beginTableX + PerX;   //注意这个换行
+                NowY -= FontHeight * 1.5;
             
             }
      
@@ -532,26 +567,27 @@ void DrawDate(stu_Ptr HEAD) {
     while (tmp != NULL) {
         if (tmp->IsSelect) {
             ++tmpnum;
-            DrawEachDate(tmpnum, tmp->Date,tmp);  //画每一天的日期  传参数为当前过了多少天，主要用来计算显示的横坐标位置  和日期
+            DrawEachDate(tmpnum, tmp->Date,tmp);//画每一天的日期  传参数为当前过了多少天，主要用来计算显示的横坐标位置  和日期
         }
         tmp = tmp->next;
     }      //画日期和两道线
 }
 void DrawMainLine() {
     
-    DrawWithColumnNow = 0;   //已经画了几个**柱状图**了 因为 cxz设定最多画两个 所以好讨论
+    DrawWithColumnNow = 0;   //已经画了几个柱状图了 因为 cxz设定最多画两个 所以好讨论
     int i,j;
     for (i=1; i <= ChooseColumnNum; i++) {
 
         /*正常的准备工作
         size  笔的位置
         */
-        SetPenSize(2);                            
-        MovePen(beginTableX, beginTableY);  
+        SetPenSize(2);
+        MovePen(beginTableX, beginTableY);
         int column = ChoosedColumn[i];
+        SetPenColor(COLOR[column]);   //正常的准备工作
 
 
-        if (IsChooseLine&& column == ChooseLineNum) {   //如果这是一根曲线图 并且被选中
+        if (IsChooseLine&& column == ChooseLineNum) {   //如果这根线被选中
             SetPenColor("ChoosedColor");
             SetPenSize(4); 
             //把这条线坐标全部加上偏移量  之后再减去
@@ -568,37 +604,33 @@ void DrawMainLine() {
         }
             if (IsChooseColumn[column] == 1)   //1是画曲线   2是柱状图
                 //1用三次样条插值法 
-                Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, column);
+				Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, column);
             else {
                 //2用画柱状图常规算法
-                DrawHistogram(TableData[column], ClassDataNum[column]);
+				DrawHistogram(TableData[column], ClassDataNum[column]);
             }
-            if (IsChooseLine && column == ChooseLineNum) {  
+            if (IsChooseLine && column == ChooseLineNum) {
                 for (j = 1; j <= ClassDataNum[column]; j++) {
                     TableData[column][j][0] -= ChooseLineMoveX;
                     TableData[column][j][1] -= ChooseLineMoveY;
-                }    //由于之前加上了偏移量  现在要减去  
+                }   //由于之前加上了偏移量  现在要减去  
             }
 
     }   //!!!!   画线部分   核心 !!!!  曲线用到三次样条插值法  柱状图倒没啥  感觉还行 找了一整天（
 }
-
 void DrawArrow() {
-    /*X轴  分是否被选中讨论*/
     SetPenColor("Black");
     SetPenSize(1);
-
+     /*X轴  分是否被选中讨论*/
     if (IsChooseXaxis)
         SetPenColor("ChoosedColor"), SetPenSize(3);
     MovePen(endTableX, beginTableY);
     DrawLine(-0.2, 0.2 );
     MovePen(endTableX, beginTableY);
     DrawLine(-0.2 , -0.2 );
-
     /*Y轴  分是否被选中讨论*/
     SetPenColor("Black");
     SetPenSize(1);
-    
     if (IsChooseYaxis)
         SetPenColor("ChoosedColor"), SetPenSize(3);
     MovePen(beginTableX, endTableY);
@@ -619,15 +651,15 @@ void Add(int num) {
 void Delete(int num) {
     int i;
     for (i = 1; i <= ChooseColumnNum; i++) {
-        if (ChoosedColumn[i] == num)   //找到该num
+        if (ChoosedColumn[i] == num)//找到该num
             break;
     }
-    for (i; i < ChooseColumnNum; i++)  //每一位往前移动
+    for (i; i < ChooseColumnNum; i++)//每一位往前移动
         ChoosedColumn[i] = ChoosedColumn[i + 1];
     ChooseColumnNum--;
 }
 void DrawBaseline() {
-    //六条基准线的属性设置
+	//六条基准线的属性设置
     SetPenSize(1);
     SetPenColor("Gray");
     int i;
@@ -647,7 +679,6 @@ void DrawBaseline() {
     }
 }
 void DrawXYLine() {
-    /*画xy轴的线 */
     SetPenColor("Black");
     SetPenSize(1);
     if (IsChooseXaxis) {
@@ -699,7 +730,7 @@ void DrawTextChar(string str,double bx,double by) {   //写字符（数字）
     
     if (str[1] > 0 && str[1] <= 255)   //如果是两位数
     {
-        c = (string)malloc(10);  //如果malloc少 free时候会报错
+        c = (string)malloc(10);
         c[0] = str[0];
         c[1] = str[1];
         c[2] = 0;
@@ -731,10 +762,11 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
 {
     SetPointSize(15);
     double midx = tmpnum * PerX+beginTableX;
-    double bx= midx , by = beginTableY-0.2 ;
-  
-   //对每个日期都进行判断  颜色、是否被选中、位置
 
+    
+    double bx= midx , by = beginTableY-0.2 ;
+  //对每个日期都进行判断  颜色、是否被选中、位置
+   
     MovePen(bx, by);
     SetPenColor("Black");
     if (ptr->IsShowNum) {
@@ -757,7 +789,7 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
         }
     }
     if (IsChangeNum) {  //如果处在更改数据模式  每个日期下面放一个小选择框
-        SetPenSize(1);
+        SetPenSize(2);
         int i;
         setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", ptr->IsShowNum);
         stu_Ptr tmp = NowShowTable;
@@ -778,12 +810,13 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
                 ChangingPtr = ptr;   //将改变的ptr指向这个
                 for (i = 1; i <= TotalColumnNum; i++) {
                     ChangingPtrStringNum[i] = tostring(ptr->Data[i]);
-                   // printf("%s\n", ChangingPtrStringNum[i]);
+                    printf("%s\n", ChangingPtrStringNum[i]);
                 }
             }
             else {
                 ChangingPtr = NULL;   //否则指向NULL
             }
+       
                 
             ptr->IsShowNum = !(ptr->IsShowNum);//按一下就切换是否被选中
            
@@ -792,3 +825,116 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
    
 
 }
+
+
+void DrawWelcomeWindow(){
+	
+	
+	
+		//获得窗口尺寸 
+	currentX = GetWindowWidth();
+    currentY = GetWindowHeight();
+	
+	
+	//定义了一堆颜色 
+	
+	
+	
+	
+	WriteTitle();
+	DrawVirusAll();
+
+	DrawMagnifier();
+
+}
+
+
+void WriteTitle(){
+    SetPointSize(70); 
+    SetPenColor("TitleColor");
+    SetPenSize(8); 
+	SetFont("圆体");
+	drawLabel(titleX,titleY,"战疫，我们在一起");
+	SetFont("KaiTi_GB2312");
+	SetPointSize(25);
+	SetPenColor("TextColor"); 
+	drawLabel(textX,textY,"欢迎使用疫情数据分析工具") ;
+}
+
+
+ 
+void DrawVirusAll(){
+	MovePen(9.9,3);
+	DrawVirus();
+    MovePen(11.5,3);
+    DrawVirus();   
+    MovePen(10.7,4.3);
+    DrawVirus();
+    
+}
+ 
+void DrawVirus(){
+	double cx=0.0,cy=0.0;
+	int i=0;
+	cx=2;
+	cy=2;
+	SetPenSize(3);
+	SetPenColor("VirusColor");
+	for(i=0;i<8;i++){
+	DrawArc(0.24,45*i,45);
+	cx=GetCurrentX();
+	cy=GetCurrentY();
+	DrawPart(cx,cy,45*i+45);
+	} 
+	
+} 
+ 
+ void DrawPart(double x,double y,double degree){
+ 	MovePen(x,y);
+ 	double px=0.0,py=0.0;
+ 	px=cos(degree/180*PI);
+ 	py=sin(degree/180*PI);
+ 	DrawLine(0.15*px,0.15*py);
+ 	DrawLine(0.06*py,-0.06*px);
+ 	DrawLine(0.06*px,0.06*py);
+ 	DrawLine(-0.18*py,0.18*px);
+ 	DrawLine(-0.06*px,-0.06*py);
+ 	DrawLine(0.06*py,-0.06*px);
+ 	DrawLine(-0.15*px,-0.15*py);
+}
+
+void DrawMagnifier(){
+    MovePen(14.7,4.5);
+    SetPenSize(1);
+    SetPenColor("CircleColor");
+    StartFilledRegion(0.2);
+    DrawArc(1,0,360);
+    EndFilledRegion();
+    SetPenColor("WoodColor");
+    SetPenSize(6);
+    DrawArc(1,0,360);
+    MovePen(14.45,4.8);
+    SetPenColor("White");
+    SetPenSize(7);
+    DrawArc(1,30,60);
+    MovePen(14.5,3.85);
+    SetPenSize(6);
+    SetPenColor("WoodColor");
+    StartFilledRegion(0.5);
+    DrawLine(1.1,-1.1);
+    DrawLine(-0.2,-0.2);
+	DrawLine(-1.1,1.1);
+	DrawLine(0.2,0.2); 
+	EndFilledRegion();
+}
+
+
+
+
+
+
+
+
+
+
+
