@@ -120,10 +120,10 @@ void DrawPredict() {
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
 
-    drawLabel(MaxX * 0.9, beginY -= FontHeight * 3, "月");
-    drawLabel(MaxX * 0.94, beginY , "日");
-    textbox(GenUIID(0), MaxX * 0.915, beginY-=1.5*FontDescent, MaxX * 0.02, FontHeight * 1.3, InputMonth, 3);
-    textbox(GenUIID(0), MaxX * 0.955, beginY, MaxX * 0.02, FontHeight * 1.3, InputDay, 3);
+    drawLabel(MaxX * 0.915, beginY -= FontHeight * 3, "月");
+    drawLabel(MaxX * 0.96, beginY , "日");
+    textbox(GenUIID(0), MaxX * 0.89, beginY-=1.5*FontDescent, MaxX * 0.02, FontHeight * 1.3, InputMonth, 3);
+    textbox(GenUIID(0), MaxX * 0.935, beginY, MaxX * 0.02, FontHeight * 1.3, InputDay, 3);
 
     drawLabel(MaxX * 0.9, beginY -= FontHeight * 2, "采样天数");
     textbox(GenUIID(0), MaxX * 0.9, beginY -= FontHeight * 3, MaxX * 0.04, FontHeight * 1.3, DateLength, 20);

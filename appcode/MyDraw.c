@@ -18,7 +18,8 @@ void DrawCreateNewFile();//创建新文件
 void DrawStatus(); //左下角状态
 void HandleFileButton(int selection);//处理工具栏的输入
 void HandleToolButton(int selection);
-
+void HandleHelpButton(int selection); 
+ 
 void DrawLeftButton(stu_Ptr Head);//左侧的选择日期 选择列的显示
 void drawMainPicture();
 void DrawEachDate(int tmpnum, char* Date,stu_Ptr ptr);//画每一天的日期
@@ -40,21 +41,15 @@ void DrawVirusAll();//画病毒的函数
 void DrawVirus();
 void DrawMagnifier();//画放大镜的函数 
 void DrawPart(double x,double y,double degree);
-void DrawWelcomeWindow();
+void DrawWelcomeWindow();//画欢迎界面的函数 
 
-
+void DrawHelpPage1();//画帮助界面第一页的函数 
+void DrawHelpPage2(); //画帮助界面第二页的函数 
 #define   MY_DRAW_K  20  //在画table的时候 两个x直接画多少个点
 #define  SHOWTIMEDRAW 0 //输出运行时间
-
-
-
-
-
-
-
-#define titleX       7
+#define titleX       7 //标题位置 
 #define titleY       10
-#define textX        9
+#define textX        9 //初始界面小字位置 
 #define textY        7
 #define PI           3.1415926
 
@@ -79,9 +74,14 @@ void display()
 
 void DrawMain()
 {   
-    DisplayClear();
-   
-     if (IsNew == 1) {       //展示图像有几种情况   如果正在新建  画出新建的情况 Isopendir选择打开的
+   DisplayClear();
+    if (IsHelp == 1){
+    	DrawHelpPage1();//画出帮助界面第一页 
+    }
+    else if(IsHelp ==2){
+    	DrawHelpPage2();//画出帮助界面第二页 
+    }
+     else if (IsNew == 1) {       //展示图像有几种情况   如果正在新建  画出新建的情况 Isopendir选择打开的
        
         DrawCreateNewFile();
     }
@@ -92,7 +92,8 @@ void DrawMain()
     {
         DrawOpenDir();//画选择文件框
     }
-    else if (IsOpen == 2)    //如果读取到了该csv文件那么将isopen值设为2
+    
+	else if (IsOpen == 2)    //如果读取到了该csv文件那么将isopen值设为2
     {
         
             DrawPicture(NowShowTable);  //非预测模式就按照文件里的数据画图 预测模式就按照预测的链表画图
@@ -133,6 +134,9 @@ void DrawStatus() {
     SetPointSize(15);
     if (IsSave)
         strcpy(NowStatus, "正在文件保存");
+    else if (IsHelp==1||IsHelp==2){
+    	sprintf(NowStatus, "正在查看帮助");
+    } 
     else if (IsChooseXaxis)
         strcpy(NowStatus, "正在移动X轴");
     else if (IsChooseYaxis)
@@ -175,6 +179,9 @@ void DrawMenu()
                                    "Advance Setting",
                                    "Music",
                                    "Other"};
+                                   
+     static char *menuListHelp[] = {"Help",
+	                                "Help |Ctrl-H"};								
     double fH = GetFontHeight();
     double x = 0;
     double y = GetWindowHeight();
@@ -188,8 +195,10 @@ void DrawMenu()
     int selection;
     selection = menuList(GenUIID(0), x, y - height, w * 1.5, w * 3, height, menuListFile, sizeof(menuListFile) / sizeof(menuListFile[0]));
     HandleFileButton(selection);//每个菜单对应handle函数
-    selection = menuList(GenUIID(0), x + w * 1.5, y - height, w * 1.5, w * 3, height, menuListTool, sizeof(menuListFile) / sizeof(menuListFile[0]));
+    selection = menuList(GenUIID(0), x + w * 1.5, y - height, w * 1.5, w * 3, height, menuListTool, sizeof(menuListTool) / sizeof(menuListTool[0]));
     HandleToolButton(selection);
+    selection = menuList(GenUIID(0), x + w * 3, y - height, w * 1.5, w * 3, height, menuListHelp, sizeof(menuListHelp) / sizeof(menuListHelp[0]));
+    HandleHelpButton(selection);
 }
 void DrawOpenDir()
 {   
@@ -447,17 +456,20 @@ void HandleFileButton(int selection)
     switch (selection) {
     
     case 1:
+    	IsHelp=0;
         IsNew = 1;    //对于每个操作改变data里的设定值
         break;
     case 2:
+    	IsHelp=0;
         IsOpen = 1;  //进入选择csv文件界面
         IsNew = 0;
         InitData();   //提前把数据初始化了
 
         break;
     case 3:
-        IsOpen = 0;
+        IsHelp = 0;
         IsNew = 0; 
+        IsOpen =0;
         MyFree(NowShowTable);//close时候要把申请的节点free了 
         FreeColumn(TmpColumnName); //再把申请的存储列的空间free了
         break;
@@ -837,12 +849,6 @@ void DrawWelcomeWindow(){
 	currentX = GetWindowWidth();
     currentY = GetWindowHeight();
 	
-	
-	//定义了一堆颜色 
-	
-	
-	
-	
 	WriteTitle();
 	DrawVirusAll();
 
@@ -851,13 +857,12 @@ void DrawWelcomeWindow(){
 }
 
 
-void WriteTitle(){
+void WriteTitle(){//画出初始页面标题 
     SetPointSize(70); 
     SetPenColor("TitleColor");
     SetPenSize(8); 
-	SetFont("圆体");
+	SetFont("楷体");     //定义了字体 
 	drawLabel(titleX,titleY,"战疫，我们在一起");
-	SetFont("宋体");
 	SetPointSize(25);
 	SetPenColor("TextColor"); 
 	drawLabel(textX,textY,"欢迎使用疫情数据分析工具") ;
@@ -866,7 +871,7 @@ void WriteTitle(){
 
  
 void DrawVirusAll(){
-	MovePen(9.9,3);
+	MovePen(9.9,3); //一个简单画出病毒简笔画的函数 在设定位置画出三个 
 	DrawVirus();
     MovePen(11.5,3);
     DrawVirus();   
@@ -875,13 +880,13 @@ void DrawVirusAll(){
     
 }
  
-void DrawVirus(){
+void DrawVirus(){  //具体画出病毒的函数 
 	double cx=0.0,cy=0.0;
 	int i=0;
 	cx=2;
 	cy=2;
 	SetPenSize(3);
-	SetPenColor("VirusColor");
+	SetPenColor("VirusColor"); //设定颜色 
 	for(i=0;i<8;i++){
 	DrawArc(0.24,45*i,45);
 	cx=GetCurrentX();
@@ -893,7 +898,7 @@ void DrawVirus(){
  
  void DrawPart(double x,double y,double degree){
  	MovePen(x,y);
- 	double px=0.0,py=0.0;
+ 	double px=0.0,py=0.0;  // 具体画出病毒的函数 
  	px=cos(degree/180*PI);
  	py=sin(degree/180*PI);
  	DrawLine(0.15*px,0.15*py);
@@ -905,23 +910,23 @@ void DrawVirus(){
  	DrawLine(-0.15*px,-0.15*py);
 }
 
-void DrawMagnifier(){
+void DrawMagnifier(){ //画放大镜的函数 
     MovePen(14.7,4.5);
     SetPenSize(1);
-    SetPenColor("CircleColor");
-    StartFilledRegion(0.2);
-    DrawArc(1,0,360);
-    EndFilledRegion();
-    SetPenColor("WoodColor");
+    SetPenColor("CircleColor"); //填充颜色 
+    StartFilledRegion(0.2);//填充区域 
+    DrawArc(1,0,360); 
+    EndFilledRegion(); //关闭填充区域 
+    SetPenColor("WoodColor"); //圆环颜色 
     SetPenSize(6);
     DrawArc(1,0,360);
-    MovePen(14.45,4.8);
+    MovePen(14.45,4.8);//画出圆环上的反光弧 
     SetPenColor("White");
     SetPenSize(7);
     DrawArc(1,30,60);
     MovePen(14.5,3.85);
     SetPenSize(6);
-    SetPenColor("WoodColor");
+    SetPenColor("WoodColor"); //画出手柄并填充颜色 
     StartFilledRegion(0.5);
     DrawLine(1.1,-1.1);
     DrawLine(-0.2,-0.2);
@@ -931,12 +936,58 @@ void DrawMagnifier(){
 }
 
 
+void HandleHelpButton(int selection){ //菜单栏HELP键的控制函数 
+	if (selection == 1){
+		IsHelp=1;
+		IsNew=0;
+		IsOpen=0;
+	}
+}
 
 
+void DrawHelpPage1(){  //帮助页面第一页 
+	    double interval = 0.0;
+		interval=GetFontHeight(); 
+		drawLabel(MaxX-interval*45,MaxY-interval*4,"Hello！这里是本可视化工具的使用指南"); 
+		drawLabel(MaxX-interval*68,MaxY-interval*8,"·关于新建功能") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*10,"点击窗口左上角File菜单中的New键或使用快捷键Ctrl-N打开新建页面，根据提示输入新建数据的相关数据，点击确认后在下一页面输入列名，点击确认后进入可视化页面。");
+	    drawLabel(MaxX-interval*68,MaxY-interval*12,"·关于打开文件") ; 
+	    drawLabel(MaxX-interval*68,MaxY-interval*14,"在打开文件前请把需要查看的csv数据文件放至demoprj-devc->output文件夹下，然后使用File菜单下的Open键或使用快捷键Ctrl-N打开查看页面，点击显示的文件或者使") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*16,"用搜索功能打开output文件夹下的数据文件，进入可视化页面。") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*18,"·关于可视化页面") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*20,"勾选页面左上角的日期数据来达到显示或隐藏当前日期的数据的目的，可使用上下翻页功能来浏览所有日期哦。勾选左下角相关列名，可以在图表中显示相关数据的可视化") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*22,"功能。根据页面右方相关提示可进行预测功能的实现哦。点击拖动X轴Y轴实现图像的缩放功能，点击柱体可显示当前具体数据，可使用右上角恢复功能键来恢复图表初始状") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*24,"态。") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*26,"·关于数据更改（适用于新建功能和查看功能）") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*28,"在可视化页面单击右下角更改数据功能键，点击勾选X轴相关数据即可进行修改数据，点击保存即可保存修改数据。") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*30,"·关于预测功能") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*32,"在可视化页面右侧依照相关提示进行预测。已实现5阶及以下的模型预测。") ; 
+		//点击按钮进入帮助页面第二页 
+		setButtonColors("Black", "Black", "DarkBlue", "DarkBlue", 0);
+    if (button(GenUIID(0),MaxX-interval*40,MaxY-interval*36,1.5,0.8, "下一页")){  
+	IsHelp =2; 
+	} 
+		
 
+}
 
-
-
+void DrawHelpPage2(){//帮助页面第二页 
+		double interval = 0.0;
+		interval=GetFontHeight(); 	
+		
+        drawLabel(MaxX-interval*68,MaxY-interval*8,"·关于关闭功能") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*10,"在任意页面点击File菜单下的Close键或使用快捷键Ctrl-W即可回到初始页面") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*12,"·关于保存功能") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*14,"新建数据后单击File菜单下的Save键或使用快捷键Ctrl-S保存数据，注意输入正确的文件扩展名.csv，即可保存文件至OutPut文件夹下。") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*16,"·关于退出功能") ;  
+		drawLabel(MaxX-interval*68,MaxY-interval*18,"点击file菜单下的Exit键或使用快捷键Ctrl-E退出本工具。") ;
+		//点击按钮回到帮助页面第一页 
+			setButtonColors("Black", "Black", "DarkBlue", "DarkBlue", 0);
+        if (button(GenUIID(0),MaxX-interval*40,MaxY-interval*36, 1.5, 0.8, "上一页")){
+     	IsHelp =1; 
+	} 
+	
+}
 
 
 

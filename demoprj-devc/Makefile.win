@@ -1,18 +1,18 @@
 # Project: demo
-# Makefile created by Dev-C++ 5.9.2
+# Makefile created by Dev-C++ 5.5.3
 
-CPP      = g++.exe -D__DEBUG__
-CC       = gcc.exe -D__DEBUG__
+CPP      = g++.exe
+CC       = gcc.exe
 WINDRES  = windres.exe
 OBJ      = output/exceptio.o output/genlib.o output/graphics.o output/random.o output/simpio.o output/strlib.o output/imgui.o output/demo.o
 LINKOBJ  = output/exceptio.o output/genlib.o output/graphics.o output/random.o output/simpio.o output/strlib.o output/imgui.o output/demo.o
-LIBS     = -L"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib" -L"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -mwindows -g3
-INCS     = -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"../libgraphics" -I"../simpleGUI" -I"../appcode"
-CXXINCS  = -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include/c++" -I"../libgraphics" -I"../simpleGUI" -I"../appcode"
+LIBS     = -L"D:/Dev-Cpp/MinGW32/lib" -L"D:/Dev-Cpp/MinGW32/mingw32/lib" -static-libstdc++ -static-libgcc -mwindows -g3
+INCS     = -I"D:/Dev-Cpp/MinGW32/include" -I"../libgraphics" -I"../simpleGUI" -I"../appcode"
+CXXINCS  = -I"D:/Dev-Cpp/MinGW32/include" -I"D:/Dev-Cpp/MinGW32/lib/gcc/mingw32/4.7.2/include/c++" -I"../libgraphics" -I"../simpleGUI" -I"../appcode"
 BIN      = output/demo.exe
-CXXFLAGS = $(CXXINCS) -Og -std=c++11 -g3
-CFLAGS   = $(INCS) -Og -std=c++11 -g3
-RM       = rm.exe -f
+CXXFLAGS = $(CXXINCS) -g3
+CFLAGS   = $(INCS) -g3
+RM       = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 

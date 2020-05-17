@@ -20,6 +20,7 @@ int MyError; //error小于0的话就报错   -1文件未打开
 int IsMusic; //放音乐就算了
 int IsOpenOther;
 int IsOpenAdvance;
+int IsHelp; 
 
 int FileTotalNum;    //一共多少日期
 int NowDateNum;     //当前展示第几列date   翻页时候用
