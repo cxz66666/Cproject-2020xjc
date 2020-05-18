@@ -308,8 +308,11 @@ void  FreeColumn(char* Ptr[]) {
 	int i=0; 
     for (i = 1; i <= TotalColumnNum; i++) {
         if (Ptr[i] != NULL)
-            if(Ptr[i][0] != 0)
-            free(Ptr[i]);
+            if (Ptr[i][0] != 0) {
+                free(Ptr[i]);
+                Ptr[i] = NULL;
+            }
+       
     }
 }
 void ChangeIsSelect(stu_Ptr HEAD) {  //最多选中20个日期  再多不好看了

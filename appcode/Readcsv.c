@@ -52,15 +52,16 @@ BOOL ReadCSVFile(char *Name)
 {
     head = (stu_Ptr)malloc(sizeof(struct stu));
     ptr = head;  //带头结点的   注意!!!!!!!!
-
+    head->next = NULL;
     /*  !!!!  注意了带头节点   别被坑了   为啥要带   我懒得重写了   !!!!*/
 
     int num = 0; //num用来记录当前到第几个了
     FILE *fp = fopen(Name, "r+");
-    // printf("%s\n",Name);
-    if (fp == NULL)
+    //printf("%s\n",Name);
+    if (fp==NULL)
     {
-        printf("NULL");
+        //printf("NULL");
+        fclose(fp);
         MyError = -1;  //如果没打开就要报错了
         return 0;
     }
@@ -70,7 +71,7 @@ BOOL ReadCSVFile(char *Name)
         int flag = 0;
         char buffer[256];
         char flagbuffer[10];
-                             
+       
         while (fscanf(fp, "%[^,\n]", buffer) != EOF) //   使用部分正则表达式  buffer里放的是数据   flagbuffer里放的是,或者\n  flag是第一行是否读取完毕  是否应该进入读取日期模式
         {
             num++;
@@ -116,15 +117,29 @@ BOOL ReadCSVFile(char *Name)
                 // printf("%s\n", ColumnName[num - 1]);
             }
             if (!flag && flagbuffer[0] == 10) {   //读到换行了  10就是换行
-                flag = 1;  //flag标志是否开始创建struct
-                TotalColumnNum = num-1  ;   //减一的原因是算了"日期" 
-                printf("num is %d\n", num);
+                if (num != 1) {   //num=1为空文件
+                    flag = 1;  //flag标志是否开始创建struct
+                    TotalColumnNum = num - 1;   //减一的原因是算了"日期" 
+                   // printf("num is %d\n", num);
+                }
+                else {
+                   
+                    MyError = -2;    //两种情况  -1是文件未打开  -2是文件打开了但是是空的
+                    return FALSE;
+                }
 
             }
         }
-        //printf("wanshi");
+        
         fclose(fp);
-        return 1;
+        if (!num)    //加一步判断 如果文件是空的  那就返回FALSE
+        {
+            MyError = -2;    //两种情况  -1是文件未打开  -2是文件打开了但是是空的
+            return FALSE;
+        }
+            
+        else 
+        return TRUE;
     }
 }
 

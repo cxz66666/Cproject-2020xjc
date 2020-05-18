@@ -469,6 +469,7 @@ void    MyFree(stu_Ptr Head) {
    
     next = tmp->next;
     free(tmp);   //头节点单独释放
+    tmp = NULL;
     tmp = next;
 
     while (next!=NULL)

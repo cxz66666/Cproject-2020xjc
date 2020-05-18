@@ -4,71 +4,74 @@
 #include "MyDrawTable.c"
 #include "MyPredict.c"
 #include "MyCreat.c"
-/*ÉùÃ÷µÄº¯Êý»ù±¾°´ÕÕ¹¦ÄÜÀ´ÁË 
-¾ø´ó²¿·Ö²ÉÓÃ´óÍÕ·åÃüÃû·¨
-Ó¦¸Ã°´¹¦ÄÜÀ´¿´ ²»ÄÜÓ²¿´
+/*ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+ï¿½ï¿½ï¿½ó²¿·Ö²ï¿½ï¿½Ã´ï¿½ï¿½Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+Ó¦ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ó²ï¿½ï¿½
 */
-void display(); //×îÖ÷ÒªµÄÕ¹Ê¾º¯Êý
-void DrawPicture(stu_Ptr Head); //»­×îÖØÒªµÄÍ¼
+void display(); //ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Õ¹Ê¾ï¿½ï¿½ï¿½ï¿½
+void DrawPicture(stu_Ptr Head); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Í¼
 
-void DrawMain();//Main²¿·Ö
-void DrawOpenDir(); //´ò¿ª¸÷¸öÎÄ¼þ°´Å¥
-void DrawMenu();//¹¤¾ßÀ¸
-void DrawCreateNewFile();//´´½¨ÐÂÎÄ¼þ
-void DrawStatus(); //×óÏÂ½Ç×´Ì¬
-void HandleFileButton(int selection);//´¦Àí¹¤¾ßÀ¸µÄÊäÈë
+void DrawMain();//Mainï¿½ï¿½ï¿½ï¿½
+void DrawOpenDir(); //ï¿½ò¿ª¸ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Å¥
+void DrawMenu();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void DrawCreateNewFile();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+void DrawStatus(); //ï¿½ï¿½ï¿½Â½ï¿½×´Ì¬
+void HandleFileButton(int selection);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void HandleToolButton(int selection);
 void HandleHelpButton(int selection); 
  
-void DrawLeftButton(stu_Ptr Head);//×ó²àµÄÑ¡ÔñÈÕÆÚ Ñ¡ÔñÁÐµÄÏÔÊ¾
+void DrawLeftButton(stu_Ptr Head);//ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ñ¡ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ê¾
 void drawMainPicture();
-void DrawEachDate(int tmpnum, char* Date,stu_Ptr ptr);//»­Ã¿Ò»ÌìµÄÈÕÆÚ
-void DrawDate(stu_Ptr HEAD);  //»­ÏÂ·½µÄÈÕÆÚ
-void DrawTextZH(string str, double bx, double by);//Êä³öÖÐÎÄ
-void DrawTextChar(string str, double bx, double by);//Êä³ö×Ö·û
-void DrawArrow();//»­xy¼ýÍ·
-void DrawLastTableNum();//»­×ìÉÏ
-void Drawlegend(); //»­Í¼Àý  
-void DrawHistogram(double TableData[][2],int ClassDataNum);//»­Öù×´Í¼
-void DrawXYLine();//»­xyÏß
-void DrawBaseline(); //»­6Ìõ»ù×¼Ïß
-void DrawMainLine();//»­Ö÷ÒªµÄÏß
+void DrawEachDate(int tmpnum, char* Date,stu_Ptr ptr);//ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void DrawDate(stu_Ptr HEAD);  //ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void DrawTextZH(string str, double bx, double by);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void DrawTextChar(string str, double bx, double by);//ï¿½ï¿½ï¿½ï¿½Ö·ï¿½
+void DrawArrow();//ï¿½ï¿½xyï¿½ï¿½Í·
+void DrawLastTableNum();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void Drawlegend(); //ï¿½ï¿½Í¼ï¿½ï¿½  
+void DrawHistogram(double TableData[][2],int ClassDataNum);//ï¿½ï¿½ï¿½ï¿½×´Í¼
+void DrawXYLine();//ï¿½ï¿½xyï¿½ï¿½
+void DrawBaseline(); //ï¿½ï¿½6ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½
+void DrawMainLine();//ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½
 void Add(int num);
 void Delete(int num);
+void ResetFileName(string Name);
+int SplitFileName(string szFile);
+void HandleFileError(string ErrorAns);
 
-void WriteTitle(); //±êÌâº¯Êý 
-void DrawVirusAll();//»­²¡¶¾µÄº¯Êý 
+void WriteTitle(); //ï¿½ï¿½ï¿½âº¯ï¿½ï¿½ 
+void DrawVirusAll();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ 
 void DrawVirus();
-void DrawMagnifier();//»­·Å´ó¾µµÄº¯Êý 
+void DrawMagnifier();//ï¿½ï¿½ï¿½Å´ó¾µµÄºï¿½ï¿½ï¿½ 
 void DrawPart(double x,double y,double degree);
-void DrawWelcomeWindow();//»­»¶Ó­½çÃæµÄº¯Êý 
+void DrawWelcomeWindow();//ï¿½ï¿½ï¿½ï¿½Ó­ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ 
 
-void DrawHelpPage1();//»­°ïÖú½çÃæµÚÒ»Ò³µÄº¯Êý 
-void DrawHelpPage2(); //»­°ïÖú½çÃæµÚ¶þÒ³µÄº¯Êý 
-#define   MY_DRAW_K  20  //ÔÚ»­tableµÄÊ±ºò Á½¸öxÖ±½Ó»­¶àÉÙ¸öµã
-#define  SHOWTIMEDRAW 0 //Êä³öÔËÐÐÊ±¼ä
-#define titleX       7 //±êÌâÎ»ÖÃ 
+void DrawHelpPage1();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ò³ï¿½Äºï¿½ï¿½ï¿½ 
+void DrawHelpPage2(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½Ò³ï¿½Äºï¿½ï¿½ï¿½ 
+#define   MY_DRAW_K  20  //ï¿½Ú»ï¿½tableï¿½ï¿½Ê±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½xÖ±ï¿½Ó»ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½
+#define  SHOWTIMEDRAW 0 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+#define titleX       7 //ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ 
 #define titleY       10
-#define textX        9 //³õÊ¼½çÃæÐ¡×ÖÎ»ÖÃ 
+#define textX        9 //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Î»ï¿½ï¿½ 
 #define textY        7
 #define PI           3.1415926
 
 
-static double currentX=0.0,currentY=0.0; //µ±Ç°»­±ÊËùÔÚÎ»ÖÃ 
+static double currentX=0.0,currentY=0.0; //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ 
 
 
 
-// ÏÔÊ¾½çÃæ
-/*×¢ÒâÎªÁËÊäÈëÖÐÎÄ¿ª·¢Õß½«textbox½øÐÐÐ©ÐíµÄÐÞ¸Ä Ê¹Æä¿ÉÒÔÊäÈëGBK±àÂëµÄÖÐÎÄ*/
+// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+/*×¢ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ß½ï¿½textboxï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GBKï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 void display()
 {
-    if (!IsSave&&!IsNew)   //Èç¹û²»ÔÚ±£´æ½çÃæÉÏ  ¾Íupdate  ÒòÎª±£´æ½çÃæ¿ÉÄÜÊäÈëÖÐÎÄ  Ê¹ÓÃupdateÎÞ·¨ÊäÈëÖÐÎÄ
+    if (!IsSave&&!IsNew)   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½update  ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  Ê¹ï¿½ï¿½updateï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         UpdateDisplay();
-    DisplayClear();//ÇåÆÁ
+    DisplayClear();//ï¿½ï¿½ï¿½ï¿½
 
-    DrawMain(); //»­ÏÂ·½µÄ
-    DrawMenu();//»­²Ëµ¥
-    //ÏÈ»­Ö÷ÒªµÄ²¿·ÖÔÙ»­²Ëµ¥  ·ÀÖ¹ÕÚµ²
+    DrawMain(); //ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½
+    DrawMenu();//ï¿½ï¿½ï¿½Ëµï¿½
+    //ï¿½È»ï¿½ï¿½ï¿½Òªï¿½Ä²ï¿½ï¿½ï¿½ï¿½Ù»ï¿½ï¿½Ëµï¿½  ï¿½ï¿½Ö¹ï¿½Úµï¿½
 }
 
 
@@ -76,45 +79,45 @@ void DrawMain()
 {   
    DisplayClear();
     if (IsHelp == 1){
-    	DrawHelpPage1();//»­³ö°ïÖú½çÃæµÚÒ»Ò³ 
+    	DrawHelpPage1();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ò³ 
     }
     else if(IsHelp ==2){
-    	DrawHelpPage2();//»­³ö°ïÖú½çÃæµÚ¶þÒ³ 
+    	DrawHelpPage2();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½Ò³ 
     }
-     else if (IsNew == 1) {       //Õ¹Ê¾Í¼ÏñÓÐ¼¸ÖÖÇé¿ö   Èç¹ûÕýÔÚÐÂ½¨  »­³öÐÂ½¨µÄÇé¿ö IsopendirÑ¡Ôñ´ò¿ªµÄ
+     else if (IsNew == 1) {       //Õ¹Ê¾Í¼ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ IsopendirÑ¡ï¿½ï¿½ò¿ªµï¿½
        
         DrawCreateNewFile();
     }
     else if( IsOpen == 0){
-    	DrawWelcomeWindow();//»­»¶Ó­½çÃæ 
+    	DrawWelcomeWindow();//ï¿½ï¿½ï¿½ï¿½Ó­ï¿½ï¿½ï¿½ï¿½ 
     }
 	else if (IsOpen == 1)
     {
-        DrawOpenDir();//»­Ñ¡ÔñÎÄ¼þ¿ò
+        DrawOpenDir();//ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
     }
     
-	else if (IsOpen == 2)    //Èç¹û¶ÁÈ¡µ½ÁË¸ÃcsvÎÄ¼þÄÇÃ´½«isopenÖµÉèÎª2
+	else if (IsOpen == 2)    //ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ë¸ï¿½csvï¿½Ä¼ï¿½ï¿½ï¿½Ã´ï¿½ï¿½isopenÖµï¿½ï¿½Îª2
     {
         
-            DrawPicture(NowShowTable);  //·ÇÔ¤²âÄ£Ê½¾Í°´ÕÕÎÄ¼þÀïµÄÊý¾Ý»­Í¼ Ô¤²âÄ£Ê½¾Í°´ÕÕÔ¤²âµÄÁ´±í»­Í¼
+            DrawPicture(NowShowTable);  //ï¿½ï¿½Ô¤ï¿½ï¿½Ä£Ê½ï¿½Í°ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý»ï¿½Í¼ Ô¤ï¿½ï¿½Ä£Ê½ï¿½Í°ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
      
 
-        if (IsSave == 1)  //Èç¹ûÕýÔÚ±£´æ×´Ì¬
+        if (IsSave == 1)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½×´Ì¬
         {
-            SaveToCsv(NowShowTable);  //±£´æµ±Ç°µÄÁ´±í
+            SaveToCsv(NowShowTable);  //ï¿½ï¿½ï¿½æµ±Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
     }
-    DrawStatus();   //×óÏÂ½Ç»­µ±Ç°×´Ì¬
+    DrawStatus();   //ï¿½ï¿½ï¿½Â½Ç»ï¿½ï¿½ï¿½Ç°×´Ì¬
 }
 
 
 void DrawPicture(stu_Ptr Head)
 {
 
-    DrawLeftButton(Head);   //×ó²àµÄÒ»¶Ñ°´Å¥
+    DrawLeftButton(Head);   //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ñ°ï¿½Å¥
 
-    drawMainPicture();   //Ö÷ÒªÄÇ¸ö±í
-    DrawPredict();     //»­Ô¤²âµÄÊäÈë¿ò
+    drawMainPicture();   //ï¿½ï¿½Òªï¿½Ç¸ï¿½ï¿½ï¿½
+    DrawPredict();     //ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    
   
     if (IsRedisplay)
@@ -133,31 +136,31 @@ void DrawStatus() {
     memset(NowStatus, 0, sizeof(NowStatus));
     SetPointSize(15);
     if (IsSave)
-        strcpy(NowStatus, "ÕýÔÚÎÄ¼þ±£´æ");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½");
     else if (IsHelp==1||IsHelp==2){
-    	sprintf(NowStatus, "ÕýÔÚ²é¿´°ïÖú");
+    	sprintf(NowStatus, "ï¿½ï¿½ï¿½Ú²é¿´ï¿½ï¿½ï¿½ï¿½");
     } 
     else if (IsChooseXaxis)
-        strcpy(NowStatus, "ÕýÔÚÒÆ¶¯XÖá");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½Xï¿½ï¿½");
     else if (IsChooseYaxis)
-        strcpy(NowStatus, "ÕýÔÚÒÆ¶¯YÖá");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½Yï¿½ï¿½");
     else if (IsChooseLine)
-        strcpy(NowStatus, "ÕýÔÚÒÆ¶¯ÇúÏß");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½");
     else if (IsChooseHistogram)
-        strcpy(NowStatus, "Ñ¡ÖÐÖùÌå");
+        strcpy(NowStatus, "Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
     else if (IsChangeNum)
-        strcpy(NowStatus, "ÕýÔÚ¸ü¸ÄÊý¾Ý");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
     else if (IsPredict)
-        strcpy(NowStatus, "ÕýÔÚ½øÐÐÔ¤²â");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½");
     else if (IsOpen == 1)
-        strcpy(NowStatus, "ÕýÔÚ´ò¿ªÎÄ¼þ");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ä¼ï¿½");
     else if (IsOpen == 2)
-        sprintf(NowStatus, "ÕýÔÚ²é¿´%sÎÄ¼þ", OpenFileName);
+        sprintf(NowStatus, "ï¿½ï¿½ï¿½Ú²é¿´%sï¿½Ä¼ï¿½", OpenFileName);
     else if (IsNew == 1)
-        strcpy(NowStatus, "ÕýÔÚÐÂ½¨ÎÄ¼þ");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½ï¿½Ä¼ï¿½");
     else if ( IsOpen == 0);
     else
-        strcpy(NowStatus, "ÕýÔÚÃþÓã");
+        strcpy(NowStatus, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
     
     MovePen(0.1, 0.1);
 
@@ -165,7 +168,7 @@ void DrawStatus() {
 }
 void DrawMenu()
 {
-	 /*menulistFileºÍMenulistToolÀï·ÅÁ½¸ö¹¤¾ßÀ¸ÀïµÄ¶«Î÷*/
+	 /*menulistFileï¿½ï¿½MenulistToolï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½*/
 	SetPointSize(16);
     static char *menuListFile[] = {"File",
                                     "New | Ctrl-N",
@@ -188,65 +191,116 @@ void DrawMenu()
     double height = fH * 1.5;
     double w = TextStringWidth(menuListFile[0]) * 2;
     setMenuColors("MenuBar", "White", "White", "White", 1);
-    //»­³öBarµÄÑÕÉ«
+    //ï¿½ï¿½ï¿½ï¿½Barï¿½ï¿½ï¿½ï¿½É«
     drawMenuBar(0, y - height, GetWindowWidth(), height);
-    //»­³öÁ½¸ö¹¦ÄÜÑ¡Ïî
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½
     setMenuColors("MenuBar", "Black", "MenuFrameHot", "Black", 1);
     int selection;
     selection = menuList(GenUIID(0), x, y - height, w * 1.5, w * 3, height, menuListFile, sizeof(menuListFile) / sizeof(menuListFile[0]));
-    HandleFileButton(selection);//Ã¿¸ö²Ëµ¥¶ÔÓ¦handleº¯Êý
+    HandleFileButton(selection);//Ã¿ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½Ó¦handleï¿½ï¿½ï¿½ï¿½
     selection = menuList(GenUIID(0), x + w * 1.5, y - height, w * 1.5, w * 3, height, menuListTool, sizeof(menuListTool) / sizeof(menuListTool[0]));
     HandleToolButton(selection);
     selection = menuList(GenUIID(0), x + w * 3, y - height, w * 1.5, w * 3, height, menuListHelp, sizeof(menuListHelp) / sizeof(menuListHelp[0]));
     HandleHelpButton(selection);
 }
+BOOL CheckFileName(string szFile) {
+    int Length = strlen(szFile);
+    if (szFile[Length - 4] == '.'
+        && szFile[Length - 3] == 'c'
+        && szFile[Length - 2] == 's'
+        && szFile[Length - 1] == 'v')
+        return TRUE;
+    else return FALSE;
+}
 void DrawOpenDir()
 {   
+
+
+   
+    
+    static char ErrorAns[40]="";
     SetPointSize(18);
     double BoxHeight = GetFontHeight() * 2;
-    double BeginY = MaxY - MaxY / 4;
+    double BeginY = MaxY* 3/4;
     SetPenColor("TextBoxLabel");
-    char InputWelcome[] = "ÄúÒ²¿ÉÒÔÊäÈëÎÄ¼þÈ«³Æ";
+    char InputWelcome[] = "ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½È«ï¿½ï¿½";
     SetPenSize(2);
     char NameDemo[] = "demo.csv";
-    if (!FileNum)//Èç¹ûÃ»ÕÒµ½csvÎÄ¼þ
-    {
+    if (button(GenUIID(0), 0.9 * MaxX, 0.8 * MaxY, 1, FontHeight * 2, "ï¿½ï¿½")) {
+            char szFile[MAX_PATH] = { 0 };
+            memset(ErrorAns, 0, sizeof(ErrorAns));  //ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ErrorAns
+           
+            MyError = 0;
+            if (FileDialog(szFile))
+            {
+                if (CheckFileName(szFile)) {
+                    string str = szFile+SplitFileName(szFile);
+                    if (ReadCSVFile(szFile)) {
+                        ResetFileName(str);
+                        NowShowTable = head;
+                        IsOpen = 2;
+                        ChangeIsSelect(NowShowTable);
+                        Calculate(NowShowTable);
+                        return;
+                    }
+                    
+                    
+                }
+                else {
+                    strcpy(ErrorAns, "ï¿½ï¿½È·ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ä¼ï¿½");
+                   
+                }
+            }
+            else {
+                strcpy(ErrorAns, "ï¿½ï¿½È·ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ä¼ï¿½");
+            }
+    }
        
-        char tmpLabel[] = "µ±Ç°Ä¿Â¼ÏÂÎÞcsvÎÄ¼þ";
+    SetPenColor("Red");
+    char tmpLabel[40] = "ï¿½ï¿½Ç°Ä¿Â¼ï¿½ï¿½ï¿½ï¿½csvï¿½Ä¼ï¿½";
+    if (!FileNum)//ï¿½ï¿½ï¿½Ã»ï¿½Òµï¿½csvï¿½Ä¼ï¿½
+    {
+
+        
         drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY, tmpLabel);
     }
     else
     {
-    	 //»­³öÒ»¹²ÓÐ¶àÉÙ¸ö
-        char tmplabel[40] = "";
-        sprintf(tmplabel, "µ±Ç°Ä¿Â¼ÏÂ¹²ÓÐ%d¸öcsvÎÄ¼þ", FileNum);
-        drawLabel(MaxX / 2 - TextStringWidth(tmplabel) / 2, BeginY, tmplabel);
+        //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ù¸ï¿½
+     
+        sprintf(tmpLabel, "ï¿½ï¿½Ç°Ä¿Â¼ï¿½Â¹ï¿½ï¿½ï¿½%dï¿½ï¿½csvï¿½Ä¼ï¿½", FileNum);
+
+        drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY, tmpLabel);
         setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
         int i;
-		for ( i= 1; i <= FileNum; i++)
+        for (i = 1; i <= FileNum; i++)
         {
-            printf("1\n");
+           // printf("1\n");
             if (button(GenUIID(i - 1), MaxX / 2 - TextStringWidth(NameDemo), BeginY - i * BoxHeight * 1.5 + 0.25 * BoxHeight, TextStringWidth(NameDemo) * 2, BoxHeight, FileName[i - 1]))
             {
-                OpenFileName = (char *)malloc(sizeof(strlen(FileName[i - 1]) + 1));
-                strcpy(OpenFileName, FileName[i - 1]);
+                memset(ErrorAns, 0, sizeof(ErrorAns));
+                MyError = 0;
+                ResetFileName(FileName[i - 1]);
                 //printf("ok\n");
-                if (ReadCSVFile(FileName[i - 1]))  //readÕýÈ··µ»Ø1   ²»ÕýÈ··µ»Ø0
+                if (ReadCSVFile(FileName[i - 1]))  //readï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½1   ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½0
                 {
-                    if (!FileTotalNum)//Èç¹ûµ±Ç°Ä¿Â¼Ã»ÓÐcsvÎÄ¼þ
+                    if (!FileTotalNum)//ï¿½ï¿½ï¿½ï¿½ï¿½Ç°Ä¿Â¼Ã»ï¿½ï¿½csvï¿½Ä¼ï¿½
                     {
-                        SetPenColor("Red");
-                        drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "ÎØÎØÎØÇëÈ·±£ÎÄ¼þÒÑ¾­¹Ø±ÕÇÒ²»ÎªNaNÄØ");
+                        strcpy(ErrorAns, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ñ¾ï¿½ï¿½Ø±ï¿½ï¿½Ò²ï¿½ÎªNaNï¿½ï¿½");
+
                     }
                     else
                     {
                         NowShowTable = head;
-                        IsOpen = 2;   //2µÄÊ±ºò¾ÍÊÇ¿ÉÒÔ½øÐÐ»­Í¼ÁË
-                        ChangeIsSelect(NowShowTable);
+                        IsOpen = 2;   //2ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½Ô½ï¿½ï¿½Ð»ï¿½Í¼ï¿½ï¿½
+                        ChangeIsSelect(NowShowTable);  //Ñ¡ï¿½ï¿½ï¿½20ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                         Calculate(NowShowTable);
-                       
+
                         return;
                     }
+                }
+                else {
+                    MyFree(head);
                 }
             }
         }
@@ -255,25 +309,26 @@ void DrawOpenDir()
     static char dirName[30] = "";
 
     SetPenColor("TextBoxLabel");
-    drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 0.5 * BoxHeight, InputWelcome); //ÕâÀïµÄy   ¼òµ¥ËµÒ»¹þ Ò»¸öboxheightÊÇÁ½±¶µÄ×ÖÌå¸ß¶È  Ò»¸ö°´Å¥Õ¼1.5±¶µÄboxheight  ÆäÖÐÉÏÏÂ¸÷¿Õ³ö0.25boxheight
+    drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 0.5 * BoxHeight, InputWelcome); //ï¿½ï¿½ï¿½ï¿½ï¿½y   ï¿½ï¿½ËµÒ»ï¿½ï¿½ Ò»ï¿½ï¿½boxheightï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½  Ò»ï¿½ï¿½ï¿½ï¿½Å¥Õ¼1.5ï¿½ï¿½ï¿½ï¿½boxheight  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½ï¿½Õ³ï¿½0.25boxheight
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
-    textbox(GenUIID(0), MaxX / 2 - 1, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 2, BoxHeight, dirName, 30); //ÕâÀïµÄÊäÈë¿í¶ÈÎª1 ×î¶àÊä30¸ö Ë­ÄÜÊäÄÇÃ´¶à°¡
+    textbox(GenUIID(0), MaxX / 2 - 1, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 2, BoxHeight, dirName, 30); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª1 ï¿½ï¿½ï¿½ï¿½ï¿½30ï¿½ï¿½ Ë­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã´ï¿½à°¡
     setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
-    if (button(GenUIID(0), MaxX / 2 + 1.5, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 1, BoxHeight, "È·ÈÏ"))
+    if (button(GenUIID(0), MaxX / 2 + 1.5, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 1, BoxHeight, "È·ï¿½ï¿½"))
     {
+        memset(ErrorAns, 0, sizeof(ErrorAns));
+        MyError = 0;
         if (CheckName(dirName))
         {
-
-            // printf("okcheck\n");
-            OpenFileName = (char *)malloc(sizeof(strlen(dirName) + 1));
-            strcpy(OpenFileName, dirName);
+            ResetFileName(dirName);
+        
             if (ReadCSVFile(dirName))
             {
                 if (!FileTotalNum)
                 {
                     SetPenColor("Red");
-                    drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "ÎØÎØÎØÇëÈ·±£ÎÄ¼þÒÑ¾­¹Ø±ÕÇÒ²»ÎªNaNÄØ");
+                    strcpy(ErrorAns, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ñ¾ï¿½ï¿½Ø±ï¿½ï¿½Ò²ï¿½ÎªNaNï¿½ï¿½");
+                 
                 }
                 else
                 {
@@ -284,13 +339,28 @@ void DrawOpenDir()
                     return;
                 }
             }
+            else {
+                MyFree(head);
+            }
         }
         else
         {
             SetPenColor("Red");
-            drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 3.5 * BoxHeight, "ÇëÈ·±£ÊäÈëÁËÕýÈ·µÄÎÄ¼þÃûÅ¶");
+            strcpy(ErrorAns, "ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Å¶");
+           
         }
     }
+    SetPenColor("Red");   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½Ð¾Í½ï¿½ï¿½ï¿½handleï¿½ï¿½Ä±ï¿½
+    if (strlen(ErrorAns))
+    {
+        printf("%s\n", ErrorAns);
+        drawLabel(0.5 * MaxX - TextStringWidth(ErrorAns) / 2, 0.01 * MaxY, ErrorAns);
+    }
+    else {
+        HandleFileError(ErrorAns);
+
+    }
+   
     
 }
 
@@ -300,7 +370,7 @@ void DrawLeftButton(stu_Ptr Head)
 	
     double fH = GetFontHeight();
     int nowNum = 0;
-    Head = Head->next;   //ËùÓÐµÄÊý¾ÝÁ´±íÊÇÓÐÍ·½ÚµãµÄ
+    Head = Head->next;   //ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Úµï¿½ï¿½
     
 
   
@@ -309,10 +379,10 @@ void DrawLeftButton(stu_Ptr Head)
     SetPenSize(1);
     while (Head != NULL)  
     {   
-        int IsSelect = Head->IsSelect;//Ö÷ÒªÓÃÀ´ÅÐ¶ÏÊÇ·ñÌîÍ¿
-        setButtonColors("Black", "Black", "Red", "Red", IsSelect);//×¢ÒâÊÇ·ñÌîÍ¿
+        int IsSelect = Head->IsSelect;//ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Í¿
+        setButtonColors("Black", "Black", "Red", "Red", IsSelect);//×¢ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Í¿
         nowNum++;
-       /*ÕâÀïÉè¶¨10¸ö¾ÍÏÔÊ¾·­Ò³   Ö»ÏÔÊ¾µ±Ç°Ê®¸ö*/
+       /*ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨10ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ò³   Ö»ï¿½ï¿½Ê¾ï¿½ï¿½Ç°Ê®ï¿½ï¿½*/
         if (nowNum > 10 * NowDateNum&&nowNum<=10*(NowDateNum+1)) {
             if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum-1)%10+1) + 1.5) * FontHeight, 0.15, 0.15, ""))
             {
@@ -320,13 +390,13 @@ void DrawLeftButton(stu_Ptr Head)
                 Calculate(NowShowTable);
 
             }
-            /*£¡£¡ÕâÐ©Î»ÖÃ»ù±¾¿ÉÒÔÎ¢µ÷Ò»¹þ  ×¢ÒâÁË£¡£¡*/
+            /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð©Î»ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½Ò»ï¿½ï¿½  ×¢ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½*/
             SetPenColor("Black");
             drawLabel(0.3, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
         
         }
         if (nowNum+1 > 10 * (NowDateNum + 1))
-            break; //Ö»ÏÔÊ¾10¸ö¶àÁË¾Í·­Ò³
+            break; //Ö»ï¿½ï¿½Ê¾10ï¿½ï¿½ï¿½ï¿½ï¿½Ë¾Í·ï¿½Ò³
         Head = Head->next;
      
     }
@@ -334,22 +404,22 @@ void DrawLeftButton(stu_Ptr Head)
     SetPointSize(15); 
 
     
-    if (NowDateNum) { //Èç¹û²»ÊÇµÚ0Ò³¾ÍÏÔÊ¾ÉÏÒ»Ò³°´Å¥
+    if (NowDateNum) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½0Ò³ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ò»Ò³ï¿½ï¿½Å¥
         setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot","Black", 0);
-        if (button(GenUIID(0), 0.2, MaxY - 15 * FontHeight, 1, FontHeight, "ÉÏÒ»Ò³"))
+        if (button(GenUIID(0), 0.2, MaxY - 15 * FontHeight, 1, FontHeight, "ï¿½ï¿½Ò»Ò³"))
         { 
             IsRedisplay = 1;
-            NowDateNum--;//ÈÕÆÚµÄ»»Ò³
+            NowDateNum--;//ï¿½ï¿½ï¿½ÚµÄ»ï¿½Ò³
         //display();
         }
 
     }
     if (nowNum != FileTotalNum) {
         setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-        if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight, 1, FontHeight, "ÏÂÒ»Ò³"))
+        if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight, 1, FontHeight, "ï¿½ï¿½Ò»Ò³"))
         {
             IsRedisplay = 1;
-            NowDateNum++;//ÈÕÆÚµÄ»»Ò³
+            NowDateNum++;//ï¿½ï¿½ï¿½ÚµÄ»ï¿½Ò³
           //  display();
         }
             
@@ -371,10 +441,10 @@ void DrawLeftButton(stu_Ptr Head)
               //      printf("%d ", ChoosedColumn[j]);
                // printf("\n");
             }
-                //°Ñi¼Óµ½ÒÑ¾­Ñ¡ÔñµÄÀïÃæ 
+                //ï¿½ï¿½iï¿½Óµï¿½ï¿½Ñ¾ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
             else
             {
-                Delete(i); //°ÑiÉ¾È¥
+                Delete(i); //ï¿½ï¿½iÉ¾È¥
                /* int j;
                 for (j = 1; j <= ChooseColumnNum; j++)
                     printf("%d ", ChoosedColumn[j]);
@@ -387,63 +457,63 @@ void DrawLeftButton(stu_Ptr Head)
         }
         drawLabel(0.4, 4 - (1.4 * ((i - 1) % 4 + 1)  + 1.5) * GetFontHeight(), ColumnName[i]);
 
-        //»­ÊÇ·ñÔÚ¸ü¸Ä/ÏÔÊ¾Êý¾Ý  ÊÇÒ»¸öÑÕÉ«ÂùºÃ¿´µÄÊäÈë¿ò
+        //ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½/ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (IsChangeNum&&ChangingPtr!=NULL) {
             setTextBoxColors("TextBoxFrame", COLOR[i], "TextBoxFrameHot", COLOR[i], 0);
 
             textbox(GenUIID(i), 0.5 + TextStringWidth(ColumnName[i]), 4.0 - (1.4 * ((i - 1) % 4 + 1) + 1.5) * GetFontHeight(), 1.5, FontHeight*1.2, ChangingPtrStringNum[i], 10);
         }
 
-        if (NowDateColumn) { //Èç¹û²»ÔÚµÚÒ»Ò³
+        if (NowDateColumn) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ò»Ò³
             setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-            if (button(GenUIID(0), 0.2, 4 - 9 * FontHeight, 1, FontHeight, "ÉÏÒ»Ò³"))
+            if (button(GenUIID(0), 0.2, 4 - 9 * FontHeight, 1, FontHeight, "ï¿½ï¿½Ò»Ò³"))
             {
                 IsRedisplay = 1;
-                NowDateColumn--;   //ÁÐµÄ»»Ò³
+                NowDateColumn--;   //ï¿½ÐµÄ»ï¿½Ò³
                 //display();
             }
         }
 
-        if ((NowDateColumn + 1) * 4 < TotalColumnNum) { //Èç¹û²»ÔÚ×îºóÒ»Ò³
+        if ((NowDateColumn + 1) * 4 < TotalColumnNum) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ò³
             setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-            if (button(GenUIID(0), 0.2, 4 - 11 * FontHeight, 1, FontHeight, "ÏÂÒ»Ò³"))
+            if (button(GenUIID(0), 0.2, 4 - 11 * FontHeight, 1, FontHeight, "ï¿½ï¿½Ò»Ò³"))
             {
                 IsRedisplay = 1;
-                NowDateColumn++;//ÁÐµÄ»»Ò³
+                NowDateColumn++;//ï¿½ÐµÄ»ï¿½Ò³
                 //display();
             }
 
         }
 
     }
-    static char ErrorAns[20];  //·ÅÖÃ¼ì²éÊäÈë·µ»ØµÄÖµ
-    //»­È·ÈÏ°´Å¥  È·ÈÏÖ®ºóÁ¢¿ÌÊ¹ÓÃ¸üÐÂ
+    static char ErrorAns[20];  //ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ë·µï¿½Øµï¿½Öµ
+    //ï¿½ï¿½È·ï¿½Ï°ï¿½Å¥  È·ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¸ï¿½ï¿½ï¿½
     if (IsChangeNum&&ChangingPtr!=NULL) {
         setButtonColors("Orange", "Red", "Black", "Red", 0);
-        if (button(GenUIID(0), 1.5, 0.9 , 0.8, 0.4, "È·ÈÏ"))
+        if (button(GenUIID(0), 1.5, 0.9 , 0.8, 0.4, "È·ï¿½ï¿½"))
         {
-            if (CheckChangedNum(ChangingPtrStringNum, ErrorAns)) {//´«Êý¾ÝºÍ·µ»ØµÄÌáÊ¾ÓïÊý×é
-                Calculate(NowShowTable);//×¢ÒâÐèÒªÖØÐÂ¼ÆËã
+            if (CheckChangedNum(ChangingPtrStringNum, ErrorAns)) {//ï¿½ï¿½ï¿½ï¿½ï¿½ÝºÍ·ï¿½ï¿½Øµï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                Calculate(NowShowTable);//×¢ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½
                
             }
             drawLabel(2.5, 0.9, ErrorAns);
         }
     }
 
-    //»­¸´Ô­°´Å¥   ¾ÍÊÇÈç¹ûÒÆ¶¯ÁËxyÖá»òÕßÄ³ÌõÇúÏß   Ôò»áÏÔÊ¾Õâ¸ö°´Å¥
+    //ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½Å¥   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½xyï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Å¥
     if (IsChooseXaxis || IsChooseYaxis || IsChooseLine) {
         setButtonColors("Orange", "Red", "Black", "Black", IsChooseColumn[i]);
-        if (button(GenUIID(0), 0.95 * MaxX, 0.9 * MaxY, 1, 0.5, "¸´Ô­"))
+        if (button(GenUIID(0), 0.95 * MaxX, 0.9 * MaxY, 1, 0.5, "ï¿½ï¿½Ô­"))
         {
         	
-        	  /*½«ËùÓÐ¸Ä±ä»¹Ô­
-            ¸Ä±ä°üÀ¨ÊÇ·ñÑ¡ÖÐ Ñ¡ÖÐµÄÁÐÊý   ÒÆ¶¯µÄ³¤¶È   Í¼±í½áÊøÎ»ÖÃ*/
+        	  /*ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸Ä±ä»¹Ô­
+            ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ñ¡ï¿½ï¿½ Ñ¡ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½   ï¿½Æ¶ï¿½ï¿½Ä³ï¿½ï¿½ï¿½   Í¼ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½*/
             IsChooseXaxis = IsChooseYaxis = IsChooseLine = 0;
             ChooseLineNum = 0;
             ChooseLineMoveX = ChooseLineMoveY = 0;
             endTableX = StaticendTableX;
             endTableY = StaticendTableY;
-            Calculate(NowShowTable);//Îñ±Ø¼Ç×¡ÖØÐÂ¼ÆËã
+            Calculate(NowShowTable);//ï¿½ï¿½Ø¼ï¿½×¡ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½
         }
     }
 
@@ -457,21 +527,21 @@ void HandleFileButton(int selection)
     
     case 1:
     	IsHelp=0;
-        IsNew = 1;    //¶ÔÓÚÃ¿¸ö²Ù×÷¸Ä±ädataÀïµÄÉè¶¨Öµ
+        IsNew = 1;    //ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½dataï¿½ï¿½ï¿½ï¿½è¶¨Öµ
         break;
     case 2:
     	IsHelp=0;
-        IsOpen = 1;  //½øÈëÑ¡ÔñcsvÎÄ¼þ½çÃæ
+        IsOpen = 1;  //ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½csvï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
         IsNew = 0;
-        InitData();   //ÌáÇ°°ÑÊý¾Ý³õÊ¼»¯ÁË
+        InitData();   //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ý³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
 
         break;
     case 3:
         IsHelp = 0;
         IsNew = 0; 
         IsOpen =0;
-        MyFree(NowShowTable);//closeÊ±ºòÒª°ÑÉêÇëµÄ½ÚµãfreeÁË 
-        FreeColumn(TmpColumnName); //ÔÙ°ÑÉêÇëµÄ´æ´¢ÁÐµÄ¿Õ¼äfreeÁË
+        MyFree(NowShowTable);//closeÊ±ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½Úµï¿½freeï¿½ï¿½ 
+        FreeColumn(TmpColumnName); //ï¿½Ù°ï¿½ï¿½ï¿½ï¿½ï¿½Ä´æ´¢ï¿½ÐµÄ¿Õ¼ï¿½freeï¿½ï¿½
         break;
     case 4:
         IsSave = 1;
@@ -499,34 +569,34 @@ void HandleToolButton(int selection)
 }
 
 
-/*×÷ÓÃ
-»­Î²²¿µÄÊý×ÖÏÔÊ¾
-Èç¹ûÄ³Êý¾Ý±»Ñ¡ÖÐ  ÄÇÃ´ÏÔÊ¾ËùÓÐÈÕÆÚµÄÊý¾Ý
+/*ï¿½ï¿½ï¿½ï¿½
+ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
+ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½Ý±ï¿½Ñ¡ï¿½ï¿½  ï¿½ï¿½Ã´ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½
 
 */
 void DrawLastTableNum() {
-    stu_Ptr tmp = tail;//×¢Òâtail·ÅµÄÊÇËùÓÐÑ¡ÖÐÈÕÆÚµÄ×îºóÒ»¸ö½Úµã
+    stu_Ptr tmp = tail;//×¢ï¿½ï¿½tailï¿½Åµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Úµï¿½
     int i;
     for (i=1; i <= ChooseColumnNum; i++) {
         int column = ChoosedColumn[i];
-            string ShowNum = tostring(tmp->Data[column]); //ÕâÀïÉêÇë³öÀ´µÄ×îºóÐèÒªfreeµô
-            SetPenColor(COLOR[column]); //½«ÑÕÉ«±äÎªÉè¶¨µÄÑÕÉ«
+            string ShowNum = tostring(tmp->Data[column]); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªfreeï¿½ï¿½
+            SetPenColor(COLOR[column]); //ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½Îªï¿½è¶¨ï¿½ï¿½ï¿½ï¿½É«
             if (column != ChooseLineNum&&column!=ChooseHistogramNum) {
                 MovePen(tmp->XPosition[column] + 0.05, tmp->YPosition[column]);
                 DrawTextString(ShowNum);
             }
          
-            else  if (column == ChooseLineNum||column==ChooseHistogramNum) { //Èç¹û¸ÃÁÐÊÇÑ¡ÖÐµÄÖ±Ïß»òÕßÖù×´Í¼
+            else  if (column == ChooseLineNum||column==ChooseHistogramNum) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½Ðµï¿½Ö±ï¿½ß»ï¿½ï¿½ï¿½ï¿½ï¿½×´Í¼
                
                
-                stu_Ptr tmp1 = NowShowTable->next;//¿ªÊ¼½«Ã¿¸öÑ¡ÖÐµÄÈÕÆÚ¶¼»­Êý×Ö
+                stu_Ptr tmp1 = NowShowTable->next;//ï¿½ï¿½Ê¼ï¿½ï¿½Ã¿ï¿½ï¿½Ñ¡ï¿½Ðµï¿½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 
                 while (tmp1 != NULL) {
                     if (tmp1->IsSelect) {
                         string ShowNum1 = tostring(tmp1->Data[column]);
-                        if (column == ChooseLineNum)//Èç¹ûÊÇÑ¡µÄÖ±Ïß
+                        if (column == ChooseLineNum)//ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ö±ï¿½ï¿½
                             MovePen(tmp1->XPosition[column] + ChooseLineMoveX + 0.05, tmp1->YPosition[column] + ChooseLineMoveY + 0.2);
-                        else //·ñÔò¾ÍÊÇÑ¡µÄÁÐ£¬
+                        else //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Ð£ï¿½
                             MovePen(tmp1->XPosition[column] - TextStringWidth(ShowNum1)/2, tmp1->YPosition[column] + FontHeight);
                        
                         DrawTextString(ShowNum1);
@@ -544,35 +614,35 @@ void DrawLastTableNum() {
     }
 }
 
-void Drawlegend()  //»­Í¼Àý 
+void Drawlegend()  //ï¿½ï¿½Í¼ï¿½ï¿½ 
 {  
     double  NowX = beginTableX + PerX,NowY=beginTableY/4;
-    int presize = GetPenSize();//ÄÃµ½µ±Ç°±ÊµÄÊý¾Ý£¬Ö®ºó»á»Ö¸´
+    int presize = GetPenSize();//ï¿½Ãµï¿½ï¿½ï¿½Ç°ï¿½Êµï¿½ï¿½ï¿½ï¿½Ý£ï¿½Ö®ï¿½ï¿½ï¿½Ö¸ï¿½
     string precolor = GetPenColor();
     int i;
     for (i = 1; i <=ChooseColumnNum; i++) {
         int column = ChoosedColumn[i];
-            NowX += 0.8;  //0.8ÊÇÁ½Á½ÊÇ¼ä¸ô
+            NowX += 0.8;  //0.8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½ï¿½
 
             MovePen(NowX, NowY);
          
-           IsChooseColumn[column]==1? SetPenSize(2):SetPenSize(5);     //»­µÄÊÇÕÛÏß»¹ÊÇÖù   1¾ÍÊÇÕÛÏÖ  2ÊÇÖù
+           IsChooseColumn[column]==1? SetPenSize(2):SetPenSize(5);     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß»ï¿½ï¿½ï¿½ï¿½ï¿½   1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  2ï¿½ï¿½ï¿½ï¿½
             SetPenColor(COLOR[column]);
-            DrawLine(0.6, 0);//»­Í¼ÀýµÄÏß
+            DrawLine(0.6, 0);//ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             MovePen(GetCurrentX() + 0.25, GetCurrentY());         
-            DrawTextString(ColumnName[column]);//Ð´ÁÐÐÅÏ¢
+            DrawTextString(ColumnName[column]);//Ð´ï¿½ï¿½ï¿½ï¿½Ï¢
 
             NowX = GetCurrentX(), NowY = GetCurrentY();
-            if (NowX > endTableX - PerX)   //»»ÐÐ
+            if (NowX > endTableX - PerX)   //ï¿½ï¿½ï¿½ï¿½
             {
-                NowX = beginTableX + PerX;   //×¢ÒâÕâ¸ö»»ÐÐ
+                NowX = beginTableX + PerX;   //×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 NowY -= FontHeight * 1.5;
             
             }
      
     }
-    SetPenColor(precolor); //»»»ØÔ­À´ÑÕÉ«
-    SetPenSize(presize);   //»»»ØÔ­À´³ß´ç
+    SetPenColor(precolor); //ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½É«
+    SetPenSize(presize);   //ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ß´ï¿½
 }
 void DrawDate(stu_Ptr HEAD) {
     SetPenColor("Black");
@@ -581,34 +651,34 @@ void DrawDate(stu_Ptr HEAD) {
     while (tmp != NULL) {
         if (tmp->IsSelect) {
             ++tmpnum;
-            DrawEachDate(tmpnum, tmp->Date,tmp);//»­Ã¿Ò»ÌìµÄÈÕÆÚ  ´«²ÎÊýÎªµ±Ç°¹ýÁË¶àÉÙÌì£¬Ö÷ÒªÓÃÀ´¼ÆËãÏÔÊ¾µÄºá×ø±êÎ»ÖÃ  ºÍÈÕÆÚ
+            DrawEachDate(tmpnum, tmp->Date,tmp);//ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ë¶ï¿½ï¿½ï¿½ï¿½ì£¬ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
         tmp = tmp->next;
-    }      //»­ÈÕÆÚºÍÁ½µÀÏß
+    }      //ï¿½ï¿½ï¿½ï¿½ï¿½Úºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 void DrawMainLine() {
     
-    DrawWithColumnNow = 0;   //ÒÑ¾­»­ÁË¼¸¸öÖù×´Í¼ÁË ÒòÎª cxzÉè¶¨×î¶à»­Á½¸ö ËùÒÔºÃÌÖÂÛ
+    DrawWithColumnNow = 0;   //ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ë¼ï¿½ï¿½ï¿½ï¿½ï¿½×´Í¼ï¿½ï¿½ ï¿½ï¿½Îª cxzï¿½è¶¨ï¿½ï¿½à»­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½ï¿½ï¿½
     int i,j;
     for (i=1; i <= ChooseColumnNum; i++) {
 
-        /*Õý³£µÄ×¼±¸¹¤×÷
-        size  ±ÊµÄÎ»ÖÃ
+        /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        size  ï¿½Êµï¿½Î»ï¿½ï¿½
         */
         SetPenSize(2);
         MovePen(beginTableX, beginTableY);
         int column = ChoosedColumn[i];
-        SetPenColor(COLOR[column]);   //Õý³£µÄ×¼±¸¹¤×÷
+        SetPenColor(COLOR[column]);   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
-        if (IsChooseLine&& column == ChooseLineNum) {   //Èç¹ûÕâ¸ùÏß±»Ñ¡ÖÐ
+        if (IsChooseLine&& column == ChooseLineNum) {   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß±ï¿½Ñ¡ï¿½ï¿½
             SetPenColor("ChoosedColor");
             SetPenSize(4); 
-            //°ÑÕâÌõÏß×ø±êÈ«²¿¼ÓÉÏÆ«ÒÆÁ¿  Ö®ºóÔÙ¼õÈ¥
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½  Ö®ï¿½ï¿½ï¿½Ù¼ï¿½È¥
             for (j = 1; j <= ClassDataNum[column]; j++) {
                 TableData[column][j][0] += ChooseLineMoveX;
                 TableData[column][j][1] += ChooseLineMoveY;
-            }    //°ÑËüµÄxy×ø±ê¸ÄÁË
+            }    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
            
         }
         if (IsChooseHistogram && column == ChooseHistogramNum)
@@ -616,33 +686,33 @@ void DrawMainLine() {
             SetPenColor("ChoosedColor");
             SetPenSize(2);
         }
-            if (IsChooseColumn[column] == 1)   //1ÊÇ»­ÇúÏß   2ÊÇÖù×´Í¼
-                //1ÓÃÈý´ÎÑùÌõ²åÖµ·¨ 
+            if (IsChooseColumn[column] == 1)   //1ï¿½Ç»ï¿½ï¿½ï¿½ï¿½ï¿½   2ï¿½ï¿½ï¿½ï¿½×´Í¼
+                //1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ 
 				Cubic_Spline(TableData[column], ClassDataNum[column], MY_DRAW_K, column);
             else {
-                //2ÓÃ»­Öù×´Í¼³£¹æËã·¨
+                //2ï¿½Ã»ï¿½ï¿½ï¿½×´Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨
 				DrawHistogram(TableData[column], ClassDataNum[column]);
             }
             if (IsChooseLine && column == ChooseLineNum) {
                 for (j = 1; j <= ClassDataNum[column]; j++) {
                     TableData[column][j][0] -= ChooseLineMoveX;
                     TableData[column][j][1] -= ChooseLineMoveY;
-                }   //ÓÉÓÚÖ®Ç°¼ÓÉÏÁËÆ«ÒÆÁ¿  ÏÖÔÚÒª¼õÈ¥  
+                }   //ï¿½ï¿½ï¿½ï¿½Ö®Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½È¥  
             }
 
-    }   //!!!!   »­Ïß²¿·Ö   ºËÐÄ !!!!  ÇúÏßÓÃµ½Èý´ÎÑùÌõ²åÖµ·¨  Öù×´Í¼µ¹Ã»É¶  ¸Ð¾õ»¹ÐÐ ÕÒÁËÒ»ÕûÌì£¨
+    }   //!!!!   ï¿½ï¿½ï¿½ß²ï¿½ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½ !!!!  ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½  ï¿½ï¿½×´Í¼ï¿½ï¿½Ã»É¶  ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ì£¨
 }
 void DrawArrow() {
     SetPenColor("Black");
     SetPenSize(1);
-     /*XÖá  ·ÖÊÇ·ñ±»Ñ¡ÖÐÌÖÂÛ*/
+     /*Xï¿½ï¿½  ï¿½ï¿½ï¿½Ç·ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     if (IsChooseXaxis)
         SetPenColor("ChoosedColor"), SetPenSize(3);
     MovePen(endTableX, beginTableY);
     DrawLine(-0.2, 0.2 );
     MovePen(endTableX, beginTableY);
     DrawLine(-0.2 , -0.2 );
-    /*YÖá  ·ÖÊÇ·ñ±»Ñ¡ÖÐÌÖÂÛ*/
+    /*Yï¿½ï¿½  ï¿½ï¿½ï¿½Ç·ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     SetPenColor("Black");
     SetPenSize(1);
     if (IsChooseYaxis)
@@ -665,22 +735,22 @@ void Add(int num) {
 void Delete(int num) {
     int i;
     for (i = 1; i <= ChooseColumnNum; i++) {
-        if (ChoosedColumn[i] == num)//ÕÒµ½¸Ãnum
+        if (ChoosedColumn[i] == num)//ï¿½Òµï¿½ï¿½ï¿½num
             break;
     }
-    for (i; i < ChooseColumnNum; i++)//Ã¿Ò»Î»ÍùÇ°ÒÆ¶¯
+    for (i; i < ChooseColumnNum; i++)//Ã¿Ò»Î»ï¿½ï¿½Ç°ï¿½Æ¶ï¿½
         ChoosedColumn[i] = ChoosedColumn[i + 1];
     ChooseColumnNum--;
 }
 void DrawBaseline() {
-	//ÁùÌõ»ù×¼ÏßµÄÊôÐÔÉèÖÃ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ßµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     SetPenSize(1);
     SetPenColor("Gray");
     int i;
     for (i = 1; i <= 6; i++) {
         MovePen(beginTableX, beginTableY + (endTableY - beginTableY) / 7 * i);
         DrawLine(endTableX - beginTableX, 0);
-    }   //»­Ïß  
+    }   //ï¿½ï¿½ï¿½ï¿½  
 
     SetPenColor("Black");
     
@@ -697,14 +767,14 @@ void DrawXYLine() {
     SetPenSize(1);
     if (IsChooseXaxis) {
         SetPenColor("ChoosedColor");
-        SetPenSize(3);             //Èç¹û¸ßÁÁx
+        SetPenSize(3);             //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½x
     }
-    MovePen(beginTableX, beginTableY);   //Á½ÌõÏßxÖáyÖá
+    MovePen(beginTableX, beginTableY);   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½yï¿½ï¿½
     DrawLine(endTableX - beginTableX, 0);
     SetPenColor("Black");
     SetPenSize(1);
     if (IsChooseYaxis) {
-        SetPenColor("ChoosedColor");   //Èç¹û¸ßÁÁy
+        SetPenColor("ChoosedColor");   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½y
         SetPenSize(3);
     }
     MovePen(beginTableX, beginTableY);
@@ -716,22 +786,22 @@ void drawMainPicture()
 
 
     clock_t start_time, end_time;
-    start_time = clock();   //»ñÈ¡¿ªÊ¼Ö´ÐÐÊ±¼ä
+    start_time = clock();   //ï¿½ï¿½È¡ï¿½ï¿½Ê¼Ö´ï¿½ï¿½Ê±ï¿½ï¿½
 #endif // SHOWTIME
 
 
     DrawDate(NowShowTable);
-    DrawXYLine();   //»­³öxyÖá   Èç¹ûÑ¡ÖÐ¾Í¸ßÁÁ
+    DrawXYLine();   //ï¿½ï¿½ï¿½ï¿½xyï¿½ï¿½   ï¿½ï¿½ï¿½Ñ¡ï¿½Ð¾Í¸ï¿½ï¿½ï¿½
 
-    DrawMainLine();  //×îÖØÒªµÄÇúÏß °¡°¡»¹ÓÐÖù×´Í¼
+    DrawMainLine();  //ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Í¼
 
    // printf("DrawWithColumn is  %d\n", DrawWithColumn);
    
    
-    DrawBaseline(); //»­yÖáÉÏµÄÁùÌõ»ù×¼Ïß
-    DrawArrow();   //xyÖáµÄ¼ýÍ·
-    DrawLastTableNum();   //×îºóµÄÊý×ÖÏÔÊ¾
-    Drawlegend();   //»­Í¼Àý
+    DrawBaseline(); //ï¿½ï¿½yï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½
+    DrawArrow();   //xyï¿½ï¿½Ä¼ï¿½Í·
+    DrawLastTableNum();   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
+    Drawlegend();   //ï¿½ï¿½Í¼ï¿½ï¿½
 #if SHOWTIMEDRAW
     end_time = clock();
     printf("%lf seconds\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
@@ -739,10 +809,10 @@ void drawMainPicture()
 
     
 }
-void DrawTextChar(string str,double bx,double by) {   //Ð´×Ö·û£¨Êý×Ö£©
+void DrawTextChar(string str,double bx,double by) {   //Ð´ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö£ï¿½
     string c;
     
-    if (str[1] > 0 && str[1] <= 255)   //Èç¹ûÊÇÁ½Î»Êý
+    if (str[1] > 0 && str[1] <= 255)   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
     {
         c = (string)malloc(10);
         c[0] = str[0];
@@ -758,11 +828,11 @@ void DrawTextChar(string str,double bx,double by) {   //Ð´×Ö·û£¨Êý×Ö£©
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
     if(c!=NULL)
-    free(c);   //Èç¹ûcÊÇNULL freeÊ±ºò»á³öÎÊÌâ
+    free(c);   //ï¿½ï¿½ï¿½cï¿½ï¿½NULL freeÊ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
-void DrawTextZH(string str,double bx,double by) {   //Ð´ÖÐÎÄ
-    string c = (string )malloc(sizeof(char)*5);   //¿ª3freeÊ±ºò±¨´í
+void DrawTextZH(string str,double bx,double by) {   //Ð´ï¿½ï¿½ï¿½ï¿½
+    string c = (string )malloc(sizeof(char)*5);   //ï¿½ï¿½3freeÊ±ï¿½ò±¨´ï¿½
     string tmp = c;
     memset(c, 0, sizeof(c));
     c[0] = str[0], c[1] = str[1];
@@ -770,7 +840,7 @@ void DrawTextZH(string str,double bx,double by) {   //Ð´ÖÐÎÄ
     MovePen(bx - TextStringWidth(c) / 2, by);
     DrawTextString(c);
     if (tmp != NULL)
-    free(tmp);  //Èç¹ûcÊÇNULL freeÊ±ºò»á³öÎÊÌâ
+    free(tmp);  //ï¿½ï¿½ï¿½cï¿½ï¿½NULL freeÊ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
 {
@@ -779,7 +849,7 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
 
     
     double bx= midx , by = beginTableY-0.2 ;
-  //¶ÔÃ¿¸öÈÕÆÚ¶¼½øÐÐÅÐ¶Ï  ÑÕÉ«¡¢ÊÇ·ñ±»Ñ¡ÖÐ¡¢Î»ÖÃ
+  //ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½  ï¿½ï¿½É«ï¿½ï¿½ï¿½Ç·ï¿½Ñ¡ï¿½Ð¡ï¿½Î»ï¿½ï¿½
    
     MovePen(bx, by);
     SetPenColor("Black");
@@ -788,21 +858,21 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
     }
     int i;
     for ( i = 0; Date[i]; i++) {
-        if (Date[i] > 0 && Date[i] < 255) {  //ÊÇÊý×Ö
+        if (Date[i] > 0 && Date[i] < 255) {  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             by -= FontHeight;
             DrawTextChar(Date + i,bx,by);
            
             if (Date[i + 1] > 0 && Date[i + 1] <= 255)
-                i++; //Èç¹ûÊý×ÖÊÇÁ½Î» ÐèÒª°Ñi++ ÒòÎªÒÑ¾­Ëæ×ÅdrawtextcharÊä³öÁË
+                i++; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î» ï¿½ï¿½Òªï¿½ï¿½i++ ï¿½ï¿½Îªï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½drawtextcharï¿½ï¿½ï¿½ï¿½ï¿½
 
         }
-        else {   //ÊÇÖÐÎÄ
+        else {   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             by -= FontHeight;
             DrawTextZH(Date+i,bx,by);
             i++;
         }
     }
-    if (IsChangeNum) {  //Èç¹û´¦ÔÚ¸ü¸ÄÊý¾ÝÄ£Ê½  Ã¿¸öÈÕÆÚÏÂÃæ·ÅÒ»¸öÐ¡Ñ¡Ôñ¿ò
+    if (IsChangeNum) {  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½  Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ð¡Ñ¡ï¿½ï¿½ï¿½
         SetPenSize(2);
         int i;
         setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", ptr->IsShowNum);
@@ -810,7 +880,7 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
         if (button(GenUIID(tmpnum), bx - FontHeight / 2.5, by - FontHeight, FontHeight * 0.8, FontHeight * 0.8, "")) {
             if (!(ptr->IsShowNum))
             {
-                while (tmp != NULL) { //Èç¹ûÕâ¸ö¼´½«±»Ñ¡ÖÐ  ÄÇÃ´°ÑÆäËûµÄ¶¼ÖÃÎªFALSEÒòÎªÒ»´ÎÖ»ÄÜ¸ü¸ÄÒ»¸ö
+                while (tmp != NULL) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½  ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ÎªFALSEï¿½ï¿½ÎªÒ»ï¿½ï¿½Ö»ï¿½Ü¸ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
                     if (tmp != ptr)
                         tmp->IsShowNum = FALSE;
                     tmp = tmp->next;
@@ -821,31 +891,75 @@ void DrawEachDate(int tmpnum, char* Date, stu_Ptr ptr)
                 }
 
                
-                ChangingPtr = ptr;   //½«¸Ä±äµÄptrÖ¸ÏòÕâ¸ö
+                ChangingPtr = ptr;   //ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ptrÖ¸ï¿½ï¿½ï¿½ï¿½ï¿½
                 for (i = 1; i <= TotalColumnNum; i++) {
                     ChangingPtrStringNum[i] = tostring(ptr->Data[i]);
                     printf("%s\n", ChangingPtrStringNum[i]);
                 }
             }
             else {
-                ChangingPtr = NULL;   //·ñÔòÖ¸ÏòNULL
+                ChangingPtr = NULL;   //ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½NULL
             }
        
                 
-            ptr->IsShowNum = !(ptr->IsShowNum);//°´Ò»ÏÂ¾ÍÇÐ»»ÊÇ·ñ±»Ñ¡ÖÐ
+            ptr->IsShowNum = !(ptr->IsShowNum);//ï¿½ï¿½Ò»ï¿½Â¾ï¿½ï¿½Ð»ï¿½ï¿½Ç·ï¿½Ñ¡ï¿½ï¿½
            
         }
     }
    
 
 }
+void HandleFileError(string ErrorAns) {
+  
+    
+    if (!MyError)
+        return;
+    else if (MyError == -1) {
+        strcpy(ErrorAns, "ï¿½Ä¼ï¿½Î´ï¿½ï¿½È·ï¿½ï¿½"); 
+            drawLabel(0.5 * MaxX - TextStringWidth(ErrorAns)/2, 0.01 * MaxY, ErrorAns);
+    }
+    else if (MyError == -2) {
+        strcpy(ErrorAns, "ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½");
+    
+            drawLabel(0.5 * MaxX - TextStringWidth(ErrorAns)/2, 0.01 * MaxY, ErrorAns);
+        
+    }
+}
+void ResetFileName(string Name) {
 
+    if (OpenFileName != NULL||Name[0]!='\0') {
+        free(OpenFileName);
+        OpenFileName = NULL;
+    }
+    OpenFileName = (char*)malloc(sizeof(Name)+100);
+    strcpy(OpenFileName, Name);
+}
+BOOL FileDialog(char* path)
+{
+    OPENFILENAME ofn;
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn); // ï¿½á¹¹ï¿½ï¿½Ð¡
+    ofn.lpstrFile = path; // Â·ï¿½ï¿½
+    ofn.nMaxFile = MAX_PATH; // Â·ï¿½ï¿½ï¿½ï¿½Ð¡
+    ofn.lpstrFilter = ".csv"; // ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+    return GetOpenFileName(&ofn);
+}
+int SplitFileName(string szFile) {
+    int ans = 0,i;
+    for (i = 0; szFile[i]; i++) {
+        if (szFile[i] == '/' || szFile[i] == '\\')
+            ans = i;
 
+    }
+ 
+    return ans+ 1;
+}
 void DrawWelcomeWindow(){
 	
 	
 	
-		//»ñµÃ´°¿Ú³ß´ç 
+		//ï¿½ï¿½Ã´ï¿½ï¿½Ú³ß´ï¿½ 
 	currentX = GetWindowWidth();
     currentY = GetWindowHeight();
 	
@@ -857,21 +971,21 @@ void DrawWelcomeWindow(){
 }
 
 
-void WriteTitle(){//»­³ö³õÊ¼Ò³Ãæ±êÌâ 
+void WriteTitle(){//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ 
     SetPointSize(70); 
     SetPenColor("TitleColor");
     SetPenSize(8); 
-	SetFont("¿¬Ìå");     //¶¨ÒåÁË×ÖÌå 
-	drawLabel(titleX,titleY,"Õ½Òß£¬ÎÒÃÇÔÚÒ»Æð");
+	SetFont("ï¿½ï¿½ï¿½ï¿½");     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+	drawLabel(titleX,titleY,"Õ½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½");
 	SetPointSize(25);
 	SetPenColor("TextColor"); 
-	drawLabel(textX,textY,"»¶Ó­Ê¹ÓÃÒßÇéÊý¾Ý·ÖÎö¹¤¾ß") ;
+	drawLabel(textX,textY,"ï¿½ï¿½Ó­Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½") ;
 }
 
 
  
 void DrawVirusAll(){
-	MovePen(9.9,3); //Ò»¸ö¼òµ¥»­³ö²¡¶¾¼ò±Ê»­µÄº¯Êý ÔÚÉè¶¨Î»ÖÃ»­³öÈý¸ö 
+	MovePen(9.9,3); //Ò»ï¿½ï¿½ï¿½òµ¥»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê»ï¿½ï¿½Äºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½è¶¨Î»ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	DrawVirus();
     MovePen(11.5,3);
     DrawVirus();   
@@ -880,13 +994,13 @@ void DrawVirusAll(){
     
 }
  
-void DrawVirus(){  //¾ßÌå»­³ö²¡¶¾µÄº¯Êý 
+void DrawVirus(){  //ï¿½ï¿½ï¿½å»­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ 
 	double cx=0.0,cy=0.0;
 	int i=0;
 	cx=2;
 	cy=2;
 	SetPenSize(3);
-	SetPenColor("VirusColor"); //Éè¶¨ÑÕÉ« 
+	SetPenColor("VirusColor"); //ï¿½è¶¨ï¿½ï¿½É« 
 	for(i=0;i<8;i++){
 	DrawArc(0.24,45*i,45);
 	cx=GetCurrentX();
@@ -898,7 +1012,7 @@ void DrawVirus(){  //¾ßÌå»­³ö²¡¶¾µÄº¯Êý
  
  void DrawPart(double x,double y,double degree){
  	MovePen(x,y);
- 	double px=0.0,py=0.0;  // ¾ßÌå»­³ö²¡¶¾µÄº¯Êý 
+ 	double px=0.0,py=0.0;  // ï¿½ï¿½ï¿½å»­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ 
  	px=cos(degree/180*PI);
  	py=sin(degree/180*PI);
  	DrawLine(0.15*px,0.15*py);
@@ -910,23 +1024,23 @@ void DrawVirus(){  //¾ßÌå»­³ö²¡¶¾µÄº¯Êý
  	DrawLine(-0.15*px,-0.15*py);
 }
 
-void DrawMagnifier(){ //»­·Å´ó¾µµÄº¯Êý 
+void DrawMagnifier(){ //ï¿½ï¿½ï¿½Å´ó¾µµÄºï¿½ï¿½ï¿½ 
     MovePen(14.7,4.5);
     SetPenSize(1);
-    SetPenColor("CircleColor"); //Ìî³äÑÕÉ« 
-    StartFilledRegion(0.2);//Ìî³äÇøÓò 
+    SetPenColor("CircleColor"); //ï¿½ï¿½ï¿½ï¿½ï¿½É« 
+    StartFilledRegion(0.2);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
     DrawArc(1,0,360); 
-    EndFilledRegion(); //¹Ø±ÕÌî³äÇøÓò 
-    SetPenColor("WoodColor"); //Ô²»·ÑÕÉ« 
+    EndFilledRegion(); //ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+    SetPenColor("WoodColor"); //Ô²ï¿½ï¿½ï¿½ï¿½É« 
     SetPenSize(6);
     DrawArc(1,0,360);
-    MovePen(14.45,4.8);//»­³öÔ²»·ÉÏµÄ·´¹â»¡ 
+    MovePen(14.45,4.8);//ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ÏµÄ·ï¿½ï¿½â»¡ 
     SetPenColor("White");
     SetPenSize(7);
     DrawArc(1,30,60);
     MovePen(14.5,3.85);
     SetPenSize(6);
-    SetPenColor("WoodColor"); //»­³öÊÖ±ú²¢Ìî³äÑÕÉ« 
+    SetPenColor("WoodColor"); //ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É« 
     StartFilledRegion(0.5);
     DrawLine(1.1,-1.1);
     DrawLine(-0.2,-0.2);
@@ -936,7 +1050,7 @@ void DrawMagnifier(){ //»­·Å´ó¾µµÄº¯Êý
 }
 
 
-void HandleHelpButton(int selection){ //²Ëµ¥À¸HELP¼üµÄ¿ØÖÆº¯Êý 
+void HandleHelpButton(int selection){ //ï¿½Ëµï¿½ï¿½ï¿½HELPï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Æºï¿½ï¿½ï¿½ 
 	if (selection == 1){
 		IsHelp=1;
 		IsNew=0;
@@ -945,45 +1059,45 @@ void HandleHelpButton(int selection){ //²Ëµ¥À¸HELP¼üµÄ¿ØÖÆº¯Êý
 }
 
 
-void DrawHelpPage1(){  //°ïÖúÒ³ÃæµÚÒ»Ò³ 
+void DrawHelpPage1(){  //ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½Ò»Ò³ 
 	    double interval = 0.0;
 		interval=GetFontHeight(); 
-		drawLabel(MaxX-interval*45,MaxY-interval*4,"Hello£¡ÕâÀïÊÇ±¾¿ÉÊÓ»¯¹¤¾ßµÄÊ¹ÓÃÖ¸ÄÏ"); 
-		drawLabel(MaxX-interval*68,MaxY-interval*8,"¡¤¹ØÓÚÐÂ½¨¹¦ÄÜ") ; 
-		drawLabel(MaxX-interval*68,MaxY-interval*10,"µã»÷´°¿Ú×óÉÏ½ÇFile²Ëµ¥ÖÐµÄNew¼ü»òÊ¹ÓÃ¿ì½Ý¼üCtrl-N´ò¿ªÐÂ½¨Ò³Ãæ£¬¸ù¾ÝÌáÊ¾ÊäÈëÐÂ½¨Êý¾ÝµÄÏà¹ØÊý¾Ý£¬µã»÷È·ÈÏºóÔÚÏÂÒ»Ò³ÃæÊäÈëÁÐÃû£¬µã»÷È·ÈÏºó½øÈë¿ÉÊÓ»¯Ò³Ãæ¡£");
-	    drawLabel(MaxX-interval*68,MaxY-interval*12,"¡¤¹ØÓÚ´ò¿ªÎÄ¼þ") ; 
-	    drawLabel(MaxX-interval*68,MaxY-interval*14,"ÔÚ´ò¿ªÎÄ¼þÇ°Çë°ÑÐèÒª²é¿´µÄcsvÊý¾ÝÎÄ¼þ·ÅÖÁdemoprj-devc->outputÎÄ¼þ¼ÐÏÂ£¬È»ºóÊ¹ÓÃFile²Ëµ¥ÏÂµÄOpen¼ü»òÊ¹ÓÃ¿ì½Ý¼üCtrl-N´ò¿ª²é¿´Ò³Ãæ£¬µã»÷ÏÔÊ¾µÄÎÄ¼þ»òÕßÊ¹") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*16,"ÓÃËÑË÷¹¦ÄÜ´ò¿ªoutputÎÄ¼þ¼ÐÏÂµÄÊý¾ÝÎÄ¼þ£¬½øÈë¿ÉÊÓ»¯Ò³Ãæ¡£") ; 
-		drawLabel(MaxX-interval*68,MaxY-interval*18,"¡¤¹ØÓÚ¿ÉÊÓ»¯Ò³Ãæ") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*20,"¹´Ñ¡Ò³Ãæ×óÉÏ½ÇµÄÈÕÆÚÊý¾ÝÀ´´ïµ½ÏÔÊ¾»òÒþ²Øµ±Ç°ÈÕÆÚµÄÊý¾ÝµÄÄ¿µÄ£¬¿ÉÊ¹ÓÃÉÏÏÂ·­Ò³¹¦ÄÜÀ´ä¯ÀÀËùÓÐÈÕÆÚÅ¶¡£¹´Ñ¡×óÏÂ½ÇÏà¹ØÁÐÃû£¬¿ÉÒÔÔÚÍ¼±íÖÐÏÔÊ¾Ïà¹ØÊý¾ÝµÄ¿ÉÊÓ»¯") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*22,"¹¦ÄÜ¡£¸ù¾ÝÒ³ÃæÓÒ·½Ïà¹ØÌáÊ¾¿É½øÐÐÔ¤²â¹¦ÄÜµÄÊµÏÖÅ¶¡£µã»÷ÍÏ¶¯XÖáYÖáÊµÏÖÍ¼ÏñµÄËõ·Å¹¦ÄÜ£¬µã»÷ÖùÌå¿ÉÏÔÊ¾µ±Ç°¾ßÌåÊý¾Ý£¬¿ÉÊ¹ÓÃÓÒÉÏ½Ç»Ö¸´¹¦ÄÜ¼üÀ´»Ö¸´Í¼±í³õÊ¼×´") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*24,"Ì¬¡£") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*26,"¡¤¹ØÓÚÊý¾Ý¸ü¸Ä£¨ÊÊÓÃÓÚÐÂ½¨¹¦ÄÜºÍ²é¿´¹¦ÄÜ£©") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*28,"ÔÚ¿ÉÊÓ»¯Ò³Ãæµ¥»÷ÓÒÏÂ½Ç¸ü¸ÄÊý¾Ý¹¦ÄÜ¼ü£¬µã»÷¹´Ñ¡XÖáÏà¹ØÊý¾Ý¼´¿É½øÐÐÐÞ¸ÄÊý¾Ý£¬µã»÷±£´æ¼´¿É±£´æÐÞ¸ÄÊý¾Ý¡£") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*30,"¡¤¹ØÓÚÔ¤²â¹¦ÄÜ") ; 
-		drawLabel(MaxX-interval*68,MaxY-interval*32,"ÔÚ¿ÉÊÓ»¯Ò³ÃæÓÒ²àÒÀÕÕÏà¹ØÌáÊ¾½øÐÐÔ¤²â¡£ÒÑÊµÏÖ5½×¼°ÒÔÏÂµÄÄ£ÐÍÔ¤²â¡£") ; 
-		//µã»÷°´Å¥½øÈë°ïÖúÒ³ÃæµÚ¶þÒ³ 
+		drawLabel(MaxX-interval*45,MaxY-interval*4,"Helloï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ï¿½ï¿½ï¿½Ó»ï¿½ï¿½ï¿½ï¿½ßµï¿½Ê¹ï¿½ï¿½Ö¸ï¿½ï¿½"); 
+		drawLabel(MaxX-interval*68,MaxY-interval*8,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½ï¿½") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*10,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ï¿½Fileï¿½Ëµï¿½ï¿½Ðµï¿½Newï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¿ï¿½Ý¼ï¿½Ctrl-Nï¿½ï¿½ï¿½Â½ï¿½Ò³ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½È·ï¿½Ïºï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½Ïºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó»ï¿½Ò³ï¿½æ¡£");
+	    drawLabel(MaxX-interval*68,MaxY-interval*12,"ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ä¼ï¿½") ; 
+	    drawLabel(MaxX-interval*68,MaxY-interval*14,"ï¿½Ú´ï¿½ï¿½Ä¼ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½é¿´ï¿½ï¿½csvï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½demoprj-devc->outputï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Â£ï¿½È»ï¿½ï¿½Ê¹ï¿½ï¿½Fileï¿½Ëµï¿½ï¿½Âµï¿½Openï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¿ï¿½Ý¼ï¿½Ctrl-Nï¿½ò¿ª²é¿´Ò³ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*16,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü´ï¿½outputï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó»ï¿½Ò³ï¿½æ¡£") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*18,"ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½Ó»ï¿½Ò³ï¿½ï¿½") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*20,"ï¿½ï¿½Ñ¡Ò³ï¿½ï¿½ï¿½ï¿½ï¿½Ï½Çµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ïµ½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½Ç°ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½Ýµï¿½Ä¿ï¿½Ä£ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¶ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝµÄ¿ï¿½ï¿½Ó»ï¿½") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*22,"ï¿½ï¿½ï¿½Ü¡ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½É½ï¿½ï¿½ï¿½Ô¤ï¿½â¹¦ï¿½Üµï¿½Êµï¿½ï¿½Å¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½Xï¿½ï¿½Yï¿½ï¿½Êµï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¹ï¿½ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½Ï½Ç»Ö¸ï¿½ï¿½ï¿½ï¿½Ü¼ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½Í¼ï¿½ï¿½ï¿½Ê¼×´") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*24,"Ì¬ï¿½ï¿½") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*26,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½ÜºÍ²é¿´ï¿½ï¿½ï¿½Ü£ï¿½") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*28,"ï¿½Ú¿ï¿½ï¿½Ó»ï¿½Ò³ï¿½æµ¥ï¿½ï¿½ï¿½ï¿½ï¿½Â½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¹ï¿½ï¿½Ü¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡Xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½É½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ¼´ï¿½É±ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*30,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½â¹¦ï¿½ï¿½") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*32,"ï¿½Ú¿ï¿½ï¿½Ó»ï¿½Ò³ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½â¡£ï¿½ï¿½Êµï¿½ï¿½5ï¿½×¼ï¿½ï¿½ï¿½ï¿½Âµï¿½Ä£ï¿½ï¿½Ô¤ï¿½â¡£") ; 
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½Ú¶ï¿½Ò³ 
 		setButtonColors("Black", "Black", "DarkBlue", "DarkBlue", 0);
-    if (button(GenUIID(0),MaxX-interval*40,MaxY-interval*36,1.5,0.8, "ÏÂÒ»Ò³")){  
+    if (button(GenUIID(0),MaxX-interval*40,MaxY-interval*36,1.5,0.8, "ï¿½ï¿½Ò»Ò³")){  
 	IsHelp =2; 
 	} 
 		
 
 }
 
-void DrawHelpPage2(){//°ïÖúÒ³ÃæµÚ¶þÒ³ 
+void DrawHelpPage2(){//ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½Ú¶ï¿½Ò³ 
 		double interval = 0.0;
 		interval=GetFontHeight(); 	
 		
-        drawLabel(MaxX-interval*68,MaxY-interval*8,"¡¤¹ØÓÚ¹Ø±Õ¹¦ÄÜ") ; 
-		drawLabel(MaxX-interval*68,MaxY-interval*10,"ÔÚÈÎÒâÒ³Ãæµã»÷File²Ëµ¥ÏÂµÄClose¼ü»òÊ¹ÓÃ¿ì½Ý¼üCtrl-W¼´¿É»Øµ½³õÊ¼Ò³Ãæ") ;
-		drawLabel(MaxX-interval*68,MaxY-interval*12,"¡¤¹ØÓÚ±£´æ¹¦ÄÜ") ; 
-		drawLabel(MaxX-interval*68,MaxY-interval*14,"ÐÂ½¨Êý¾Ýºóµ¥»÷File²Ëµ¥ÏÂµÄSave¼ü»òÊ¹ÓÃ¿ì½Ý¼üCtrl-S±£´æÊý¾Ý£¬×¢ÒâÊäÈëÕýÈ·µÄÎÄ¼þÀ©Õ¹Ãû.csv£¬¼´¿É±£´æÎÄ¼þÖÁOutPutÎÄ¼þ¼ÐÏÂ¡£") ; 
-		drawLabel(MaxX-interval*68,MaxY-interval*16,"¡¤¹ØÓÚÍË³ö¹¦ÄÜ") ;  
-		drawLabel(MaxX-interval*68,MaxY-interval*18,"µã»÷file²Ëµ¥ÏÂµÄExit¼ü»òÊ¹ÓÃ¿ì½Ý¼üCtrl-EÍË³ö±¾¹¤¾ß¡£") ;
-		//µã»÷°´Å¥»Øµ½°ïÖúÒ³ÃæµÚÒ»Ò³ 
+        drawLabel(MaxX-interval*68,MaxY-interval*8,"ï¿½ï¿½ï¿½ï¿½ï¿½Ú¹Ø±Õ¹ï¿½ï¿½ï¿½") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*10,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½Fileï¿½Ëµï¿½ï¿½Âµï¿½Closeï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¿ï¿½Ý¼ï¿½Ctrl-Wï¿½ï¿½ï¿½É»Øµï¿½ï¿½ï¿½Ê¼Ò³ï¿½ï¿½") ;
+		drawLabel(MaxX-interval*68,MaxY-interval*12,"ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½æ¹¦ï¿½ï¿½") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*14,"ï¿½Â½ï¿½ï¿½ï¿½ï¿½Ýºóµ¥»ï¿½Fileï¿½Ëµï¿½ï¿½Âµï¿½Saveï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¿ï¿½Ý¼ï¿½Ctrl-Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½.csvï¿½ï¿½ï¿½ï¿½ï¿½É±ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½OutPutï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Â¡ï¿½") ; 
+		drawLabel(MaxX-interval*68,MaxY-interval*16,"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½") ;  
+		drawLabel(MaxX-interval*68,MaxY-interval*18,"ï¿½ï¿½ï¿½fileï¿½Ëµï¿½ï¿½Âµï¿½Exitï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¿ï¿½Ý¼ï¿½Ctrl-Eï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¡ï¿½") ;
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Å¥ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½Ò»Ò³ 
 			setButtonColors("Black", "Black", "DarkBlue", "DarkBlue", 0);
-        if (button(GenUIID(0),MaxX-interval*40,MaxY-interval*36, 1.5, 0.8, "ÉÏÒ»Ò³")){
+        if (button(GenUIID(0),MaxX-interval*40,MaxY-interval*36, 1.5, 0.8, "ï¿½ï¿½Ò»Ò³")){
      	IsHelp =1; 
 	} 
 	
