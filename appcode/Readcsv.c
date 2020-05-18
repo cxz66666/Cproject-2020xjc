@@ -22,28 +22,28 @@ int stoi(string str)  //string to int
 
 string tostring(int num) {
     int tmp = num;
-    int N = 0;
+    int N1 = 0;
     while (tmp) {
-        N++;
+        N1++;
         tmp /= 10;
     }
-    string ans = (string)malloc(sizeof(char)*(N + 6));  //数组开大防止free时候出错
+    string ans = (string)malloc(sizeof(char)*(N1 + 6));  //数组开大防止free时候出错
     
     tmp = num;
 
-    ans[N] = '\0';
+    ans[N1] = '\0';
 
-    N--;
+    N1--;
     if (num < 0) {   //如果负数情况特殊讨论
-        N++;
-        ans[N + 1] = '\0';
+        N1++;
+        ans[N1 + 1] = '\0';
         ans[0] = '-';
     }
     tmp = abs(tmp);
     while (tmp) {
-        ans[N] = tmp % 10+'0';
+        ans[N1] = tmp % 10+'0';
         tmp /= 10;
-        N--;
+        N1--;
     }
     return  ans;
 }

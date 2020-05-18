@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MyData.h"
-
+#include "MyPredict.c"
 BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, string  ColumnNum, string  ErrorAns, int* Data);
 
 void DrawCreateNewFile();
