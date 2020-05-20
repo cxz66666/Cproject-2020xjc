@@ -62,7 +62,7 @@ static double currentX = 0.0, currentY = 0.0; //当前画笔所在位置
 /*注意为了输入中文开发者将textbox进行些许的修改 使其可以输入GBK编码的中文*/
 void display()
 {
-    if (!IsSave && !IsNew) //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文
+    if (!IsSave && !IsNew) //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文  新建文件同理
         UpdateDisplay();
     DisplayClear(); //清屏
 
@@ -216,7 +216,7 @@ void DrawOpenDir()
     static char ErrorAns[40] = "";
     SetPointSize(18);
     double BoxHeight = GetFontHeight() * 2;
-    double BeginY = MaxY * 3 / 4;
+    double BeginY = MaxY * 0.82;
     SetPenColor("TextBoxLabel");
     char InputWelcome[] = "您也可以输入文件全称";
     SetPenSize(2);
@@ -244,7 +244,7 @@ void DrawOpenDir()
             }
             else
             {
-                strcpy(ErrorAns, "请检查文件类型"); //文件类型不对
+                strcpy(ErrorAns, "文件打开失败，请检查文件类型"); //文件类型不对
             }
         }
         else
@@ -348,7 +348,7 @@ void DrawOpenDir()
     SetPenColor("Red"); //如果ErrorAns有东西 则进行输出 没东西则进行计算
     if (strlen(ErrorAns))
     {
-        printf("%s\n", ErrorAns);
+    //    printf("%s\n", ErrorAns);
         drawLabel(0.5 * MaxX - TextStringWidth(ErrorAns) / 2, 0.01 * MaxY, ErrorAns);
     }
     else
@@ -360,56 +360,71 @@ void DrawOpenDir()
 void DrawLeftButton(stu_Ptr Head)
 {
 
-    double fH = GetFontHeight();
+    double fH = FontHeight;
+   static  char ErrorAns[20]; //放置检查输入返回的值
+    
+   static IsShowChooseDate = FALSE;
     int nowNum = 0;
     Head = Head->next; //所有的数据链表是有头节点的
 
-    SetPenSize(1);
-    while (Head != NULL)
+    if (!IsShowChooseDate) {
+        setButtonColors("Black", "Black", "Red", "Red", 0); //注意是否填涂
+        if (button(GenUIID(0), 0.2, MaxY * 0.9, TextStringWidth("显示日期") * 1.5, 1.5 * FontHeight, "显示日期"))
+            IsShowChooseDate = TRUE;
+    }
+    if (IsShowChooseDate)
     {
-        int IsSelect = Head->IsSelect;                             //主要用来判断是否填涂
-        setButtonColors("Black", "Black", "Red", "Red", IsSelect); //注意是否填涂
-        nowNum++;
-        /*这里设定10个就显示翻页   只显示当前十个*/
-        if (nowNum > 10 * NowDateNum && nowNum <= 10 * (NowDateNum + 1))
+        SetPenSize(1);
+        while (Head != NULL)
         {
-            if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, 0.15, 0.15, ""))
+            int IsSelect = Head->IsSelect;                             //主要用来判断是否填涂
+            setButtonColors("Black", "Black", "Red", "Red", IsSelect); //注意是否填涂
+            nowNum++;
+            /*这里设定10个就显示翻页   只显示当前十个*/
+            if (nowNum > 10 * NowDateNum && nowNum <= 10 * (NowDateNum + 1))
             {
-                Head->IsSelect = !(Head->IsSelect);
-                Calculate(NowShowTable);
+                if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, 0.15, 0.15, ""))
+                {
+                    Head->IsSelect = !(Head->IsSelect);
+                    Calculate(NowShowTable);
+                }
+                /*！！这些位置基本可以微调一哈  注意了！！*/
+                SetPenColor("Black");
+                drawLabel(0.3, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
             }
-            /*！！这些位置基本可以微调一哈  注意了！！*/
-            SetPenColor("Black");
-            drawLabel(0.3, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
+            if (nowNum + 1 > 10 * (NowDateNum + 1))
+                break; //只显示10个多了就翻页
+            Head = Head->next;
         }
-        if (nowNum + 1 > 10 * (NowDateNum + 1))
-            break; //只显示10个多了就翻页
-        Head = Head->next;
-    }
-    SetPenSize(2);
-    SetPointSize(15);
+        SetPenSize(2);
+        SetPointSize(15);
 
-    if (NowDateNum)
-    { //如果不是第0页就显示上一页按钮
-        setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-        if (button(GenUIID(0), 0.2, MaxY - 15 * FontHeight, 1, FontHeight, "上一页"))
-        {
-            IsRedisplay = 1;
-            NowDateNum--; //日期的换页
-            //display();
+        if (NowDateNum)
+        { //如果不是第0页就显示上一页按钮
+            setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
+            if (button(GenUIID(0), 0.2, MaxY - 15 * FontHeight, 1, FontHeight, "上一页"))
+            {
+                IsRedisplay = 1;
+                NowDateNum--; //日期的换页
+                //display();
+            }
         }
-    }
-    if (nowNum != FileTotalNum)
-    {
-        setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-        if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight, 1, FontHeight, "下一页"))
+        if (nowNum != FileTotalNum)
         {
-            IsRedisplay = 1;
-            NowDateNum++; //日期的换页
-                          //  display();
+            setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
+            if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight, 1, FontHeight, "下一页"))
+            {
+                IsRedisplay = 1;
+                NowDateNum++; //日期的换页
+                              //  display();
+            }
         }
-    }
 
+        if (button(GenUIID(0), 0.2, MaxY - 20 * FontHeight, TextStringWidth("隐藏日期")*1.1, FontHeight*1.5, "隐藏日期"))
+        {
+            IsShowChooseDate = FALSE;
+        }
+    }
     int i;
     for (i = NowDateColumn * 4 + 1; i <= TotalColumnNum && i <= (NowDateColumn + 1) * 4; i++)
     {
@@ -469,40 +484,49 @@ void DrawLeftButton(stu_Ptr Head)
             }
         }
     }
-    static char ErrorAns[20]; //放置检查输入返回的值
+   
+
     //画确认按钮  确认之后立刻使用更新
     if (IsChangeNum && ChangingPtr != NULL)
     {
+        CheckChangedNum(ChangingPtrStringNum, ErrorAns);     //传数据和返回的提示语数组
         setButtonColors("Orange", "Red", "Black", "Red", 0);
         if (button(GenUIID(0), 1.5, 0.9, 0.8, 0.4, "确认"))
         {
-            if (CheckChangedNum(ChangingPtrStringNum, ErrorAns))
-            {                            //传数据和返回的提示语数组
-                Calculate(NowShowTable); //注意需要重新计算
+
+            for (i = 1; i <= TotalColumnNum; i++) {
+
+                ChangingPtr->Data[i] = atoi(ChangingPtrStringNum[i]);    //改变Ptr里的各个数据
             }
+            strcpy(ErrorAns, "更新成功");
+                Calculate(NowShowTable); //注意需要重新计算
+
+
+           
+        }
+
+        //画复原按钮   就是如果移动了xy轴或者某条曲线   则会显示这个按钮
+        if (IsChooseXaxis || IsChooseYaxis || IsChooseLine)
+        {
+            setButtonColors("Orange", "Red", "Black", "Black", IsChooseColumn[i]);
+            if (button(GenUIID(0), 0.95 * MaxX, 0.9 * MaxY, 1, 0.5, "复原"))
+            {
+
+                /*将所有改变还原
+              改变包括是否选中 选中的列数   移动的长度   图表结束位置*/
+                IsChooseXaxis = IsChooseYaxis = IsChooseLine = 0;
+                ChooseLineNum = 0;
+                ChooseLineMoveX = ChooseLineMoveY = 0;
+                endTableX = StaticendTableX;
+                endTableY = StaticendTableY;
+                Calculate(NowShowTable); //务必记住重新计算
+            }
+        }
+        if (IsChangeNum && strlen(ErrorAns)) {
             drawLabel(2.5, 0.9, ErrorAns);
         }
     }
-
-    //画复原按钮   就是如果移动了xy轴或者某条曲线   则会显示这个按钮
-    if (IsChooseXaxis || IsChooseYaxis || IsChooseLine)
-    {
-        setButtonColors("Orange", "Red", "Black", "Black", IsChooseColumn[i]);
-        if (button(GenUIID(0), 0.95 * MaxX, 0.9 * MaxY, 1, 0.5, "复原"))
-        {
-
-            /*将所有改变还原
-          改变包括是否选中 选中的列数   移动的长度   图表结束位置*/
-            IsChooseXaxis = IsChooseYaxis = IsChooseLine = 0;
-            ChooseLineNum = 0;
-            ChooseLineMoveX = ChooseLineMoveY = 0;
-            endTableX = StaticendTableX;
-            endTableY = StaticendTableY;
-            Calculate(NowShowTable); //务必记住重新计算
-        }
-    }
 }
-
 void HandleFileButton(int selection)
 {
     switch (selection)
@@ -608,14 +632,14 @@ void Drawlegend() //画图例
 
         MovePen(NowX, NowY);
 
-        IsChooseColumn[column] == 1 ? SetPenSize(2) : SetPenSize(5); //画的是折线还是柱   1就是折现  2是柱
+        IsChooseColumn[column] == 1 ? SetPenSize(2) : SetPenSize(6); //画的是折线还是柱   1就是折现  2是柱
         SetPenColor(COLOR[column]);
         DrawLine(0.6, 0); //画图例的线
         MovePen(GetCurrentX() + 0.25, GetCurrentY());
         DrawTextString(ColumnName[column]); //写列信息
 
         NowX = GetCurrentX(), NowY = GetCurrentY();
-        if (NowX > endTableX - PerX) //换行
+        if (NowX > StaticendTableX - PerX) //换行
         {
             NowX = beginTableX + PerX; //注意这个换行
             NowY -= FontHeight * 1.5;

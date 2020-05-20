@@ -193,7 +193,14 @@ void DrawPredict() {
     else {
         if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "撤销更改")) {
 
+
             IsChangeNum = FALSE;
+          stu_Ptr  tmp = NowShowTable->next;    //遍历当前展示的数据将所有IsShowNum改为FALSE
+            while (tmp!=NULL)
+            {
+                tmp->IsShowNum = FALSE;
+                tmp = tmp->next;
+            }
         }
     }
 } 
@@ -362,7 +369,7 @@ void FindBestPredict(int n, double* x, double* y, double a[]) {
     }
     PolyNum = Findpoly;
 }
-int CalY(int num, double  c[]) {
+int CalY(int num, double  c[]) {  //计算Y的值  分情况讨论
     double ans = 0;
     int i=0;
     if (PolyNum) {

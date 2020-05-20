@@ -174,12 +174,9 @@ BOOL CheckChangedNum(string str[], string ans) {
         }
     }
     //将状态改为更新成功
-    strcpy(ans, "更新成功");
+    strcpy(ans, "数据合法");
 
-    for (i = 1; i <= TotalColumnNum; i++) {
-    
-        ChangingPtr->Data[i] = atoi(str[i]);    //改变Ptr里的各个数据
-    }
+   
    
     return TRUE;
 }
@@ -237,7 +234,7 @@ void Calculate(stu_Ptr HEAD)
     TableMark5 = TableMark1 * 5;
     TableMark6 = TableMark1 * 6;
      PerY = (endTableY - beginTableY) / 7 / TableMark1;
-    PerX = (endTableX - beginTableX) / (ShowNum + 1.0);
+    PerX = (endTableX - beginTableX) / (ShowNum + 1.0);   //计算每单位XY分别占多少PX
     //printf("%lf %lf \n", endTableX, endTableY);
     
     
@@ -274,7 +271,7 @@ void Calculate(stu_Ptr HEAD)
         tmp = tmp->next;
     }
     AssignTable();//把折线图的设为1   柱状图设为2     柱状图数目不超过两个 尽量平均分配
-    ColumnWidth = min(0.2, 0.25 * PerX);
+    ColumnWidth = min(0.3, 0.25 * PerX);
     
 #if  SHOWTIMEPRE
     end_time = clock();     //获取结束时间
@@ -284,7 +281,7 @@ void Calculate(stu_Ptr HEAD)
 #endif //  SHOWTIME
 
 }
-void InitData() {
+void InitData() {   //将全部外部数据Init
     
     memset(IsChooseColumn, 0, sizeof(IsChooseColumn));
     memset(ChoosedColumn, 0, sizeof(ChoosedColumn));
