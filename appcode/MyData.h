@@ -2,7 +2,7 @@
 
 #include "genlib.h"
 
-#define MAXCOLUMN 13  // 数据的最多列数 
+#define MAXCOLUMN 21  // 数据的最多列数 
 #define MAXDATE   60  // 最多支持的日期 
 
 double MaxX, MaxY; //最大宽度 长度
@@ -70,13 +70,13 @@ struct stu    //每一天
 {
     char* Date;   //日期
      
-    int Data[10];    //每一行的数据
+    int Data[MAXCOLUMN];    //每一行的数据
     stu_Ptr next;   //下一个
     char Nowcolor[16];   //颜色
     char Changedcolor[16];   //选中的颜色
     BOOL IsSelect;   //是否显示   左侧按钮可以改变这个状态
     double nowx, nowy;   //
-    double XPosition[10],YPosition[10];    //每一个数据的xy位置
+    double XPosition[MAXCOLUMN],YPosition[MAXCOLUMN];    //每一个数据的xy位置
     BOOL IsShowNum;  //是否正在更改
 } *STU;
 struct stu *head, *ptr,*tail;
@@ -99,6 +99,6 @@ BOOL IsChangeNum;   //是否在 改数据
 
 stu_Ptr ChangingPtr;    //正在改变的Ptr
 
-string ChangingPtrStringNum[20];    //更改数据框里的数据   本质就是ChangingPtr里的data数据里的string化
+string ChangingPtrStringNum[MAXCOLUMN];    //更改数据框里的数据   本质就是ChangingPtr里的data数据里的string化
 
 BOOL IsSavingOK;  //是否保存正确

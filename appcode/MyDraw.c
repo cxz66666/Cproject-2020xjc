@@ -62,8 +62,7 @@ static double currentX = 0.0, currentY = 0.0; //当前画笔所在位置
 /*注意为了输入中文开发者将textbox进行些许的修改 使其可以输入GBK编码的中文*/
 void display()
 {
-    if (!IsSave && !IsNew) //如果不在保存界面上  就update  因为保存界面可能输入中文  使用update无法输入中文  新建文件同理
-        UpdateDisplay();
+    
     DisplayClear(); //清屏
 
     DrawMain(); //画下方的
@@ -359,7 +358,8 @@ void DrawOpenDir()
 
 void DrawLeftButton(stu_Ptr Head)
 {
-
+    SetPenSize(1);
+    SetPointSize(15);
     double fH = FontHeight;
    static  char ErrorAns[20]; //放置检查输入返回的值
     
@@ -397,7 +397,7 @@ void DrawLeftButton(stu_Ptr Head)
             Head = Head->next;
         }
         SetPenSize(2);
-        SetPointSize(15);
+      
 
         if (NowDateNum)
         { //如果不是第0页就显示上一页按钮
@@ -406,7 +406,7 @@ void DrawLeftButton(stu_Ptr Head)
             {
                 IsRedisplay = 1;
                 NowDateNum--; //日期的换页
-                //display();
+                DisplayClear();
             }
         }
         if (nowNum != FileTotalNum)
@@ -416,6 +416,7 @@ void DrawLeftButton(stu_Ptr Head)
             {
                 IsRedisplay = 1;
                 NowDateNum++; //日期的换页
+                DisplayClear();
                               //  display();
             }
         }
@@ -469,7 +470,7 @@ void DrawLeftButton(stu_Ptr Head)
             {
                 IsRedisplay = 1;
                 NowDateColumn--; //列的换页
-                //display();
+                DisplayClear();
             }
         }
 
@@ -480,7 +481,7 @@ void DrawLeftButton(stu_Ptr Head)
             {
                 IsRedisplay = 1;
                 NowDateColumn++; //列的换页
-                //display();
+                DisplayClear();
             }
         }
     }
