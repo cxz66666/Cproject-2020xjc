@@ -892,13 +892,13 @@ void DrawTextChar(string str, double bx, double by)
 BOOL FileDialog(char* path)
 {
     OPENFILENAME ofn;
-    ZeroMemory(&ofn, sizeof(ofn));
-    ofn.lStructSize = sizeof(ofn); // ????С
-    ofn.lpstrFile = path; // ·??
-    ofn.nMaxFile = MAX_PATH; // ·????С
-    ofn.lpstrFilter = ".csv"; // ???????
+	ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn); // 结构大小
+    ofn.lpstrFile = path; // 路径
+    ofn.nMaxFile = MAX_PATH; // 路径大小
+    ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0"; // 文件类型
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-    return GetOpenFileName(&ofn);
+	return GetOpenFileName(&ofn);
 }
 void DrawTextZH(string str, double bx, double by)
 {                                                //写中文
