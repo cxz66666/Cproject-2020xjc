@@ -105,6 +105,8 @@ void DefineMycolor()
     DefineColor("TableColor11", 1,0.6,0.72);//浅粉色 
     DefineColor("TableColor12",1,0.71,0.6);//形容不出来的颜色 
     
+    DefineColor("Color13",0.24,0.61,1) ;
+	DefineColor("Color14",1,0.67,0.44) ;
     DefineColor("DarkBlue",0.13,0.07,0.65) ;
     
     DefineColor("TitleColor",0.17,0.62,0.84);

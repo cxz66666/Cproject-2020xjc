@@ -116,7 +116,7 @@ void DrawPredict() {
     SetPenColor("TextBoxLabel");
     SetPenSize(3);
     double beginY = MaxY * 0.8;
-    drawLabel(MaxX * 0.9, beginY, "预测起始日期");
+    drawLabel(MaxX * 0.9-0.3, beginY, "预测起始日期");
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
 

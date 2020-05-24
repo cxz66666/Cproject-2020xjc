@@ -220,7 +220,9 @@ void DrawOpenDir()
     char InputWelcome[] = "您也可以输入文件全称";
     SetPenSize(2);
     char NameDemo[] = "demo.csv";
-    if (button(GenUIID(0), 0.9 * MaxX, 0.8 * MaxY, 1, FontHeight * 2, "打开"))   //使用现成的工具 win给的api直接打开
+    drawLabel(MaxX *0.435,MaxY*0.5+BoxHeight,"您也可以点击下方按钮"); 
+    drawLabel(MaxX *0.43,MaxY*0.5+BoxHeight/2,"打开系统文件管理器目录");
+    if (button(GenUIID(0), MaxX*0.46,MaxY*0.5-BoxHeight, 2,FontHeight * 2, "打开"))   //使用现成的工具 win给的api直接打开
     {
         char szFile[MAX_PATH] = {0};
         memset(ErrorAns, 0, sizeof(ErrorAns)); //ErrorAns
@@ -254,10 +256,13 @@ void DrawOpenDir()
 
     SetPenColor("Red");
     char tmpLabel[40] = "当前目录下无csv文件";
+    
+    
+    
     if (!FileNum) //如果没有文件
     {
 
-        drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY, tmpLabel);
+        drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY-0.1*MaxY, tmpLabel);
     }
     else
     {
@@ -265,7 +270,7 @@ void DrawOpenDir()
 
         sprintf(tmpLabel, "当前目录下共有%d个csv文件", FileNum);
 
-        drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY, tmpLabel);
+        drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY-0.1*MaxY, tmpLabel);
         setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
         int i;
         for (i = 1; i <= FileNum; i++)
@@ -304,12 +309,12 @@ void DrawOpenDir()
     static char dirName[30] = "";
 
     SetPenColor("TextBoxLabel");
-    drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 0.5 * BoxHeight, InputWelcome); //这里的y   简单说一哈 一个boxheight是两倍的字体高度  一个按钮占1.5倍的boxheight  其中上下各空出0.25boxheight
+    drawLabel(MaxX / 2 - TextStringWidth(InputWelcome) / 2, BeginY - FileNum * BoxHeight * 1.5 - 0.5 * BoxHeight-0.1*MaxY, InputWelcome); //这里的y   简单说一哈 一个boxheight是两倍的字体高度  一个按钮占1.5倍的boxheight  其中上下各空出0.25boxheight
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
-    textbox(GenUIID(0), MaxX / 2 - 1, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 2, BoxHeight, dirName, 30); //这里的输入宽度为1 最多输30个 谁能输那么多啊
+    textbox(GenUIID(0), MaxX / 2 - 1, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight-0.1*MaxY, 2, BoxHeight, dirName, 30); //这里的输入宽度为1 最多输30个 谁能输那么多啊
     setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
-    if (button(GenUIID(0), MaxX / 2 + 1.5, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight, 1, BoxHeight, "确认"))
+    if (button(GenUIID(0), MaxX / 2 + 1.5, BeginY - FileNum * BoxHeight * 1.5 - 2 * BoxHeight-0.1*MaxY, 1, BoxHeight, "确认"))
     {
         memset(ErrorAns, 0, sizeof(ErrorAns));
         MyError = 0;
@@ -368,7 +373,7 @@ void DrawLeftButton(stu_Ptr Head)
     Head = Head->next; //所有的数据链表是有头节点的
 
     if (!IsShowChooseDate) {
-        setButtonColors("Black", "Black", "Red", "Red", 0); //注意是否填涂
+        setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1); //注意是否填涂
         if (button(GenUIID(0), 0.2, MaxY * 0.9, TextStringWidth("显示日期") * 1.5, 1.5 * FontHeight, "显示日期"))
             IsShowChooseDate = TRUE;
     }
@@ -378,19 +383,19 @@ void DrawLeftButton(stu_Ptr Head)
         while (Head != NULL)
         {
             int IsSelect = Head->IsSelect;                             //主要用来判断是否填涂
-            setButtonColors("Black", "Black", "Red", "Red", IsSelect); //注意是否填涂
+            setButtonColors("Color14", "Color14", "Red", "Red", IsSelect); //注意是否填涂
             nowNum++;
             /*这里设定10个就显示翻页   只显示当前十个*/
             if (nowNum > 10 * NowDateNum && nowNum <= 10 * (NowDateNum + 1))
             {
-                if (button(GenUIID(nowNum), 0.1, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, 0.15, 0.15, ""))
+                if (button(GenUIID(nowNum), 0.1, MaxY -1- (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, 0.15, 0.15, ""))
                 {
                     Head->IsSelect = !(Head->IsSelect);
                     Calculate(NowShowTable);
                 }
                 /*！！这些位置基本可以微调一哈  注意了！！*/
                 SetPenColor("Black");
-                drawLabel(0.3, MaxY - (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
+                drawLabel(0.3, MaxY -1- (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
             }
             if (nowNum + 1 > 10 * (NowDateNum + 1))
                 break; //只显示10个多了就翻页
@@ -402,7 +407,7 @@ void DrawLeftButton(stu_Ptr Head)
         if (NowDateNum)
         { //如果不是第0页就显示上一页按钮
             setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-            if (button(GenUIID(0), 0.2, MaxY - 15 * FontHeight, 1, FontHeight, "上一页"))
+            if (button(GenUIID(0), 0.2, MaxY-1 - 15 * FontHeight, 1, FontHeight, "上一页"))
             {
                 IsRedisplay = 1;
                 NowDateNum--; //日期的换页
@@ -412,7 +417,7 @@ void DrawLeftButton(stu_Ptr Head)
         if (nowNum != FileTotalNum)
         {
             setButtonColors("DirSelectionFrame", "Black", "DirSelectionFrameHot", "Black", 0);
-            if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight, 1, FontHeight, "下一页"))
+            if (button(GenUIID(0), 0.2, MaxY - 17 * FontHeight-1, 1, FontHeight, "下一页"))
             {
                 IsRedisplay = 1;
                 NowDateNum++; //日期的换页
@@ -420,8 +425,9 @@ void DrawLeftButton(stu_Ptr Head)
                               //  display();
             }
         }
-
-        if (button(GenUIID(0), 0.2, MaxY - 20 * FontHeight, TextStringWidth("隐藏日期")*1.1, FontHeight*1.5, "隐藏日期"))
+        
+        setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1); 
+        if (button(GenUIID(0), 0.2, MaxY * 0.9, TextStringWidth("隐藏日期")*1.5, FontHeight*1.5, "隐藏日期"))
         {
             IsShowChooseDate = FALSE;
         }
@@ -1095,12 +1101,12 @@ void DrawHelpPage1()
     drawLabel(MaxX - interval * 68, MaxY - interval * 8, "·关于新建功能");
     drawLabel(MaxX - interval * 68, MaxY - interval * 10, "点击窗口左上角File菜单中的New键或使用快捷键Ctrl-N打开新建页面，根据提示输入新建数据的相关数据，点击确认后在下一页面输入列名，点击确认后进入可视化页面。");
     drawLabel(MaxX - interval * 68, MaxY - interval * 12, "·关于打开文件");
-    drawLabel(MaxX - interval * 68, MaxY - interval * 14, "在打开文件前请把需要查看的csv数据文件放至demoprj-devc->output文件夹下，然后使用File菜单下的Open键或使用快捷键Ctrl-N打开查看页面，点击显示的文件或者使");
-    drawLabel(MaxX - interval * 68, MaxY - interval * 16, "用搜索功能打开output文件夹下的数据文件，进入可视化页面。");
+    drawLabel(MaxX - interval * 68, MaxY - interval * 14, "使用File菜单下的Open键或使用快捷键Ctrl-N打开查看页面，可以直接点击左上方打开键，唤醒windows资源管理器窗口，根据窗口目录选择csv文件打开即可。或者在打开");
+    drawLabel(MaxX - interval * 68, MaxY - interval * 16, "文件前把需要查看的csv数据文件放至demoprj-devc->output文件夹下，文件即可直接显示在当前目录下。");
     drawLabel(MaxX - interval * 68, MaxY - interval * 18, "·关于可视化页面");
-    drawLabel(MaxX - interval * 68, MaxY - interval * 20, "勾选页面左上角的日期数据来达到显示或隐藏当前日期的数据的目的，可使用上下翻页功能来浏览所有日期哦。勾选左下角相关列名，可以在图表中显示相关数据的可视化");
-    drawLabel(MaxX - interval * 68, MaxY - interval * 22, "功能。根据页面右方相关提示可进行预测功能的实现哦。点击拖动X轴Y轴实现图像的缩放功能，点击柱体可显示当前具体数据，可使用右上角恢复功能键来恢复图表初始状");
-    drawLabel(MaxX - interval * 68, MaxY - interval * 24, "态。");
+    drawLabel(MaxX - interval * 68, MaxY - interval * 20, "点击页面左上角显示日期，勾选跳出的日期数据来达到显示或隐藏当前日期的数据的目的，可使用上下翻页功能来浏览所有日期哦。勾选左下角相关列名，可以在图表中显");
+    drawLabel(MaxX - interval * 68, MaxY - interval * 22, "示相关数据的可视化功能。根据页面右方相关提示可进行预测功能的实现哦。点击拖动X轴Y轴实现图像的缩放功能，点击柱体可显示当前具体数据，可使用右上角恢复功能");
+    drawLabel(MaxX - interval * 68, MaxY - interval * 24, "键来恢复初始图表状态。");
     drawLabel(MaxX - interval * 68, MaxY - interval * 26, "·关于数据更改（适用于新建功能和查看功能）");
     drawLabel(MaxX - interval * 68, MaxY - interval * 28, "在可视化页面单击右下角更改数据功能键，点击勾选X轴相关数据即可进行修改数据，点击保存即可保存修改数据。");
     drawLabel(MaxX - interval * 68, MaxY - interval * 30, "·关于预测功能");

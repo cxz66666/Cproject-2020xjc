@@ -150,13 +150,14 @@ BOOL SaveToCsv(stu_Ptr HEAD) {
     static char tips[] = "请输入保存文件名";
     static char WrongAns[20] = "";
     static char  InputName[20] = "";
-    drawLabel(MaxX / 2 - TextStringWidth(tips)/2, MaxY / 2 + 2 * FontHeight, tips);
+    SetPenColor("Black"); 
+    drawLabel(MaxX / 2 - TextStringWidth(tips)/2+0.3, MaxY / 2 + 2 * FontHeight-0.5, tips);
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
 
-    textbox(GenUIID(0), MaxX / 2 -TextStringWidth(tips)/2, MaxY / 2 - 1, TextStringWidth(tips), FontHeight * 2, InputName, 15);
+    textbox(GenUIID(0), MaxX / 2 -TextStringWidth(tips)/2+0.3, MaxY / 2 - 1, TextStringWidth(tips), FontHeight * 2, InputName, 15);
 
-    if (button(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2, MaxY / 2 - 2, 0.6, FontHeight * 1.2, "确认")) {
+    if (button(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2+0.15, MaxY / 2 - 2, 1, FontHeight * 1.2, "确认")) {
 
         if (CheckSaveName(InputName, WrongAns)) {
            if( !SaveCSV(InputName,HEAD))  //如果没保存成功
@@ -171,7 +172,7 @@ BOOL SaveToCsv(stu_Ptr HEAD) {
         drawLabel(MaxX / 2 - TextStringWidth(WrongAns), MaxY / 2 - 2.5, WrongAns);
         
     }
-    if (button(GenUIID(0), MaxX / 2 + TextStringWidth(tips) / 2-0.6, MaxY / 2 - 2, 0.6, FontHeight * 1.2, "取消")) {
+    if (button(GenUIID(0), MaxX / 2 + TextStringWidth(tips) / 2-0.6, MaxY / 2 - 2,1, FontHeight * 1.2, "取消")) {
 
        
         IsSave = 0;
@@ -216,6 +217,7 @@ BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
 }
 BOOL CheckSaveName(string InputName, string WrongAns) {
     //检查保存的名字  注意需要满足*.csv才可以
+    SetPenColor("Red");
     int i;
     int flag = 0;
     for (i = 0; InputName[i]; i++) {
@@ -228,7 +230,7 @@ BOOL CheckSaveName(string InputName, string WrongAns) {
         }
     }
     if (!flag) {
-        strcpy(WrongAns, "请输入正确名称");
+        strcpy(WrongAns, "请输入正确扩展名");
         return FALSE;
     
     }
