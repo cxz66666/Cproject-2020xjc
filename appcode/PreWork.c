@@ -301,6 +301,7 @@ void InitData() {   //将全部外部数据Init
     DrawWithLine = DrawWithColumn = DrawWithColumnNow = 0;
     FileTotalNum = 0;
     NowDateNum = NowDateColumn = 0;
+    PredictHead = NULL;
 }
 
 void  FreeColumn(char* Ptr[]) {

@@ -62,7 +62,8 @@ static double currentX = 0.0, currentY = 0.0; //当前画笔所在位置
 /*注意为了输入中文开发者将textbox进行些许的修改 使其可以输入GBK编码的中文*/
 void display()
 {
-    
+    if (!IsSave && !IsNew)
+        UpdateDisplay();
     DisplayClear(); //清屏
 
     DrawMain(); //画下方的
@@ -72,7 +73,8 @@ void display()
 
 void DrawMain()
 {
-    DisplayClear();
+    
+   
     if (IsHelp == 1)
     {
         DrawHelpPage1(); //画出帮助界面第一页
@@ -220,9 +222,9 @@ void DrawOpenDir()
     char InputWelcome[] = "您也可以输入文件全称";
     SetPenSize(2);
     char NameDemo[] = "demo.csv";
-    drawLabel(MaxX *0.435,MaxY*0.5+BoxHeight,"您也可以点击下方按钮"); 
-    drawLabel(MaxX *0.43,MaxY*0.5+BoxHeight/2,"打开系统文件管理器目录");
-    if (button(GenUIID(0), MaxX*0.46,MaxY*0.5-BoxHeight, 2,FontHeight * 2, "打开"))   //使用现成的工具 win给的api直接打开
+    drawLabel(MaxX *0.635,MaxY*0.5+BoxHeight,"您也可以点击下方按钮"); 
+    drawLabel(MaxX *0.63,MaxY*0.5+BoxHeight/2,"打开系统文件管理器目录");
+    if (button(GenUIID(0), MaxX*0.66,MaxY*0.5-BoxHeight, 2,FontHeight * 2, "打开"))   //使用现成的工具 win给的api直接打开
     {
         char szFile[MAX_PATH] = {0};
         memset(ErrorAns, 0, sizeof(ErrorAns)); //ErrorAns
@@ -270,7 +272,7 @@ void DrawOpenDir()
 
         sprintf(tmpLabel, "当前目录下共有%d个csv文件", FileNum);
 
-        drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY-0.1*MaxY, tmpLabel);
+        drawLabel(MaxX / 2 - TextStringWidth(tmpLabel) / 2, BeginY, tmpLabel);
         setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
         int i;
         for (i = 1; i <= FileNum; i++)
@@ -868,6 +870,7 @@ void drawMainPicture()
     DrawArrow();        //xy轴的箭头
     DrawLastTableNum(); //最后的数字显示
     Drawlegend();       //画图例
+    DrawSelectedInf();
 #if SHOWTIMEDRAW
     end_time = clock();
     printf("%lf seconds\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);

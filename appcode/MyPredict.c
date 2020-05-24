@@ -2,8 +2,12 @@
 
 #include "MyData.h"
 
+#define PREDICT 1
+
 static int PolyNum = 3;
 int MonthDate[13] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };  //月份天数
+
+double  PolyPredictData[MAXCOLUMN+1][10] ; //存放每个数据的拟合阶数     第一个括号为列数  第二个括号为每项的系数  其中 第0项放的是拟合系数  之后 1，2，3...依次防止常数项，一次项，以此类推
 
 void DrawPredict();
 BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, string  DateLength, string PredictLength, string ploy,int ans[4]);
@@ -24,6 +28,7 @@ void FindBestPredict(int n, double* x, double* y, double a[]);
 
 int CalY(int num, double c[]);
 
+void DrawSelectedInf();
 /*==================polyfit(n,x,y,poly_n,a)===================*/
 /*=======拟合y=a0+a1*x+a2*x^2+……+apoly_n*x^poly_n========*/
 /*=====n是数据个数 xy是数据值 poly_n是多项式的项数======*/
@@ -107,10 +112,19 @@ void gauss_solve(int n, double A[], double x[], double b[])
 
 
 void DrawPredict() {
+    
+#if PREDICT
+    static char InputMonth[20] = "2", InputDay[20] = "1";
+    static char DateLength[20] = "20", PredictLength[20] = "10"; //起始的时间   模型原始数据长度 预测天数
+    static char Poly[20] = "";
+    static char WrongTip[30] = "";
+#else 
     static char InputMonth[20] = "", InputDay[20] = "";
     static char DateLength[20] = "", PredictLength[20] = ""; //起始的时间   模型原始数据长度 预测天数
-    static char Poly[20] ="";
+    static char Poly[20] = "";
     static char WrongTip[30] = "";
+#endif // PREDICT
+
     int ans[4] = { 0 };   //分别记录Inputmonth，day ，datelength，predictlength
    static BOOL ISOK = TRUE;  //是否需要提示
     SetPenColor("TextBoxLabel");
@@ -141,13 +155,14 @@ void DrawPredict() {
     if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 4, MaxX * 0.05, FontHeight * 2, "预测")) {
 
         if (CheckPredict(WrongTip, InputMonth, InputDay, DateLength, PredictLength,Poly, ans)) {
-            MyFree(PreHead);  //首先释放了原来存预测数据的链表
+            
+            if (IsPredict)
+                MyFree(PreHead);
+            NowDateNum = NowDateColumn = 0;
+            
+            PreparePredict(PredictHead,ans);  //申请内存    计算数据  提前计算好存到preHead里
             IsPredict = TRUE;
             ISOK = TRUE;
-            NowDateNum = NowDateColumn = 0;
-
-            PreparePredict(PredictHead,ans);  //申请内存    计算数据  提前计算好存到preHead里
-        
             memset(InputMonth, 0, sizeof(InputMonth));
             memset(InputDay, 0, sizeof(InputDay));
             memset(DateLength, 0, sizeof(DateLength));
@@ -157,7 +172,7 @@ void DrawPredict() {
             memset(ans, 0, sizeof(ans));    //重新清零
 
             NowShowTable = PreHead;
-            ChangeIsSelect(NowShowTable);
+            ChangeIsSelect(NowShowTable);  //日期选中上限为20个
             Calculate(NowShowTable);
             //printf("Check!!\n");
        }
@@ -224,13 +239,14 @@ string GetDate(int month, int day) {    //初始month   初始day+走过的day
 void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //预测数据的链表也带头节点
 
     char TargetDate[20] = "";
-    
+    int OldPolyNum = PolyNum;
     double coefficient[7] = { 0 };
 
     double* x = (double*)malloc(sizeof(double) * (Date[2] + Date[3]));
     double *y = (double*)malloc(sizeof(double) * (Date[2] + Date[3]));
     stu_Ptr OldPtr=HEAD;    // 原来HEAD存的是原数据表上的 不能对这个进行操作   应该先存起来   先把原来表上的那个指针的存起来 ，一会跑数据的时候用得到
-    stu_Ptr tmp1 = OldPtr,tmp2;
+    stu_Ptr tmp1=NULL ,tmp2=NULL;
+    tmp1 = HEAD;
     PreHead = (stu_Ptr)malloc(sizeof(struct stu));
 
 
@@ -247,6 +263,8 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //预测数据的链表也带头节点
     int i,j;
     for (i = 0; i < HaveNum + Date[3]; i++) {
         tmp2 = (stu_Ptr)malloc(sizeof(struct stu));
+        memset(tmp2->Data, 0, sizeof(tmp2->Data));
+        tmp2->Date = NULL;
         tmp1->next = tmp2;
         tmp1 = tmp1->next;
     }    //创建链表
@@ -256,20 +274,20 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //预测数据的链表也带头节点
     for ( i = 1; i <= TotalColumnNum; i++) {
         
         int nownum = 0;
-        int reset = 0;
+        
         memset(x, 0, sizeof(double) * (Date[2] + Date[3]));
         memset(y, 0, sizeof(double) * (Date[2] + Date[3]));
         memset(coefficient, 0, sizeof(double) * 6);
         tmp1 = OldPtr;
         while (tmp1 != NULL && nownum < HaveNum) {
-            x[nownum] = nownum + 1;
+            x[nownum] = nownum + 1.0;
             y[nownum] = tmp1->Data[i];    //x坐标为1,2,3,4.....,，y坐标为人数
             nownum++;
             tmp1 = tmp1->next;
         }
         if (PolyNum == -1) {
             FindBestPredict(nownum, x, y, coefficient);  //将polynum置为合适的值 0-5之间
-            reset = 1;
+           
         }
 
        if(PolyNum>0)   //如果不是0
@@ -280,8 +298,11 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //预测数据的链表也带头节点
 
            polyfit1(nownum, x, y, 1, coefficient);
        }
-       
-     /*   for (int i = 0; i < nownum; i++) {
+       PolyPredictData[i][0] = PolyNum;
+       for ( j = 0; j <= PolyNum; j++)
+           PolyPredictData[i][j + 1] = coefficient[j];
+   /*    printf("最佳拟合系数为%d\n", PolyNum);
+        for (int i = 0; i < nownum; i++) {
             printf("第 %d个x为%lf y为%lf", i, x[i], y[i]);
         }
         printf("\n");
@@ -298,19 +319,21 @@ void  PreparePredict(stu_Ptr HEAD,int Date[4]) { //预测数据的链表也带头节点
             nownum++;
             tmp1->IsShowNum = FALSE;
             tmp1->Data[i] = CalY(nownum, coefficient);
+            
             tmp1 = tmp1->next;
         }
 
-        if(reset)
-        PolyNum = -1; //重置为-1方便下一个循环使用
+        
+        PolyNum = OldPolyNum; //重置为初始的系数方便循环遍历
+        
 
     }
          
-    
+   
 }
 
 void FindBestPredict(int n, double* x, double* y, double a[]) {
-    int Findpoly;   //目的阶数
+    int Findpoly=0;   //目的阶数
     int i, j;
     double R_2 = -100;
     double TmpR_2;
@@ -458,6 +481,7 @@ BOOL FindDate(int month, int day) {
     {
         if (!strcmp(tmp->Date, TargetDate)) {  //如果找到了
             PredictHead = tmp;
+            printf("zhaodaole\n");
             break;
         }
         tmp = tmp->next;
@@ -476,8 +500,8 @@ void    MyFree(stu_Ptr Head) {
    
     next = tmp->next;
     free(tmp);   //头节点单独释放
+    
     tmp = NULL;
-    tmp = next;
 
     while (next!=NULL)
     {
@@ -487,4 +511,48 @@ void    MyFree(stu_Ptr Head) {
         free(tmp);  //其余正常释放
     }
    
+}
+void DrawSelectedInf() {
+    char OutChoosed[100];
+    int NowChooseColumn = 0;
+    memset(OutChoosed, 0, sizeof(OutChoosed));
+    if (IsChooseLine) {
+        sprintf(OutChoosed, "当前选中直线为%s", ColumnName[ChooseLineNum]);
+        NowChooseColumn = ChooseLineNum;
+    }
+    else if (IsChooseHistogram) {
+        sprintf(OutChoosed, "当前选中柱状图为%s", ColumnName[ChooseHistogramNum]);
+        NowChooseColumn = ChooseHistogramNum;
+    }
+    else return;
+    if (strlen(OutChoosed)) {
+        SetPenColor("PreWordColor");
+        SetPenSize(2);
+        MovePen(beginTableX + 0.5, MaxY * 0.9);
+        DrawTextString( OutChoosed);
+    }
+    if (IsPredict) {
+        MovePen(beginTableX  +0.5, MaxY * 0.9-FontHeight*2);
+        sprintf(OutChoosed, "模型阶数为%.0lf阶", PolyPredictData[NowChooseColumn][0]);
+        DrawTextString(OutChoosed);
+        memset(OutChoosed, 0, sizeof(OutChoosed));
+        strcpy(OutChoosed, "拟合曲线方程为y=");
+        int i;
+        char OutEquationTmp[20];
+        for (i = 0; i <= PolyPredictData[NowChooseColumn][0]; i++) {
+            if (!i)
+                sprintf(OutEquationTmp, "%.1lf", PolyPredictData[NowChooseColumn][1]);
+            else if(i==1)
+                sprintf(OutEquationTmp, "%.1lfx", PolyPredictData[NowChooseColumn][2]);
+            else   sprintf(OutEquationTmp, "%.1lfx^%d", PolyPredictData[NowChooseColumn][i+1],i);
+            strcat(OutChoosed, OutEquationTmp);
+            if (i != PolyPredictData[NowChooseColumn][0])
+                if(PolyPredictData[NowChooseColumn][i+2]>0)
+                strcat(OutChoosed, "+");
+
+        }
+        printf("%s\n", OutChoosed);
+        MovePen((beginTableX + StaticendTableX) / 2 , MaxY * 0.9 );
+        DrawTextString(OutChoosed);
+    }
 }
