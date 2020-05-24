@@ -11,12 +11,12 @@ void PreWork();
 void FindCSV(char *Dir);
 void DefineMycolor();
 BOOL CheckName(char* name);
-void Calculate(stu_Ptr HEAD);
+void Calculate(CaseNode_Ptr HEAD);
 void AssignTable();
 BOOL CheckChangedNum(string str[],string ans);
 void InitData();
 void  FreeColumn(char *Ptr[]);
-void ChangeIsSelect(stu_Ptr HEAD);
+void ChangeIsSelect(CaseNode_Ptr HEAD);
 void PreWork()
 {
     /*定义许多常量  防止以后再获取浪费资源*/
@@ -183,7 +183,7 @@ BOOL CheckChangedNum(string str[], string ans) {
     return TRUE;
 }
 
-void Calculate(stu_Ptr HEAD)
+void Calculate(CaseNode_Ptr HEAD)
 {
 #if  SHOWTIMEPRE
     clock_t start_time, end_time;
@@ -198,13 +198,13 @@ void Calculate(stu_Ptr HEAD)
     memset(CubicEquation, 0, sizeof(CubicEquation));   //每次计算出的方程都不一样  都得清空了再说
     int ShowNum = 0;
     int Maxnum = 0;
-    stu_Ptr tmp = HEAD->next;   //所有的都有头节点的  注意了
+    CaseNode_Ptr tmp = HEAD->next;   //所有的都有头节点的  注意了
     while (tmp != NULL)  
     {
      
         if (tmp->IsSelect)
         {
-            tail = tmp;   //tail表示的是最后一个被选中的日期
+            FileTail = tmp;   //FileTail表示的是最后一个被选中的日期
             ShowNum++;
             int i; 
             for (i=1; i <= ChooseColumnNum; i++)
@@ -315,11 +315,11 @@ void  FreeColumn(char* Ptr[]) {
        
     }
 }
-void ChangeIsSelect(stu_Ptr HEAD) {  //最多选中20个日期  再多不好看了
+void ChangeIsSelect(CaseNode_Ptr HEAD) {  //最多选中20个日期  再多不好看了
 
     int NowNum = 0;
 
-    stu_Ptr tmp = HEAD->next;
+    CaseNode_Ptr tmp = HEAD->next;
     while (tmp != NULL) {
 
         NowNum++;

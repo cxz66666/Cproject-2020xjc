@@ -17,9 +17,7 @@ int IsNew;//是否在新建文件
 string OpenFileName=NULL;   //打开文件的名字
 int IsSave;    //是否正在保存了
 int MyError; //error小于0的话就报错   -1文件未打开
-int IsMusic; //放音乐就算了
-int IsOpenOther;
-int IsOpenAdvance;
+
 int IsHelp; 
 
 int FileTotalNum;    //一共多少日期
@@ -65,25 +63,25 @@ double ColumnWidth;    //柱状图的宽度
 double Histogram[MAXDATE][4];  //存柱状图的各个数据   【0】为x  【1】为y
 
 
-typedef struct stu* stu_Ptr;
-struct stu    //每一天
+typedef struct CaseNode* CaseNode_Ptr;
+struct CaseNode    //每一天
 {
     char* Date;   //日期
      
     int Data[MAXCOLUMN];    //每一行的数据
-    stu_Ptr next;   //下一个
+    CaseNode_Ptr next;   //下一个
     char Nowcolor[16];   //颜色
     char Changedcolor[16];   //选中的颜色
     BOOL IsSelect;   //是否显示   左侧按钮可以改变这个状态
     double nowx, nowy;   //
     double XPosition[MAXCOLUMN],YPosition[MAXCOLUMN];    //每一个数据的xy位置
     BOOL IsShowNum;  //是否正在更改
-} *STU;
-struct stu *head, *ptr,*tail;
-struct stu* PredictHead;  //这个放在原链表中找到相同日期的那个节点  这个只是个标志 不对它做任何malloc有关的东西
-struct stu* PreHead;      //这个放新创建的链表  存放预测的数据  预测数据用的
+}*CaseNodePtr ;
+struct CaseNode *FileHead, *ptr,*FileTail;
+struct CaseNode* PredictHead;  //这个放在原链表中找到相同日期的那个节点  这个只是个标志 不对它做任何malloc有关的东西
+struct CaseNode* PreHead;      //这个放新创建的链表  存放预测的数据  预测数据用的
 
-struct stu* NowShowTable;   //两种可能   一种是show head 就是展示现有的数据 一种是show 预测的 展示预测的数据
+struct CaseNode* NowShowTable;   //两种可能   一种是show FileHead 就是展示现有的数据 一种是show 预测的 展示预测的数据
 
 
 BOOL IsChooseXaxis=FALSE, IsChooseYaxis = FALSE,IsChooseLine = FALSE, IsChooseHistogram = FALSE;    //是否选中了xy轴 进行拉伸缩短等操作
@@ -97,7 +95,7 @@ BOOL IsPredict;   //是否在预测
 
 BOOL IsChangeNum;   //是否在 改数据
 
-stu_Ptr ChangingPtr;    //正在改变的Ptr
+CaseNode_Ptr ChangingPtr;    //正在改变的Ptr
 
 string ChangingPtrStringNum[MAXCOLUMN];    //更改数据框里的数据   本质就是ChangingPtr里的data数据里的string化
 

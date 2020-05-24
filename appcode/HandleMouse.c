@@ -133,7 +133,7 @@ BOOL HandleMouse(int x, int y, int button, int event) {
 				//printf("nowx is %lf nowy is %lf\n", nowx, nowy);
 				IsChooseHistogram = TRUE;
 			}
-		
+			
 		}
 		//如果是右键  将所有玩意清零
 		if (button == RIGHT_BUTTON && (IsChooseXaxis || IsChooseYaxis || IsChooseLine||IsChooseHistogram )) {
@@ -199,7 +199,7 @@ BOOL HandleKeyBoard(char ch) {
 	BOOL Recalculate = FALSE;
 	if (NowShowTable == NULL)  //简易的判断
 		return FALSE;
-	stu_Ptr tmp = NowShowTable->next,tmp1=NowShowTable->next;   //tmp是用来遍历的 tmp1是用来记录选中节点的
+	CaseNode_Ptr tmp = NowShowTable->next,tmp1=NowShowTable->next;   //tmp是用来遍历的 tmp1是用来记录选中节点的
 
 	/* 
 	作用  +号则放大一个日期单位   通过减少第一个日期显示实现    

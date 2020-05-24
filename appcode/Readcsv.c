@@ -1,10 +1,10 @@
 #pragma once 
 #include"MyData.h"
 
-BOOL SaveToCsv(stu_Ptr HEAD);
-BOOL SaveCSV(string InputName,stu_Ptr HEAD);
-BOOL ReadCSVFile(char *Name);
-BOOL CheckSaveName(string InputName, string WrongAns);
+BOOL SaveToCsv(CaseNode_Ptr HEAD);   //保存到csv的画图主函数
+BOOL SaveCSV(string InputName,CaseNode_Ptr HEAD);   //保存csv文件的实现
+BOOL ReadCSVFile(char *Name);   //读取csv文件
+BOOL CheckSaveName(string InputName, string WrongAns);  //检查文件名称
 
 /*模仿c++定义部分stod/stoi函数*/
 double stod(string str)    //string to double
@@ -20,7 +20,7 @@ int stoi(string str)  //string to int
     return ans;
 }
 
-string tostring(int num) {
+string tostring(int num) {   //需要手动free了 用完后
     int tmp = num;
     int N1 = 0;
     while (tmp) {
@@ -50,9 +50,10 @@ string tostring(int num) {
 
 BOOL ReadCSVFile(char *Name)
 {
-    head = (stu_Ptr)malloc(sizeof(struct stu));
-    ptr = head;  //带头结点的   注意!!!!!!!!
-    head->next = NULL;
+    FileHead = (CaseNode_Ptr)malloc(sizeof(struct CaseNode));
+    ptr = FileHead;  //带头结点的   注意!!!!!!!!
+    FileHead->next = NULL;
+
     /*  !!!!  注意了带头节点   别被坑了   为啥要带   我懒得重写了   !!!!*/
 
     int num = 0; //num用来记录当前到第几个了
@@ -88,25 +89,24 @@ BOOL ReadCSVFile(char *Name)
                 switch (tmpnum)
                 {
                 case 1:
-                    STU = (stu_Ptr)malloc(sizeof(struct stu));
-
-                    STU->IsSelect = TRUE;
-                    STU->IsShowNum = FALSE;
-                    strcpy(STU->Nowcolor, COLOR[FileTotalNum % (sizeof(COLOR) / sizeof(COLOR[0]))]);
-                    strcpy(STU->Changedcolor, "Pink");
-                    STU->Date = (char *)malloc(sizeof(buffer) + 1);
-                    strcpy(STU->Date, buffer);
+                    CaseNodePtr = (CaseNode_Ptr)malloc(sizeof(struct CaseNode));    //申请
+                    CaseNodePtr->IsSelect = TRUE;    //以下均为初始化
+                    CaseNodePtr->IsShowNum = FALSE;
+                    strcpy(CaseNodePtr->Nowcolor, COLOR[FileTotalNum % (sizeof(COLOR) / sizeof(COLOR[0]))]);
+                    strcpy(CaseNodePtr->Changedcolor, "Black");
+                    CaseNodePtr->Date = (char *)malloc(sizeof(buffer) + 1);
+                    strcpy(CaseNodePtr->Date, buffer);
                     FileTotalNum++;
                     /* code */
                     break;
-                case 0:
-                    STU->Data[TotalColumnNum] = stoi(buffer);
-                    STU->next = NULL;
-                    ptr->next = STU;
+                case 0:    //挂载节点
+                    CaseNodePtr->Data[TotalColumnNum] = stoi(buffer);
+                    CaseNodePtr->next = NULL;
+                    ptr->next = CaseNodePtr;
                     ptr = ptr->next;
                     break;
-                default:
-                    STU->Data[tmpnum - 1] = stoi(buffer);
+                default:   //写入数据
+                    CaseNodePtr->Data[tmpnum - 1] = stoi(buffer);
                     break;
                 }
             }
@@ -144,7 +144,7 @@ BOOL ReadCSVFile(char *Name)
 }
 
 
-BOOL SaveToCsv(stu_Ptr HEAD) {
+BOOL SaveToCsv(CaseNode_Ptr HEAD) {
     //将HEAD里的数据保存到csv文件
 
     static char tips[] = "请输入保存文件名";
@@ -181,7 +181,7 @@ BOOL SaveToCsv(stu_Ptr HEAD) {
 
     return TRUE;
 }
-BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
+BOOL SaveCSV(string InputName,CaseNode_Ptr HEAD) {
     FILE *fp= fopen(InputName, "w+");  //使用w+进行文件写入
     if (fp == NULL)  //没打开直接返回
         return FALSE;
@@ -195,7 +195,7 @@ BOOL SaveCSV(string InputName,stu_Ptr HEAD) {
     }
     fprintf(fp, "\n");
 
-    stu_Ptr tmp = HEAD->next;
+    CaseNode_Ptr tmp = HEAD->next;
 
     /*写入每个日期不管是否选中*/
     while (tmp != NULL) {
@@ -230,11 +230,11 @@ BOOL CheckSaveName(string InputName, string WrongAns) {
         }
     }
     if (!flag) {
-        strcpy(WrongAns, "请输入正确扩展名");
+        strcpy(WrongAns, "请输入正确扩展名");    //没找到csv文件拓展名
         return FALSE;
     
     }
     else {
-        return TRUE;
+        return TRUE;   //文件名正确
     }
 }

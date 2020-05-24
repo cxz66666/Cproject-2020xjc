@@ -3,10 +3,10 @@
 
 
 
-void parspl(double p[][2], int n, int k);
-void lineto(double x, double y);
-void Cubic_Spline(double data[][2], int num, int k,  int ColumnNum);
-void DrawHistogram(double TableData[][2], int num);
+void parspl(double p[][2], int n, int k);   //一种插值法进行计算的函数
+void lineto(double x, double y);   //从当前位置画直线到xy
+void Cubic_Spline(double data[][2], int num, int k,  int ColumnNum);   //三次样条插值法c语言实现
+void DrawHistogram(double TableData[][2], int num);   //画柱状图的算法
 
 
 void lineto(double x, double y)   //画一条当前位置到x，y的直线   
@@ -37,13 +37,13 @@ void DrawHistogram(double TableData[][2], int num) {
     else if (DrawWithColumn == 1) {  //如果只用画一个柱状图
         int i;
         for (i = 1; i <= num; i++) {
-            drawRectangle(TableData[i][0] - ColumnWidth / 2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);
+            drawRectangle(TableData[i][0] - ColumnWidth / 2, beginTableY, ColumnWidth, TableData[i][1] - beginTableY, 1);   //直接在中间画出即可
             Histogram[i][0] = TableData[i][0], Histogram[i][1] = TableData[i][1];
         }
     }
 }
-void parspl(double p[][2], int n, int k)   //这个同样也是画曲线图的算法   但是没有三次样条插值法合适  具体实现原理同样不表
-{
+void parspl(double p[][2], int n, int k)   //这个同样也是画曲线图的算法   但是没有三次样条插值法合适  具体实现原理同样不表 
+{ //这个没有用到  但是同样是一种插值法的形式
     int i, j;
     double t1, t2, t3, t, a, b, c, d, x, y;
     p[0][0] = p[1][0];

@@ -2,11 +2,11 @@
 
 #include "MyData.h"
 #include "MyPredict.c"
-BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, string  ColumnNum, string  ErrorAns, int* Data);
+BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, string  ColumnNum, string  ErrorAns, int* Data);  //对数据的检查
 
-void DrawCreateNewFile();
-stu_Ptr CreatNewPtr(int* Data);
-BOOL CheckColumnName( int ColumnNum,string ErrorAns);
+void DrawCreateNewFile();   //画创建新文件的主函数
+CaseNode_Ptr CreatNewPtr(int* Data);   //创建新的链表    data中放置4个参数见下文注释
+BOOL CheckColumnName( int ColumnNum,string ErrorAns);   //检查中文的列是否正确
 
 static char ColumnData[11][20];
 void DrawCreateNewFile() {
@@ -25,7 +25,7 @@ void DrawCreateNewFile() {
         SetPenSize(3);
         SetPointSize(22); 
         SetPenColor("Black");
-        drawLabel(MaxX / 2 - TextStringWidth("起始日期") / 2, BeginY -= FontHeight * 3, "起始日期");
+        drawLabel(MaxX / 2 - TextStringWidth("起始日期") / 2, BeginY -= FontHeight * 3, "起始日期");  //起始日月
     
         SetPenColor("Black");   
         setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
@@ -35,11 +35,11 @@ void DrawCreateNewFile() {
         textbox(GenUIID(0), MaxX * 0.51, BeginY, MaxX * 0.02, FontHeight * 1.3, InputDay, 3);
 
         SetPenColor("Black");
-        drawLabel(MaxX * 0.5 - TextStringWidth("日期长度") / 2, BeginY -= FontHeight * 2.5, "日期长度");
+        drawLabel(MaxX * 0.5 - TextStringWidth("日期长度") / 2, BeginY -= FontHeight * 2.5, "日期长度");   //日期的长度
         textbox(GenUIID(0), MaxX * 0.48, BeginY -= FontHeight * 2.5, MaxX * 0.04, FontHeight * 1.3, DateLength, 4);
 
         SetPenColor("Black");
-        drawLabel(MaxX * 0.5 - TextStringWidth("列的个数") / 2, BeginY -= FontHeight *2.5, "列的个数");
+        drawLabel(MaxX * 0.5 - TextStringWidth("列的个数") / 2, BeginY -= FontHeight *2.5, "列的个数");   //列的个数
         textbox(GenUIID(0), MaxX * 0.48, BeginY -= FontHeight * 2.5, MaxX * 0.04, FontHeight * 1.4, ColumnNum, 3);
 
         setButtonColors("DirSelectionFrame", "PreWordColor", "DirSelectionFrameHot", "Black", 1);
@@ -69,14 +69,14 @@ void DrawCreateNewFile() {
       //      printf("data %d is %d\n", i, Data[i]);
        // }
         for (i = 1; i <= Data[4]; i++) {
-            textbox(GenUIID(i), MaxX * 0.47, BeginY -= 3 * FontHeight, MaxX * 0.06, 1.5 * FontHeight, ColumnData[i], 10);
+            textbox(GenUIID(i), MaxX * 0.47, BeginY -= 3 * FontHeight, MaxX * 0.06, 1.5 * FontHeight, ColumnData[i], 10);  //每一个输入框
         }
         if (button(GenUIID(0), MaxX * 0.47, BeginY -= 3 * FontHeight, MaxX * 0.06, 1.5 * FontHeight, "确认")) {
-            if (CheckColumnName(Data[5],ErrorAns)) {
+            if (CheckColumnName(Data[4],ErrorAns)) {
                 
-                stu_Ptr NewHead = CreatNewPtr(Data);   //拿到新的头节点
+                CaseNode_Ptr NewHead = CreatNewPtr(Data);   //拿到新的头节点
                 NowShowTable = NewHead; //将目前展示的变为新的表
-                ChangeIsSelect(NowShowTable);
+                ChangeIsSelect(NowShowTable);  //改变日期选择
                 Calculate(NowShowTable);   //重新计算该放置的位置
 
                 IsNew = 0;
@@ -91,8 +91,7 @@ void DrawCreateNewFile() {
         }
     }
     if (button(GenUIID(0), MaxX * 0.475, BeginY -= FontHeight * 2, MaxX * 0.05, FontHeight * 1.4, "取消")) {
-
-        IsNew = 0;
+        IsNew = 0;  //如果取消  没有什么损失直接置零
     }
 
 }
@@ -104,7 +103,7 @@ BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, 
         strcpy(ErrorAns, "请输入完整数据");
         return FALSE;
     }
-    int MonthNum = atoi(InputMonth), DayNum = atoi(InputDay), DateNum = atoi(DateLength), Column = atoi(ColumnNum);
+    int MonthNum = atoi(InputMonth), DayNum = atoi(InputDay), DateNum = atoi(DateLength), Column = atoi(ColumnNum);  //atoi和stoi的选择上  更倾向于atoi可以返回0值
 
 
     if (!MonthNum || MonthNum > 12) {
@@ -133,11 +132,11 @@ BOOL CheckCreateNewFile(string InputMonth, string InputDay, string  DateLength, 
         return FALSE;
     }
 
-    Data[1] = MonthNum, Data[2] = DayNum, Data[3] = DateNum, Data[4] = Column;
+    Data[1] = MonthNum, Data[2] = DayNum, Data[3] = DateNum, Data[4] = Column; //1为月 2为日  3为日期长度  4为列数
     return TRUE;
 }
 
-stu_Ptr CreatNewPtr(int* Data) {
+CaseNode_Ptr CreatNewPtr(int* Data) {
    
     int i;
 
@@ -153,18 +152,19 @@ stu_Ptr CreatNewPtr(int* Data) {
     FileTotalNum = Data[3];
 
 
-    stu_Ptr ans, tmp,tmp1;    //tmp用来遍历 tmp1用来新建 
-    ans = (stu_Ptr)malloc(sizeof(struct stu));
+    CaseNode_Ptr ans, tmp,tmp1;    //tmp用来遍历 tmp1用来新建 
+    ans = (CaseNode_Ptr)malloc(sizeof(struct CaseNode));
     tmp = ans;
     
     for (i = 1; i <= Data[3]; i++) {
-        tmp1 = (stu_Ptr)malloc(sizeof(struct stu));
+        tmp1 = (CaseNode_Ptr)malloc(sizeof(struct CaseNode));
         tmp1->IsSelect = TRUE;
         tmp1->Date = GetDate(Data[1], Data[2] + i - 1);  //日期malloc出来储存位置
         memset(tmp1->Data, 0, sizeof(tmp1->Data));
         tmp->IsShowNum = FALSE;  //不展示展示数据
         /*其他的不用动因为Calculate会重新赋值*/
         tmp->next = tmp1; 
+        strcpy(tmp->Changedcolor, "Black");
         tmp = tmp->next;
     }
     tmp->next = NULL;
@@ -172,20 +172,20 @@ stu_Ptr CreatNewPtr(int* Data) {
 }
 BOOL CheckColumnName( int ColumnNum,string ErrorAns) {
 
-    int i,j;
+    int i,j; 
     for (i = 1; i <= ColumnNum; i++) {
         if (!strlen(ColumnData[i])) {
-            strcpy(ErrorAns, "有数据缺失");
+            strcpy(ErrorAns, "有数据缺失");   //有的数据会有确实
             return FALSE;
             }
 
         for (j = 0; ColumnData[i][j]; j++) {
             if (ColumnData[i][j] >0) {
-                strcpy(ErrorAns, "请输入中文");
+                strcpy(ErrorAns, "请输入中文");   //需要输入中文
                 return FALSE;
             }
         }
     }
-    strcpy(ErrorAns, "成功");
+    strcpy(ErrorAns, "成功");   //没有其他问题
     return TRUE;
 }
