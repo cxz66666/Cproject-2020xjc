@@ -302,6 +302,10 @@ void InitData() {   //将全部外部数据Init
     FileTotalNum = 0;
     NowDateNum = NowDateColumn = 0;
     PredictHead = NULL;
+    if (OpenFileName != NULL) {
+        free(OpenFileName);
+        OpenFileName = NULL;
+    }
 }
 
 void  FreeColumn(char* Ptr[]) {

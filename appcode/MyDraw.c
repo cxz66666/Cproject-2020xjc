@@ -99,7 +99,7 @@ void DrawMain()
 
     else if (IsOpen == 2) //如果读取到了该csv文件那么将isopen值设为2
     {
-
+       
         DrawPicture(NowShowTable); //非预测模式就按照文件里的数据画图 预测模式就按照预测的链表画图
 
         if (IsSave == 1) //如果正在保存状态

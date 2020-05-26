@@ -51,7 +51,7 @@ void DrawCreateNewFile() {
             }
             
         }
-        if (!strlen(ErrorAns)) {
+        if (strlen(ErrorAns)) {
         
             SetPenColor("Red"); 
             SetPenSize(3);
@@ -159,12 +159,12 @@ CaseNode_Ptr CreatNewPtr(int* Data) {
     for (i = 1; i <= Data[3]; i++) {
         tmp1 = (CaseNode_Ptr)malloc(sizeof(struct CaseNode));
         tmp1->IsSelect = TRUE;
+        strcpy(tmp1->Changedcolor, "Black");
         tmp1->Date = GetDate(Data[1], Data[2] + i - 1);  //日期malloc出来储存位置
         memset(tmp1->Data, 0, sizeof(tmp1->Data));
-        tmp->IsShowNum = FALSE;  //不展示展示数据
+        tmp1->IsShowNum = FALSE;  //不展示展示数据
         /*其他的不用动因为Calculate会重新赋值*/
-        tmp->next = tmp1; 
-        strcpy(tmp->Changedcolor, "Black");
+        tmp->next = tmp1;    
         tmp = tmp->next;
     }
     tmp->next = NULL;
