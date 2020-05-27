@@ -42,7 +42,8 @@ void PreWork()
     /*for (int i = 0; i < FileNum; i++)
         printf("%s\n", FileName[i]);*/
    memset(ChangingPtrStringNum, 0, sizeof(ChangingPtrStringNum));
-   
+    
+   SetWindowTitle("疫情可视化助手v1.0");
 }
 void FindCSV(char *Dir)
 {

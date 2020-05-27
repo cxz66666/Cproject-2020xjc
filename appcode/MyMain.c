@@ -69,7 +69,7 @@ void Main()
     // 初始化图形窗口
     SetWindowSize(24, 13.5); //经过不断的调整  这个比例很舒服 满足16：9的舒适屏幕
     InitGraphics();
-  	InitConsole();
+  	//InitConsole();
     PreWork(); //把一堆定义的事干完
     // 注册回调函数
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());

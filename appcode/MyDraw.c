@@ -218,7 +218,7 @@ void DrawOpenDir()
     SetPenColor("TextBoxLabel");
     char InputWelcome[] = "您也可以输入文件全称";
     SetPenSize(2);
-    char NameDemo[] = "demo.csv";   //这个是作为基准位置 固定长度用
+    char NameDemo[] = "dedemo.csv";   //这个是作为基准位置 固定长度用
     drawLabel(MaxX *0.81,MaxY*0.9,"您也可以点击下方按钮"); 
     drawLabel(MaxX *0.8,MaxY*0.9-BoxHeight/2,"打开系统文件管理器目录");
     if (button(GenUIID(0), MaxX*0.83,MaxY*0.9-2*BoxHeight, 2,FontHeight * 2, "打开"))   //使用现成的工具 win给的api直接打开
