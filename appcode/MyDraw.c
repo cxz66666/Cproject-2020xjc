@@ -366,6 +366,7 @@ void DrawLeftButton(CaseNode_Ptr Head)
     double fH = FontHeight;
    static  char ErrorAns[20]; //放置检查输入返回的值
     
+   CaseNode_Ptr Tmpdatanum_ptr=NowShowTable;
    static IsShowChooseDate = FALSE;
     int nowNum = 0;
     Head = Head->next; //所有的数据链表是有头节点的
@@ -375,6 +376,7 @@ void DrawLeftButton(CaseNode_Ptr Head)
         if (button(GenUIID(0), 0.2, MaxY * 0.9, TextStringWidth("显示日期") * 1.5, 1.5 * FontHeight, "显示日期"))
             IsShowChooseDate = TRUE;
     }
+   
     if (IsShowChooseDate)
     {
         SetPenSize(1);
@@ -383,6 +385,8 @@ void DrawLeftButton(CaseNode_Ptr Head)
             int IsSelect = Head->IsSelect;                             //主要用来判断是否填涂
             setButtonColors("Color14", "Color14", "Red", "Red", IsSelect); //注意是否填涂
             nowNum++;
+            if (nowNum == NowDateNum * 10 + 1)
+                Tmpdatanum_ptr = Head;
             /*这里设定10个就显示翻页   只显示当前十个*/
             if (nowNum > 10 * NowDateNum && nowNum <= 10 * (NowDateNum + 1))
             {
@@ -396,7 +400,11 @@ void DrawLeftButton(CaseNode_Ptr Head)
                 drawLabel(0.3, MaxY -1- (1.2 * ((nowNum - 1) % 10 + 1) + 1.5) * FontHeight, Head->Date);
             }
             if (nowNum + 1 > 10 * (NowDateNum + 1))
+            {
                 break; //只显示10个多了就翻页
+
+            }
+             
             Head = Head->next;
         }
         SetPenSize(2);
@@ -423,7 +431,21 @@ void DrawLeftButton(CaseNode_Ptr Head)
                               //  display();
             }
         }
-        
+        if (IsShowChooseDate&& Tmpdatanum_ptr!=NULL) {    //全选
+            BOOL Choosetmp = Tmpdatanum_ptr->IsSelect;  //根据第一个进行判断
+            setButtonColors("Color14", "Color14", "Red", "Red", Tmpdatanum_ptr->IsSelect);
+            if (button(GenUIID(0), 2, MaxY - 1.7, 0.2, 0.2, "")) {
+                int tmpnum = 0;
+                while (tmpnum < 10 && Tmpdatanum_ptr != NULL) {  //设置计数器以及终点
+                    tmpnum++;
+                    Tmpdatanum_ptr->IsSelect = !Choosetmp;
+                    Tmpdatanum_ptr = Tmpdatanum_ptr->next;
+                }
+                Calculate(NowShowTable);
+            }
+            drawLabel(2.3, MaxY - 1.7, "全选");
+           
+        }
         setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1); 
         if (button(GenUIID(0), 0.2, MaxY * 0.9, TextStringWidth("隐藏日期")*1.5, FontHeight*1.5, "隐藏日期"))
         {
@@ -792,6 +814,12 @@ void DrawXYLine()
     }
     MovePen(beginTableX, beginTableY);
     DrawLine(0, endTableY - beginTableY);
+    SetFont("等线");
+    SetPenColor("Black");
+    
+    MovePen((endTableX + beginTableX) / 2 - TextStringWidth("疫情数据图") / 2, endTableY-0.5);
+    DrawTextString("疫情数据图");
+        SetFont("楷体");
 }
 int SplitFileName(string szFile)   //分出文件名 便于合并状态
 {
@@ -851,8 +879,8 @@ void drawMainPicture()
     DrawArrow();        //xy轴的箭头
     DrawLastTableNum(); //最后的数字显示
     Drawlegend();       //画图例
-    DrawSelectedInf();
-    ShowOldPoint();
+    DrawSelectedInf();   //是否选中直线 选中则进行文字描述
+    ShowOldPoint();   //画出原始数据中的线
 #if SHOWTIMEDRAW
     end_time = clock();
     printf("%lf seconds\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);

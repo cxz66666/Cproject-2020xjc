@@ -220,6 +220,8 @@ void Calculate(CaseNode_Ptr HEAD)
         tmp = tmp->next;
     }
     ShowDateNum = ShowNum;   //显示的日期数目
+    if (!ShowNum)
+        return;
     //printf("Maxnum=%d   ShowNum=%d\n", Maxnum,ShowNum);
     if (Maxnum > 1000) {
 
