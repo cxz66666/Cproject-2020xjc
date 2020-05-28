@@ -62,7 +62,7 @@ BOOL ReadCSVFile(char *Name)
     if (fp==NULL)
     {
         //printf("NULL");
-        fclose(fp);
+      
         MyError = -1;  //如果没打开就要报错了
         return 0;
     }
