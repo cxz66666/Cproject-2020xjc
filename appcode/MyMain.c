@@ -44,7 +44,7 @@
 /*以下三个是自己的
 PreWork是对整个绘画前的准备工作以及零散的计算工作，包括极为重要的Calculate
 MyDraw里放着所有的绘图函数
-HandleMouse.c放着对鼠标/键盘的输入处理
+HandleMouse放着对鼠标/键盘的输入处理
 */
 #include "PreWork.h"
 #include "MyDraw.h"

@@ -1,10 +1,10 @@
 [Project]
-FileName=demo.dev
-Name=demo
+FileName=疫情分析助手v1.0.dev
+Name=疫情分析助手v1.0
 Type=0
 Ver=2
 ObjFiles=
-Includes=..\libgraphics;..\simpleGUI;..\appcode
+Includes=..\libgraphics;..\simpleGUI;..\appcode;..\interface
 Libs=
 PrivateResource=
 ResourceIncludes=
@@ -19,7 +19,7 @@ ObjectOutput=output
 LogOutput=..\dev-c\output
 LogOutputEnabled=0
 OverrideOutput=0
-OverrideOutputName=demo.exe
+OverrideOutputName=疫情分析助手v1.0.exe
 HostApplication=
 UseCustomMakefile=0
 CustomMakefile=
@@ -211,9 +211,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\appcode\demo.c
+FileName=..\appcode\MyMain.c
 CompileCpp=0
-Folder=demo
+Folder=
 Compile=1
 Link=1
 Priority=1000

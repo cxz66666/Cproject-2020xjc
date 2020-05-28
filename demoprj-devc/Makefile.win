@@ -1,17 +1,17 @@
-# Project: demo
+# Project: 疫情分析助手v1.0
 # Makefile created by Dev-C++ 5.9.2
 
-CPP      = g++.exe -D__DEBUG__
-CC       = gcc.exe -D__DEBUG__
+CPP      = g++.exe
+CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = output/exceptio.o output/genlib.o output/graphics.o output/random.o output/simpio.o output/strlib.o output/imgui.o output/demo.o
-LINKOBJ  = output/exceptio.o output/genlib.o output/graphics.o output/random.o output/simpio.o output/strlib.o output/imgui.o output/demo.o
-LIBS     = -L"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib32" -L"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -static-libgcc -mwindows -m32 -g3
-INCS     = -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"../libgraphics" -I"../simpleGUI" -I"../appcode"
-CXXINCS  = -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include/c++" -I"../libgraphics" -I"../simpleGUI" -I"../appcode"
-BIN      = output/demo.exe
-CXXFLAGS = $(CXXINCS) -m32 -g3
-CFLAGS   = $(INCS) -m32 -g3
+OBJ      = output/exceptio.o output/genlib.o output/graphics.o output/random.o output/simpio.o output/strlib.o output/imgui.o output/MyMain.o
+LINKOBJ  = output/exceptio.o output/genlib.o output/graphics.o output/random.o output/simpio.o output/strlib.o output/imgui.o output/MyMain.o
+LIBS     = -L"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib" -L"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -mwindows -g3
+INCS     = -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"../libgraphics" -I"../simpleGUI" -I"../appcode" -I"../interface"
+CXXINCS  = -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"E:/devv/dev-cpp_gr/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include/c++" -I"../libgraphics" -I"../simpleGUI" -I"../appcode" -I"../interface"
+BIN      = output/疫情分析助手v1.0.exe
+CXXFLAGS = $(CXXINCS) -g3
+CFLAGS   = $(INCS) -g3
 RM       = rm.exe -f
 
 .PHONY: all all-before all-after clean clean-custom
@@ -45,5 +45,5 @@ output/strlib.o: ../libgraphics/strlib.c
 output/imgui.o: ../simpleGUI/imgui.c
 	$(CC) -c ../simpleGUI/imgui.c -o output/imgui.o $(CFLAGS)
 
-output/demo.o: ../appcode/demo.c
-	$(CC) -c ../appcode/demo.c -o output/demo.o $(CFLAGS)
+output/MyMain.o: ../appcode/MyMain.c
+	$(CC) -c ../appcode/MyMain.c -o output/MyMain.o $(CFLAGS)
