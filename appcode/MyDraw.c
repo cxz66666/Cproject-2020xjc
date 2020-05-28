@@ -1,14 +1,13 @@
-#pragma once
-#include "MyCreat.c"
-#include "MyData.h"
-#include "MyDrawTable.c"
-#include "MyPredict.c"
-#include "Readcsv.c"
+
+#include "MyCreat.h"
+#include "MyDrawTable.h"
+#include "MyPredict.h"
+#include "Readcsv.h"
 /*声明的函数基本按照功能来了
 绝大部分采用大驼峰命名法
 应该按功能来看 不能硬看
 */
-void display();                 //最主要的展示函数
+
 void DrawPicture(CaseNode_Ptr Head); //画最重要的图
 
 void DrawMain();                      //Main部分
@@ -45,7 +44,7 @@ void DrawVirus();
 void DrawMagnifier(); //画放大镜的函数
 void DrawPart(double x, double y, double degree);
 void DrawWelcomeWindow(); //画欢迎界面的函数
-void  ShowOldPoint();   //预测时选中曲线可以看原来的数据
+
 void DrawHelpPage1();  //画帮助界面第一页的函数
 void DrawHelpPage2();  //画帮助界面第二页的函数
 #define MY_DRAW_K 20   //在画table的时候 两个x直接画多少个点

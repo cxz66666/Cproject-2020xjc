@@ -1,7 +1,7 @@
 
 /***************************************************************
- VisualStudio 2010 用户注意：
-    将Character Set设置为 Use Multibyte Character Set
+ VisualCaseNodedio 2010 用户注意：
+    将Character Set设置为 Use ultibyte Character Set
 	否则中文显示不正常
 ***************************************************************/
 
@@ -28,7 +28,7 @@
 #include "igp_keyboard.c"
 
 #elif Demo_ID == 6
-include "igp_mouse.c"
+#include "igp_mouse.c"
 
 #elif Demo_ID == 7
 #include "igp_timer.c"
@@ -51,4 +51,4 @@ include "igp_mouse.c"
 #elif Demo_ID == 13
 #include "MyMain.c"
 
-#endif 
+#endif

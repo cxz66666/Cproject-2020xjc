@@ -34,7 +34,7 @@
     <ClCompile Include="..\simpleGUI\imgui.c">
       <Filter>simpleGUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\democode\demo.c">
+    <ClCompile Include="..\appcode\MyMain.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

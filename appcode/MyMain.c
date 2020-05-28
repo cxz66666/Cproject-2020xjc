@@ -1,5 +1,5 @@
 
-#pragma once
+
 /*写在前面   
 ********！！！！！*********
 整个程序由于时间仓促没来的急好好优化，个人感觉有很多坑，各位高手轻喷，谢谢
@@ -46,9 +46,9 @@ PreWork是对整个绘画前的准备工作以及零散的计算工作，包括极为重要的Calculate
 MyDraw里放着所有的绘图函数
 HandleMouse.c放着对鼠标/键盘的输入处理
 */
-#include "PreWork.c"
-#include "MyDraw.c"
-#include "HandleMouse.c"
+#include "PreWork.h"
+#include "MyDraw.h"
+#include "HandleMouse.h"
 
 
 

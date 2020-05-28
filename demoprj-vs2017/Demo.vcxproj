@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\democode\demo.c" />
+    <ClCompile Include="..\appcode\MyMain.c" />
     <ClCompile Include="..\libgraphics\exceptio.c" />
     <ClCompile Include="..\libgraphics\genlib.c" />
     <ClCompile Include="..\libgraphics\graphics.c" />
@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libgraphics;..\simpleGUI;..\appcode</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libgraphics;..\simpleGUI;..\appcode;..\interface</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -90,7 +90,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libgraphics;..\simpleGUI;..\appcode</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libgraphics;..\simpleGUI;..\appcode;..\interface</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
