@@ -8,7 +8,7 @@
 #include "Readcsv.c"
 
 BOOL SaveToCsv(CaseNode_Ptr HEAD); //保存到csv的画图主函数
-
+BOOL SaveCSV(string InputName, CaseNode_Ptr HEAD); //保存csv文件的实现
 BOOL ReadCSVFile(char* Name); //读取csv文件
 
 #endif

@@ -156,6 +156,8 @@ BOOL CheckChangedNum(string str[], string ans)
     int i, j;
     for (i = 1; i <= TotalColumnNum; i++)
     {
+        if (!strlen(str[i]))
+            continue;
         for (j = 0; str[i][j]; j++)
         { //如果有点或者ASCII码不是数字的
             if (str[i][j] == '.' || (str[i][j] < 48 || str[i][j] > 58))
@@ -278,6 +280,17 @@ void Calculate(CaseNode_Ptr HEAD)
 
 #endif //  SHOWTIME
 }
+void InitStatus() {
+ //作用  初始化所有状态
+    IsRedisplay = 0;
+    IsChooseXaxis = FALSE, IsChooseYaxis = FALSE, IsChooseLine = FALSE, IsChooseHistogram = FALSE;
+    IsHelp = 0;
+    IsNew = 0;
+    IsOpen = 0;
+    IsChangeNum = 0;
+    IsPredict = 0;
+    HaveSthToSave = FALSE;
+}
 void InitData()
 { //将全部外部数据Init
 
@@ -291,9 +304,7 @@ void InitData()
     ChooseLineNum = ChooseHistogramNum = 0;
     memset(ChangingPtrStringNum, 0, sizeof(ChangingPtrStringNum));
     ChangingPtr = NULL;
-    IsPredict = IsChangeNum = IsSave = FALSE;
-    IsRedisplay = 0;
-    IsChooseXaxis = FALSE, IsChooseYaxis = FALSE, IsChooseLine = FALSE, IsChooseHistogram = FALSE;
+    
     DrawWithLine = DrawWithColumn = DrawWithColumnNow = 0;
     FileTotalNum = 0;
     NowDateNum = NowDateColumn = 0;
@@ -358,12 +369,12 @@ string GetDate(int month, int day)
 void MyFree(CaseNode_Ptr Head)
 {
 
-    if (Head == NULL)
+    if (Head == NULL)   //空节点不free
         return;
     CaseNode_Ptr next = Head, tmp = Head;
 
     next = tmp->next;
-    free(tmp); //头节点单独释放
+    free(tmp); //头节点单独释放 
 
     tmp = NULL;
 
@@ -371,7 +382,7 @@ void MyFree(CaseNode_Ptr Head)
     {
         tmp = next;
         next = tmp->next;
-        free(tmp->Date); //日期单独释放
+        free(tmp->Date); //日期由于是string单独释放
         free(tmp);       //其余正常释放
     }
 }

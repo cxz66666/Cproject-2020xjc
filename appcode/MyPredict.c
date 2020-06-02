@@ -166,6 +166,7 @@ void DrawPredict()
             NowShowTable = PreHead;
             ChangeIsSelect(NowShowTable); //日期选中上限为20个
             Calculate(NowShowTable);
+            HaveSthToSave = TRUE;
             //printf("Check!!\n");
         }
         else
@@ -189,6 +190,7 @@ void DrawPredict()
 
             NowShowTable = FileHead; //改变视图   改为展示原来已有的数据
             IsPredict = FALSE;
+            HaveSthToSave = FALSE;
             NowDateNum = NowDateColumn = 0;
             Calculate(NowShowTable); //重新计算
         }

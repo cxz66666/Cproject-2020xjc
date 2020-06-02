@@ -82,7 +82,7 @@ void DrawCreateNewFile()
                 NowShowTable = NewHead;                   //将目前展示的变为新的表
                 ChangeIsSelect(NowShowTable);             //改变日期选择
                 Calculate(NowShowTable);                  //重新计算该放置的位置
-
+                HaveSthToSave = TRUE;
                 IsNew = 0;
                 IsOpen = 2;
                 ShowColumn = 0; //重新展示输入框

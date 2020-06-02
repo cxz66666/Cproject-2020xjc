@@ -1,8 +1,9 @@
 
+#include "Readcsv.h"
 #include "MyCreat.h"
 #include "MyDrawTable.h"
 #include "MyPredict.h"
-#include "Readcsv.h"
+
 /*声明的函数基本按照功能来了
 绝大部分采用大驼峰命名法
 应该按功能来看 不能硬看
@@ -515,6 +516,7 @@ void DrawLeftButton(CaseNode_Ptr Head)
     //画确认按钮  确认之后立刻使用更新
     if (IsChangeNum && ChangingPtr != NULL)
     {
+      
         CheckChangedNum(ChangingPtrStringNum, ErrorAns);     //传数据和返回的提示语数组
         setButtonColors("Orange", "Red", "Black", "Red", 0);
         if (button(GenUIID(0), 1.5, 0.9, 0.8, 0.4, "确认"))
@@ -524,6 +526,7 @@ void DrawLeftButton(CaseNode_Ptr Head)
 
                 ChangingPtr->Data[i] = atoi(ChangingPtrStringNum[i]);    //改变Ptr里的各个数据
             }
+            HaveSthToSave = TRUE;
             strcpy(ErrorAns, "更新成功");
                 Calculate(NowShowTable); //注意需要重新计算
 
@@ -569,13 +572,36 @@ void HandleFileButton(int selection)
         InitData(); //提前把数据初始化了
 
         break;
-    case 3:
-        IsHelp = 0;
-        IsNew = 0;
-        IsOpen = 0;
+    case 3: {
+        int ans;
+        if (HaveSthToSave) {
+            if (IsPredict) {   //预测状态下
+                ans = MessageBox(NULL, "您的预测数据可能未保存，是否要另存数据", "更改未保存", MB_YESNO | MB_DEFBUTTON1 | MB_ICONWARNING);
+
+                if (ans == IDYES) {
+                    IsSave = 1;
+                    break;
+                }
+
+            }
+            else  if (IsNew) {
+                IsSave = 1;
+                break;
+            }
+            else {
+                ans = MessageBox(NULL, "您更改的数据可能未保存，是否保存数据", "更改未保存", MB_YESNO | MB_DEFBUTTON1 | MB_ICONWARNING);
+
+                if (ans == IDYES) {
+                    SaveCSV(OpenFileName, NowShowTable);
+                }
+            }
+        }
+        InitStatus();
         MyFree(NowShowTable);      //close时候要把申请的节点free了
         FreeColumn(TmpColumnName); //再把申请的存储列的空间free了
         break;
+    }
+       
     case 4:
         IsSave = 1;
         break;

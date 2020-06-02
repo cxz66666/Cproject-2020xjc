@@ -43,7 +43,7 @@
 #include <Commdlg.h>//用来调用windpi中的文件选择框
 /*以下三个是自己的
 PreWork是对整个绘画前的准备工作以及零散的计算工作，包括极为重要的Calculate
-MyDraw里放着所有的绘图函数
+MyDraw里放着所有的绘图函数暴露的接口
 HandleMouse放着对鼠标/键盘的输入处理
 */
 #include "PreWork.h"
@@ -69,7 +69,7 @@ void Main()
     // 初始化图形窗口
     SetWindowSize(24, 13.5); //经过不断的调整  这个比例很舒服 满足16：9的舒适屏幕
     InitGraphics();
-  	//InitConsole();
+    InitConsole();
     PreWork(); //把一堆定义的事干完
     // 注册回调函数
     // printf("%lf %lf", GetWindowWidth(), GetWindowHeight());

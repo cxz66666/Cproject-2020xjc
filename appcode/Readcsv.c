@@ -1,6 +1,6 @@
 
 
-static BOOL SaveCSV(string InputName, CaseNode_Ptr HEAD); //保存csv文件的实现
+
 
 static BOOL CheckSaveName(string InputName, string WrongAns); //检查文件名称
 
@@ -170,6 +170,7 @@ BOOL SaveToCsv(CaseNode_Ptr HEAD)
                 strcpy(WrongAns, " 保存失败");
             else
             {
+                HaveSthToSave = FALSE;
                 IsSavingOK = TRUE;
                 IsSave = 0;
             }
@@ -186,7 +187,7 @@ BOOL SaveToCsv(CaseNode_Ptr HEAD)
 
     return TRUE;
 }
-static BOOL SaveCSV(string InputName, CaseNode_Ptr HEAD)
+ BOOL SaveCSV(string InputName, CaseNode_Ptr HEAD)
 {
     FILE *fp = fopen(InputName, "w+"); //使用w+进行文件写入
     if (fp == NULL)                    //没打开直接返回
