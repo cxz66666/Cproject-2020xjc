@@ -118,7 +118,7 @@ void DrawPredict()
 #endif // PREDICT
 
     int ans[4] = { 0 };        //分别记录Inputmonth，day ，datelength，predictlength
-    static BOOL ISOK = TRUE; //是否需要提示
+   
     SetPenColor("TextBoxLabel");
     SetPenSize(3);
     double beginY = MaxY * 0.8;
@@ -142,6 +142,7 @@ void DrawPredict()
 
     setButtonColors("DirSelectionFrame", "White", "DirSelectionFrameHot", "White", 1);
 
+    CheckPredict(WrongTip, InputMonth, InputDay, DateLength, PredictLength, Poly, ans);
     if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 4, MaxX * 0.05, FontHeight * 2, "预测"))
     {
 
@@ -149,12 +150,12 @@ void DrawPredict()
         {
 
             if (IsPredict)
-                MyFree(PreHead); //这一步很关键   如果之前没有free过就不进行free  否则free之前的
+                MyFree(&PreHead); //这一步很关键   如果之前没有free过就不进行free  否则free之前的
             NowDateNum = NowDateColumn = 0;
 
             PreparePredict(PredictHead, ans); //申请内存    计算数据  提前计算好存到preHead里
             IsPredict = TRUE;
-            ISOK = TRUE;
+          
             memset(InputMonth, 0, sizeof(InputMonth));
             memset(InputDay, 0, sizeof(InputDay));
             memset(DateLength, 0, sizeof(DateLength));
@@ -169,17 +170,16 @@ void DrawPredict()
             HaveSthToSave = TRUE;
             //printf("Check!!\n");
         }
-        else
-        {
-            ISOK = FALSE;
-        }
+      
     }
-    if (!ISOK)
+    if (strlen(WrongTip)&&!IsPredict)
     {
         SetPenColor("Red");
         SetPenSize(3);
+        SetStyle(2);
+    
         drawLabel(0.99 * MaxX - TextStringWidth(WrongTip), beginY -= 2 * FontHeight, WrongTip); //错误提示
-
+        SetStyle(0);
         SetPenSize(1);
     }
 
@@ -187,7 +187,7 @@ void DrawPredict()
     { //如果展示预测就不显示这个按钮
         if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "还原"))
         {
-
+            memset(WrongTip, 0, sizeof(WrongTip));
             NowShowTable = FileHead; //改变视图   改为展示原来已有的数据
             IsPredict = FALSE;
             HaveSthToSave = FALSE;
@@ -195,11 +195,12 @@ void DrawPredict()
             Calculate(NowShowTable); //重新计算
         }
     }
+
     if (!IsChangeNum)
     { //如果展示预测就不显示这个按钮
         if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "更改数据"))
         {
-
+            memset(WrongTip, 0, sizeof(WrongTip));
             IsChangeNum = TRUE;
         }
     }
@@ -217,6 +218,20 @@ void DrawPredict()
             }
         }
     }
+    if (ChangingPtr != NULL) {
+        if (button(GenUIID(0), MaxX * 0.9, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "删除日期"))
+        {
+            CaseNode_Ptr tmp1 = NowShowTable->next,tmp2=ChangingPtr->next;
+            while (tmp1->next != ChangingPtr) {
+                tmp1 = tmp1->next;
+            }
+            tmp1->next = tmp2;
+            free(ChangingPtr->Date);
+            free(ChangingPtr);
+            ChangingPtr = NULL;
+        }
+    }
+ 
 }
 
 static void PreparePredict(CaseNode_Ptr HEAD, int Date[4])
@@ -450,7 +465,7 @@ static BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, st
     }
     if (!Predict)
     {
-        strcpy(WrongTip, "请输入正确预测");
+        strcpy(WrongTip, "请输入正确预测天数");
         return FALSE;
     }
     if (Predict > 20)
@@ -474,7 +489,7 @@ static BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, st
     }
     if (FindDate(month, day))
     {
-        WrongTip = "";
+        strcpy(WrongTip , "");
         ans[0] = month, ans[1] = day, ans[2] = Datelen, ans[3] = Predict;
         PolyNum = polynum;
         return TRUE;
@@ -491,16 +506,16 @@ static BOOL FindDate(int month, int day)
     sprintf(TargetDate, "%d月%d日", month, day); //写入目标天数
                                                  // printf("TargetDate is %s\n", TargetDate);
 
-    PredictHead = FileHead;
+    PredictHead = NowShowTable;
 
-    CaseNode_Ptr tmp = FileHead->next; //重申一遍  FileHead有头节点
+    CaseNode_Ptr tmp = NowShowTable->next; //重申一遍  FileHead有头节点
 
     while (tmp != NULL)
     {
         if (!strcmp(tmp->Date, TargetDate))
         { //如果找到了
             PredictHead = tmp;
-            printf("zhaodaole\n");
+           // printf("zhaodaole\n");
             break;
         }
         tmp = tmp->next;

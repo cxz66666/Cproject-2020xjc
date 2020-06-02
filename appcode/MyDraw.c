@@ -298,7 +298,7 @@ void DrawOpenDir()
                 }
                 else
                 {
-                    MyFree(FileHead);  //如果没读到文件  就需要free掉已经读的
+                    MyFree(&FileHead);  //如果没读到文件  就需要free掉已经读的
                 }
             }
         }
@@ -338,7 +338,7 @@ void DrawOpenDir()
             }
             else
             {
-                MyFree(FileHead);  //同上free掉
+                MyFree(&FileHead);  //同上free掉
             }
         }
         else
@@ -566,11 +566,11 @@ void HandleFileButton(int selection)
         IsNew = 1; //对于每个操作改变data里的设定值
         break;
     case 2:
+        InitStatus();
         IsHelp = 0;
         IsOpen = 1; //进入选择csv文件界面
         IsNew = 0;
         InitData(); //提前把数据初始化了
-
         break;
     case 3: {
         int ans;
@@ -597,7 +597,7 @@ void HandleFileButton(int selection)
             }
         }
         InitStatus();
-        MyFree(NowShowTable);      //close时候要把申请的节点free了
+        MyFree(&NowShowTable);      //close时候要把申请的节点free了
         FreeColumn(TmpColumnName); //再把申请的存储列的空间free了
         break;
     }

@@ -22,7 +22,7 @@ BOOL CheckChangedNum(string str[], string ans);
 void FreeColumn(char* Ptr[]); //free每个列名占用的内存
 void ChangeIsSelect(CaseNode_Ptr HEAD);
 
-void MyFree(CaseNode_Ptr Head); //free所有申请出来的节点
+void MyFree(CaseNode_Ptr* Head); //free所有申请出来的节点
 
 void InitStatus();     //文件关闭时候使用
 #endif

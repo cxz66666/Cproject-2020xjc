@@ -151,6 +151,11 @@ BOOL SaveToCsv(CaseNode_Ptr HEAD)
 {
     //将HEAD里的数据保存到csv文件
 
+    SetPenColor("White");
+  
+    drawRectangle(0.4 * MaxX, 0.4 * MaxY, 0.2 * MaxX, 0.2 * MaxY, 1);
+
+    SetPenColor("Black");
     static char tips[] = "请输入保存文件名";
     static char WrongAns[20] = "";
     static char InputName[20] = "";
@@ -159,13 +164,16 @@ BOOL SaveToCsv(CaseNode_Ptr HEAD)
 
     setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
 
-    textbox(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2 + 0.3, MaxY / 2 - 1, TextStringWidth(tips), FontHeight * 2, InputName, 15);
-
+    textbox(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2 + 0.3, MaxY / 2 - 1, TextStringWidth(tips)*0.7, FontHeight * 2, InputName, 15);
+    SetStyle(1);
+    drawLabel(MaxX / 2 + 0.35 * TextStringWidth(tips), MaxY / 2 - 0.8, ".csv");
+    SetStyle(0);
     if (button(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2 + 0.15, MaxY / 2 - 2, 1, FontHeight * 1.2, "确认"))
     {
 
         if (CheckSaveName(InputName, WrongAns))
         {
+            strcat(InputName, ".csv");
             if (!SaveCSV(InputName, HEAD)) //如果没保存成功
                 strcpy(WrongAns, " 保存失败");
             else
@@ -234,7 +242,7 @@ BOOL CheckSaveName(string InputName, string WrongAns)
     int flag = 0;
     for (i = 0; InputName[i]; i++)
     {
-        if (InputName[i] == '.')
+        /*if (InputName[i] == '.')
         {
             if (InputName[i + 1] == 'c' && InputName[i + 2] == 's' && InputName[i + 3] == 'v')
             { //如果没找到.csv直接报错就完事
@@ -242,15 +250,22 @@ BOOL CheckSaveName(string InputName, string WrongAns)
                 flag = 1;
                 return TRUE;
             }
-        }
+        }*/
+
+        
     }
-    if (!flag)
+    if (flag)
     {
         strcpy(WrongAns, "请输入正确扩展名"); //没找到csv文件拓展名
         return FALSE;
     }
+    else if (!strlen(InputName)) {
+        strcpy(WrongAns, "名称不能为空"); //空
+        return FALSE;
+    }
     else
     {
+        strcpy(WrongAns, "名称合法");
         return TRUE; //文件名正确
     }
 }

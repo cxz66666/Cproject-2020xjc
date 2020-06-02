@@ -366,17 +366,17 @@ string GetDate(int month, int day)
     return ans;
 }
 
-void MyFree(CaseNode_Ptr Head)
+void MyFree (CaseNode_Ptr *Head)
 {
 
-    if (Head == NULL)   //空节点不free
+    
+    if (*Head == NULL)   //空节点不free
         return;
-    CaseNode_Ptr next = Head, tmp = Head;
+    CaseNode_Ptr next = *Head, tmp = *Head;
 
     next = tmp->next;
     free(tmp); //头节点单独释放 
-
-    tmp = NULL;
+    *Head = NULL;
 
     while (next != NULL)
     {
