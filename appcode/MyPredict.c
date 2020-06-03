@@ -21,6 +21,10 @@ static void FindBestPredict(int n, double* x, double* y, double a[]);
 
 static int CalY(int num, double c[]);
 
+static CaseNode_Ptr AddToLink(CaseNode_Ptr NowShowTable,string  AddMonth,string AddDay);
+
+static BOOL CheckAddDate(string WrongTip, string InputMonth, string InputDay);
+static BOOL FindDate_NoPredict(int month, int day);
 /*==================polyfit(n,x,y,poly_n,a)===================*/
 /*=======拟合y=a0+a1*x+a2*x^2+……+apoly_n*x^poly_n========*/
 /*=====n是数据个数 xy是数据值 poly_n是多项式的项数======*/
@@ -110,15 +114,17 @@ void DrawPredict()
     static char DateLength[20] = "20", PredictLength[20] = "10"; //起始的时间   模型原始数据长度 预测天数
     static char Poly[20] = "";
     static char WrongTip[30] = "";
+    static char AddWrongTip[30] = "";
 #else
     static char InputMonth[20] = "", InputDay[20] = "";
     static char DateLength[20] = "", PredictLength[20] = ""; //起始的时间   模型原始数据长度 预测天数
     static char Poly[20] = "";
     static char WrongTip[30] = "";
+    static char AddWrongTip[30] = "";
 #endif // PREDICT
 
     int ans[4] = { 0 };        //分别记录Inputmonth，day ，datelength，predictlength
-   
+    static BOOL NewDate = FALSE;
     SetPenColor("TextBoxLabel");
     SetPenSize(3);
     double beginY = MaxY * 0.8;
@@ -145,48 +151,47 @@ void DrawPredict()
     CheckPredict(WrongTip, InputMonth, InputDay, DateLength, PredictLength, Poly, ans);
     if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 4, MaxX * 0.05, FontHeight * 2, "预测"))
     {
-
-        if (CheckPredict(WrongTip, InputMonth, InputDay, DateLength, PredictLength, Poly, ans))
+        NewDate = FALSE;
+        if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(PredictLength) || !strcmp(InputMonth, "月") || !strcmp(InputDay, "日") || InputMonth[0] < 0 || InputDay[0] < 0)
         {
+            strcpy(WrongTip, "请输入完整数据");
+        } //如果是空的  或者还是初始的月  日   直接返回
+        else {
+            if (CheckPredict(WrongTip, InputMonth, InputDay, DateLength, PredictLength, Poly, ans))
+            {
 
-            if (IsPredict)
-                MyFree(&PreHead); //这一步很关键   如果之前没有free过就不进行free  否则free之前的
-            NowDateNum = NowDateColumn = 0;
+                if (IsPredict)
+                    MyFree(&PreHead); //这一步很关键   如果之前没有free过就不进行free  否则free之前的
+                NowDateNum = NowDateColumn = 0;
 
-            PreparePredict(PredictHead, ans); //申请内存    计算数据  提前计算好存到preHead里
-            IsPredict = TRUE;
-          
-            memset(InputMonth, 0, sizeof(InputMonth));
-            memset(InputDay, 0, sizeof(InputDay));
-            memset(DateLength, 0, sizeof(DateLength));
-            memset(PredictLength, 0, sizeof(PredictLength));
-            memset(Poly, 0, sizeof(Poly));
-            memset(WrongTip, 0, sizeof(WrongTip)); //对每个数组都置零
-            memset(ans, 0, sizeof(ans));           //重新清零
+                PreparePredict(PredictHead, ans); //申请内存    计算数据  提前计算好存到preHead里
+                IsPredict = TRUE;
 
-            NowShowTable = PreHead;
-            ChangeIsSelect(NowShowTable); //日期选中上限为20个
-            Calculate(NowShowTable);
-            HaveSthToSave = TRUE;
-            //printf("Check!!\n");
+                memset(InputMonth, 0, sizeof(InputMonth));
+                memset(InputDay, 0, sizeof(InputDay));
+                memset(DateLength, 0, sizeof(DateLength));
+                memset(PredictLength, 0, sizeof(PredictLength));
+                memset(Poly, 0, sizeof(Poly));
+                memset(WrongTip, 0, sizeof(WrongTip)); //对每个数组都置零
+                memset(ans, 0, sizeof(ans));           //重新清零
+                memset(AddWrongTip, 0, sizeof(AddWrongTip));
+                NowShowTable = PreHead;
+                ChangeIsSelect(NowShowTable); //日期选中上限为20个
+                Calculate(NowShowTable);
+                HaveSthToSave = TRUE;
+                //printf("Check!!\n");
+            }
+
         }
-      
+        
     }
-    if (strlen(WrongTip)&&!IsPredict)
-    {
-        SetPenColor("Red");
-        SetPenSize(3);
-        SetStyle(2);
-    
-        drawLabel(0.99 * MaxX - TextStringWidth(WrongTip), beginY -= 2 * FontHeight, WrongTip); //错误提示
-        SetStyle(0);
-        SetPenSize(1);
-    }
+   
 
     if (NowShowTable == PreHead)
     { //如果展示预测就不显示这个按钮
         if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "还原"))
         {
+            NewDate = FALSE;
             memset(WrongTip, 0, sizeof(WrongTip));
             NowShowTable = FileHead; //改变视图   改为展示原来已有的数据
             IsPredict = FALSE;
@@ -200,16 +205,18 @@ void DrawPredict()
     { //如果展示预测就不显示这个按钮
         if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "更改数据"))
         {
+            NewDate = FALSE;
             memset(WrongTip, 0, sizeof(WrongTip));
             IsChangeNum = TRUE;
         }
     }
     else
     {
-        if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "撤销更改"))
+        if (button(GenUIID(0), MaxX * 0.90, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "停止更改"))
         {
-
+            NewDate = FALSE;
             IsChangeNum = FALSE;
+            ChangingPtr = NULL;
             CaseNode_Ptr tmp = NowShowTable->next; //遍历当前展示的数据将所有IsShowNum改为FALSE
             while (tmp != NULL)
             {
@@ -218,20 +225,93 @@ void DrawPredict()
             }
         }
     }
+
+    
+    if (button(GenUIID(0), MaxX * 0.9, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "增加日期")) {
+        NewDate = !NewDate;
+    }
+    if (NewDate) {
+        SetPenColor("White");
+
+        drawRectangle(0.4 * MaxX, 0.4 * MaxY, 0.2 * MaxX, 0.2 * MaxY, 1);
+
+        SetPenColor("Black");
+        static char tips[] = "请输入添加的日期";
+        static char AddMonth[10] = "";
+        static char AddDay[10] = "";
+        static char WrongTip1[30] = "";
+        SetPenColor("Black");
+        drawLabel(MaxX / 2 - TextStringWidth(tips) / 2 + 0.3, MaxY / 2 + 2 * FontHeight - 0.5, tips);
+
+        setTextBoxColors("TextBoxFrame", "TextBoxLabel", "TextBoxFrameHot", "TextBoxLabel", 0);
+
+        textbox(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2 + 0.3, MaxY / 2 - 1, TextStringWidth(tips) * 0.3, FontHeight * 2,AddMonth , 3);
+        textbox(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2 + 2, MaxY / 2 - 1, TextStringWidth(tips) * 0.3, FontHeight * 2, AddDay, 3);
+      
+        CheckAddDate(WrongTip1, AddMonth, AddDay);
+        if (button(GenUIID(0), MaxX / 2 - TextStringWidth(tips) / 2 + 0.15, MaxY / 2 - 2, 1, FontHeight * 1.2, "确认"))
+        {
+            if (CheckAddDate(WrongTip1, AddMonth, AddDay)) {
+              CaseNode_Ptr tmp=  AddToLink(NowShowTable, AddMonth, AddDay);
+              if (tmp == NULL) {
+                  printf("空的你插个锤子\n");
+              }
+              else {
+                  HaveSthToSave = TRUE;
+                  FileTotalNum++;
+                  memset(AddMonth, 0, sizeof(AddMonth));
+                  memset(AddDay, 0, sizeof(AddDay));
+                  ChangingPtr = tmp;
+                  IsChangeNum = TRUE;
+                  NewDate = FALSE;
+                  Calculate(NowShowTable);
+              }
+            }
+          
+        }
+        if (button(GenUIID(0), MaxX / 2 + TextStringWidth(tips) / 2 - 0.6, MaxY / 2 - 2, 1, FontHeight * 1.2, "取消"))
+        {
+
+            NewDate = FALSE;
+        }
+        if (strlen(WrongTip1)) {
+            SetPenColor("Black");
+            drawLabel(MaxX / 2 - TextStringWidth(WrongTip1)/2, MaxY / 2 - 2.5, WrongTip1);
+        }
+    }
     if (ChangingPtr != NULL) {
         if (button(GenUIID(0), MaxX * 0.9, beginY -= FontHeight * 3, MaxX * 0.05, FontHeight * 2, "删除日期"))
         {
-            CaseNode_Ptr tmp1 = NowShowTable->next,tmp2=ChangingPtr->next;
-            while (tmp1->next != ChangingPtr) {
-                tmp1 = tmp1->next;
+            if (NowShowTable == NULL)
+                ;
+            else {
+                HaveSthToSave=TRUE;
+               
+                CaseNode_Ptr tmp1 = NowShowTable, tmp2 = ChangingPtr->next;
+                while (tmp1->next != ChangingPtr) {
+                    tmp1 = tmp1->next;
+                }
+                tmp1->next = tmp2;
+
+                free(ChangingPtr->Date);
+                free(ChangingPtr);
+                ChangingPtr = NULL;
+                FileTotalNum--;
+                Calculate(NowShowTable);
             }
-            tmp1->next = tmp2;
-            free(ChangingPtr->Date);
-            free(ChangingPtr);
-            ChangingPtr = NULL;
+         
         }
     }
- 
+    if (strlen(WrongTip))
+    {
+        SetPenColor("Red");
+        SetPenSize(3);
+        SetStyle(2);
+
+        drawLabel(0.99 * MaxX - TextStringWidth(WrongTip), beginY -= 2 * FontHeight, WrongTip); //错误提示
+        SetStyle(0);
+        SetPenSize(1);
+    }
 }
 
 static void PreparePredict(CaseNode_Ptr HEAD, int Date[4])
@@ -430,12 +510,12 @@ static int CalY(int num, double c[])
 //使用atoi而不是stoi
 static BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, string DateLength, string PredictLength, string poly, int ans[4])
 {
-    if (!strlen(InputMonth) || !strlen(InputDay) || !strlen(DateLength) || !strlen(PredictLength) || !strcmp(InputMonth, "月") || !strcmp(InputDay, "日") || InputMonth[0] < 0 || InputDay[0] < 0)
-    {
-
-        strcpy(WrongTip, "请输入完整数据");
+    if (!strlen(InputMonth) && !strlen(InputDay) && !strlen(DateLength) && !strlen(PredictLength) && !strlen(poly)) {
+        if (!strcmp(WrongTip, "请输入完整数据"))
         return FALSE;
-    } //如果是空的  或者还是初始的月  日   直接返回
+        else strcpy(WrongTip, "");
+        return FALSE;
+    }
 
     int month = atoi(InputMonth), day = atoi(InputDay), Datelen = atoi(DateLength), Predict = atoi(PredictLength), polynum = atoi(poly); //如果异常直接atoi返回0
     if (month <= 0 || month > 12)
@@ -445,12 +525,16 @@ static BOOL CheckPredict(string WrongTip, string InputMonth, string InputDay, st
     }
     if (day <= 0 || day > 31)
     {
-        strcpy(WrongTip, "请输入正确日期");
+        strcpy(WrongTip, "请输入正确日子");
+        return FALSE;
+    }
+    if (!FindDate(month, day)) {
+        strcpy(WrongTip, "日期未找到");
         return FALSE;
     }
     if (!Datelen)
     {
-        strcpy(WrongTip, "请输入正确长度");
+        strcpy(WrongTip, "请输入正确采样天数");
         return FALSE;
     }
     if (Datelen > 20)
@@ -515,7 +599,7 @@ static BOOL FindDate(int month, int day)
         if (!strcmp(tmp->Date, TargetDate))
         { //如果找到了
             PredictHead = tmp;
-           // printf("zhaodaole\n");
+           
             break;
         }
         tmp = tmp->next;
@@ -525,7 +609,27 @@ static BOOL FindDate(int month, int day)
     else
         return FALSE;
 }
+static BOOL FindDate_NoPredict(int month, int day)
+{
+    char TargetDate[20] = "";
+    sprintf(TargetDate, "%d月%d日", month, day); //写入目标天数
+                                                 // printf("TargetDate is %s\n", TargetDate);
 
+    CaseNode_Ptr tmp = NowShowTable->next; //重申一遍  FileHead有头节点
+
+    while (tmp != NULL)
+    {
+        if (!strcmp(tmp->Date, TargetDate))
+        { //如果找到了
+          
+
+            return TRUE;
+        }
+        tmp = tmp->next;
+    }
+  
+        return FALSE;
+}
 void DrawSelectedInf()
 {
     char OutChoosed[100];
@@ -635,4 +739,74 @@ void ShowOldPoint()
     }
     else
         return;
+}
+static BOOL CheckAddDate(string WrongTip, string InputMonth, string InputDay) {
+    int month = atoi(InputMonth), day = atoi(InputDay);
+    if ((month < 0 || month>12)||(day<0||day>MonthDate[month]))
+    {
+        strcpy(WrongTip, "数据错误");
+        return FALSE;
+    }
+    if (!strlen(InputMonth)) {
+        strcpy(WrongTip, "月份不能为空");
+        return FALSE;
+    }
+    if (!strlen(InputDay)) {
+        strcpy(WrongTip, "日子不能为空");
+        return FALSE;
+    }
+    printf("%d %d\n", month, day);
+    if (FindDate_NoPredict(month, day)) {
+        strcpy(WrongTip, "数据已经存在");
+        return FALSE;
+    }
+    strcpy(WrongTip, "数据有效");
+    return TRUE;
+}
+static CaseNode_Ptr AddToLink(CaseNode_Ptr NowShowTable, string  AddMonth, string AddDay) {
+
+    if (NowShowTable == NULL)
+        return NULL;
+    
+    string NewDate = (string)malloc(10);
+    sprintf(NewDate, "%s月%s日", AddMonth, AddDay);
+   
+    CaseNode_Ptr AddNode = (CaseNode_Ptr)malloc(sizeof(struct CaseNode));
+    AddNode->Date = NewDate;
+    memset(AddNode->Data, 0, sizeof(AddNode->Data));
+    strcpy(AddNode->Changedcolor, "Black");
+    AddNode->IsShowNum = TRUE;
+    int i;
+    for (i = 1; i <= TotalColumnNum; i++)
+    {
+        if (ChangingPtrStringNum[i] != NULL) {
+
+            free(ChangingPtrStringNum[i]);
+            ChangingPtrStringNum[i] = NULL;
+        }
+    }
+
+  
+    for (i = 1; i <= TotalColumnNum; i++)
+    {
+        ChangingPtrStringNum[i] = tostring(AddNode->Data[i]);
+        //    printf("%s\n", ChangingPtrStringNum[i]);
+    }
+    CaseNode_Ptr tmp1 = NowShowTable->next, tmp2 = NowShowTable;
+
+    while (tmp1!=NULL&&strcmp(tmp1->Date, NewDate) < 0) {
+        tmp2 = tmp1;
+        tmp1 = tmp1->next;
+    }
+
+    if (tmp1 == NULL) {
+        tmp2->next = AddNode;
+        AddNode->next = NULL;
+        return AddNode;
+    }
+    else {
+        tmp2->next = AddNode;
+        AddNode->next = tmp1;
+        return AddNode;
+    }
 }

@@ -1008,7 +1008,11 @@ void DrawEachDate(int tmpnum, char *Date, CaseNode_Ptr ptr)
                 for (i = 1; i <= TotalColumnNum; i++)
                 {
                     if (ChangingPtrStringNum[i] != NULL)
+                    {
                         free(ChangingPtrStringNum[i]);
+                        ChangingPtrStringNum[i] = NULL;
+                    }
+                       
                 }
 
                 ChangingPtr = ptr; //将改变的ptr指向这个

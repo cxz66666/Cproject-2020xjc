@@ -154,10 +154,10 @@ void AssignTable()
 BOOL CheckChangedNum(string str[], string ans)
 {
     int i, j;
+    int tmpNULL = 0;
     for (i = 1; i <= TotalColumnNum; i++)
     {
-        if (!strlen(str[i]))
-            continue;
+        
         for (j = 0; str[i][j]; j++)
         { //如果有点或者ASCII码不是数字的
             if (str[i][j] == '.' || (str[i][j] < 48 || str[i][j] > 58))
@@ -166,13 +166,18 @@ BOOL CheckChangedNum(string str[], string ans)
                 return FALSE;
             }
         }
+        if (!strlen(str[i]))
+            tmpNULL = 1;
         /*注意atoi返回0则表示有问题   返回数值表示没问题*/
-        if (!atoi(str[i])) //如果返回0就是有问题！！！
+        else if (!atoi(str[i])) //如果返回0就是有问题！！！
         {
             strcpy(ans, "请检查数据");
             return FALSE;
         }
     }
+    if(tmpNULL)
+        strcpy(ans, "可能存在数据为空");
+    else 
     //将状态改为更新成功
     strcpy(ans, "数据合法");
 
